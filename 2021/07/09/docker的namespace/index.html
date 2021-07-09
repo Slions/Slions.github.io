@@ -20,24 +20,24 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openstack">
+    <meta name="description" content="我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。 namespace是什么 namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。  ——摘自">
 <meta property="og:type" content="article">
-<meta property="og:title" content="聊聊docker">
-<meta property="og:url" content="https://slions.github.io/2021/07/09/%E8%81%8A%E8%81%8Adocker/index.html">
+<meta property="og:title" content="浅谈docker中的namespace">
+<meta property="og:url" content="https://slions.github.io/2021/07/09/docker%E7%9A%84namespace/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openstack">
+<meta property="og:description" content="我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。 namespace是什么 namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。  ——摘自">
 <meta property="og:locale">
-<meta property="og:image" content="https://slions.github.io/doc_picture/docker-1.png">
-<meta property="article:published_time" content="2021-07-09T09:10:41.000Z">
-<meta property="article:modified_time" content="2021-07-09T16:29:13.318Z">
+<meta property="og:image" content="https://slions.github.io/doc_picture/docker-2.png">
+<meta property="article:published_time" content="2021-07-09T06:49:12.000Z">
+<meta property="article:modified_time" content="2021-07-09T17:13:35.497Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://slions.github.io/doc_picture/docker-1.png">
+<meta name="twitter:image" content="https://slions.github.io/doc_picture/docker-2.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>聊聊docker · S_lion&#39;s Studio</title>
+    <title>浅谈docker中的namespace · S_lion&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -251,7 +251,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">聊聊docker</a>
+            <a href="#" class="post-name">浅谈docker中的namespace</a>
         </div>
     </div>
     
@@ -294,7 +294,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            聊聊docker
+            浅谈docker中的namespace
             <!-- 404 -->
             
         </h1>
@@ -319,7 +319,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.8k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">150</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -448,53 +448,22 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="唠唠背景"><a href="#唠唠背景" class="headerlink" title="唠唠背景"></a>唠唠背景</h1><p>自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openstack(kolla实现)，也算是逼自己要好好看看docker这块儿的东西了，当时九州云属于kolla项目的主要贡献者，也和我们有很多合作关系，所以期间有很多不太理解的地方也是请教了相关的几位大佬。</p>
-<p>18年离开了上海，入职了北京某家金融领域解决方案提供商，主要做的也一直是容器化相关的事，从docker到k8s，从慢慢摸索到推出适合本公司产品的定制化容器云平台，期间我会有很多时候需要向甲方以及公司同事介绍我们在做的事儿，以及用到的技术、行业的现状等等，借着最近时间充裕，打算写一篇关于介绍docker的文章，如果有幸被您看到，也请提出宝贵的意见，十分感谢。</p>
-<blockquote>
-<p>以下内容多属于普及性文字，不会涉及太多技术点，如果有时间会抽专门的章节来具体阐述。</p>
+        <p>我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。</p>
+<h1 id="namespace是什么"><a href="#namespace是什么" class="headerlink" title="namespace是什么"></a>namespace是什么</h1><blockquote>
+<p>namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。</p>
+<p> ——摘自《Docker进阶与实战》</p>
 </blockquote>
-<h1 id="什么是容器"><a href="#什么是容器" class="headerlink" title="什么是容器"></a>什么是容器</h1><blockquote>
-<p>纵观整个IT界历史长河，一个新兴技术能够火爆与当时的市场痛点是息息相关的，就比如当初如日中天的AWS和Openstack提供了云计算的模式，使得万物云化，资源按需使用，大大的提高了服务器的资源利用率，降低了人力物力的成本。慢慢的人们发现，当申请好一批虚拟机后，通过手工或者自动化脚本部署自己的应用时会出现各种奇奇怪怪的问题，因为本地环境与云端虚拟机环境不一致，所以导致了大量的排错过程。后面PaaS理念的一经提出（应用托管），赢得了广大开发者的关注，而docker项目的发布为应用打包问题提供了一份近乎完美的解决方案。</p>
-</blockquote>
-<h2 id="容器与操作系统"><a href="#容器与操作系统" class="headerlink" title="容器与操作系统"></a>容器与操作系统</h2><p>我们经常把容器叫做docker,但其实容器还有coreOS的rkt。在介绍容器前，大家可以先想想操作系统是如何管理进程的，我们登录到一个操作系统内执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ps -elf</span> </span><br></pre></td></tr></table></figure>
-
-<p>可以看到各种进程，这些进程包括了系统自带的和用户部署的，并且进程间可以互相看到，也可以互相通信，这些进程共享着同一份的文件系统，意味着他们可以操作同一份文件，最后他们还使用着同样的系统资源。</p>
-<p>上述这些特点会产生一系列的问题：</p>
-<ul>
-<li>具有高级权限的进程可以攻击其他进程</li>
-<li>具有高级权限的进程可以对其他进程所需的文件增删改查</li>
-<li>应用之间会存在资源争抢问题</li>
-</ul>
-<p>容器本质上是把系统中为同一个业务目标服务的相关进程合成一组，放在一个叫做<strong>namespace</strong>的空间中，同一个namespace中的进程能够互相通信，但看不见其他namespace中的进程。每个namespace可以拥有自己独立的主机名、进程ID系统、IPC、网络、文件系统、用户等等资源。使得容器这个父进程只对自己的子进程有感知，而对于宿主机其他进程互不感知。</p>
-<p>linux提供了<strong>chroot</strong>的系统调用方式可以把一个子目录变为根目录，容器会在chroot的帮助下获得一个独立的文件系统，这样进程对文件系统的增删改查都不会影响到其他进程的使用。</p>
-<p>此外，为了限制namespace对物理资源的使用，对进程能使用的CPU、内存、io等资源需要做一定的限制。这就是<strong>Cgroup</strong>技术。</p>
-<p><strong>总结：</strong></p>
-<p><strong>基于传统应用部署方式的痛点，docker通过linux的namespaces实现了资源视图的隔离，通过chroot来提供独立的文件系统，通过cgroup控制资源使用率。</strong></p>
-<h2 id="容器与虚拟机"><a href="#容器与虚拟机" class="headerlink" title="容器与虚拟机"></a>容器与虚拟机</h2><p>提容器不得不提虚拟机，他们都是为应用提供封装和隔离的。</p>
-<ul>
-<li>虚拟化层：虚拟机有Hypervisor层和GuestOS，Docker省去了Hypervisor，其虚拟化技术是基于内核的Cgroup和Namespace技术，Docker通过libcontainer与内核交互，所以在很多方面，它的性能与物理机非常接近。</li>
-<li>启动速度：docker启动快速属于秒级别。虚拟机通常需要几分钟去启动。</li>
-<li>隔离性：docker属于进程之间的隔离，那么多个容器还是使用着同一个操作系统内核，所以docker的隔离性更弱，虚拟机可实现系统级别隔离。</li>
-<li>迭代：虚拟机可以通过导出模板实现环境交付的一致性，但镜像分发无法体系化；Docker在Dockerfile中记录了容器构建过程，可在集群中实现快速分发和快速部署，快速回滚。</li>
-<li>系统支持量：同样配置的服务器支持的容器数是虚拟机的十倍以上。</li>
-</ul>
-<p><img src="/doc_picture/docker-1.png" alt="image-20210709184759385"></p>
-<h1 id="docker的优势"><a href="#docker的优势" class="headerlink" title="docker的优势"></a>docker的优势</h1><ul>
-<li>更快速的交付和部署；开发者可以使用一个标准的镜像来构建一套开发容器，开发完成之后，运维人员可以直接使用这个容器来 部署代码。 Docker 可以快速创建容器，快速迭代应用程序，并让整个过程全程可见，使团队中的其他成员 更容易理解应用程序是如何创建和工作的。 Docker 容器很轻很快！容器的启动时间是秒级的，大量地节约 开发、测试、部署的时间。</li>
-<li>更高效的虚拟化；不需要额外的hypervisor 支持，它是内核级的虚拟化，因此可以实现更高的性能和效率。</li>
-<li>更轻松的迁移和扩展；Docker 容器几乎可以在任意的平台上运行，包括物理机、虚拟机、云平台、服务器等。 这种兼容性可以让用户把一个应用程序从一个平台直接迁移到另外一个。 </li>
-<li>更简单的管理；使用 Docker，只需要小小的修改，就可以替代以往大量的更新工作。所有的修改都以增量的方式被分发和 更新，从而实现自动化并且高效的管理。 </li>
-</ul>
+<p>其实就是通过namespace使得进程在资源视图上实现隔离，目前linux共实现了6种namespace</p>
+<p><img src="/doc_picture/docker-2.png" alt="image-20210710005510508"></p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
-            <p>原文链接：<a href="https://slions.github.io/2021/07/09/%E8%81%8A%E8%81%8Adocker/">https://slions.github.io/2021/07/09/%E8%81%8A%E8%81%8Adocker/</a>
-            <p>发表日期：<a href="https://slions.github.io/2021/07/09/%E8%81%8A%E8%81%8Adocker/">July 9th 2021, 5:10:41 pm</a>
-            <p>更新日期：<a href="https://slions.github.io/2021/07/09/%E8%81%8A%E8%81%8Adocker/">July 10th 2021, 12:29:13 am</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/07/09/docker%E7%9A%84namespace/">https://slions.github.io/2021/07/09/docker%E7%9A%84namespace/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/07/09/docker%E7%9A%84namespace/">July 9th 2021, 2:49:12 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/07/09/docker%E7%9A%84namespace/">July 10th 2021, 1:13:35 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -502,12 +471,17 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/07/09/%E5%AE%89%E8%A3%85%E6%8C%87%E5%AE%9A%E7%89%88%E6%9C%AC%E7%9A%84docker/" title= "安装指定版本的docker">
+                    <div class="nextTitle">安装指定版本的docker</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/07/09/%E5%AE%89%E8%A3%85%E6%8C%87%E5%AE%9A%E7%89%88%E6%9C%AC%E7%9A%84docker/" title= "安装指定版本的docker">
-                    <div class="prevTitle">安装指定版本的docker</div>
+                <a href= "/2021/07/08/hello-world/" title= "Hello World">
+                    <div class="prevTitle">Hello World</div>
                 </a>
             
         </li>
@@ -635,7 +609,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%94%A0%E5%94%A0%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">唠唠背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%B9%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">什么是容器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%8E%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.1.</span> <span class="toc-text">容器与操作系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-number">2.2.</span> <span class="toc-text">容器与虚拟机</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#docker%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">3.</span> <span class="toc-text">docker的优势</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#namespace%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">namespace是什么</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -647,8 +621,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
     
     
     
@@ -703,7 +675,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Adocker/" >聊聊docker</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E6%88%91%E8%AF%A5%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E4%BB%8B%E7%BB%8Ddocker/" >聊聊docker</a>
         </li>
     
     
@@ -713,7 +685,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E6%B5%85%E8%B0%88docker%E4%B8%AD%E7%9A%84namespace/" >浅谈docker中的namespace</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/docker%E7%9A%84namespace/" >浅谈docker中的namespace</a>
         </li>
     
     
