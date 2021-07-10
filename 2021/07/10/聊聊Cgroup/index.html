@@ -20,13 +20,15 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="article">
+    <meta name="description" content="此前已经聊了容器隔离技术，这次我们接着来看看如何来限制容器的资源。 什么是CgroupCgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。 此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。 在 Linux 中，Cgroups 给用户暴露">
+<meta property="og:type" content="article">
 <meta property="og:title" content="聊聊Cgroup">
 <meta property="og:url" content="https://slions.github.io/2021/07/10/%E8%81%8A%E8%81%8ACgroup/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="此前已经聊了容器隔离技术，这次我们接着来看看如何来限制容器的资源。 什么是CgroupCgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。 此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。 在 Linux 中，Cgroups 给用户暴露">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-07-10T10:32:32.000Z">
-<meta property="article:modified_time" content="2021-07-10T10:46:42.098Z">
+<meta property="article:modified_time" content="2021-07-10T14:27:23.729Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -315,7 +317,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">0</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -444,7 +446,90 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        
+        <p>此前已经聊了<a href="%E8%81%8A%E8%81%8Anamespace.md">容器隔离技术</a>，这次我们接着来看看如何来限制容器的资源。</p>
+<h1 id="什么是Cgroup"><a href="#什么是Cgroup" class="headerlink" title="什么是Cgroup"></a>什么是Cgroup</h1><p>Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。</p>
+<p>此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。</p>
+<p>在 Linux 中，Cgroups 给用户暴露出来的操作接口是文件系统，默认linux系统在启动时已经挂载到了 /sys/fs/cgroup 路径下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# mount -t cgroup</span><br><span class="line">cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,xattr,release_agent=/usr/lib/systemd/systemd-cgroups                                              -agent,name=systemd)</span><br><span class="line">cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuacct,cpu)</span><br><span class="line">cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,net_prio,net_cls)</span><br><span class="line">cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuset)</span><br><span class="line">cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,devices)</span><br><span class="line">cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,freezer)</span><br><span class="line">cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,perf_event)</span><br><span class="line">cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,hugetlb)</span><br><span class="line">cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,memory)</span><br><span class="line">cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,pids)</span><br><span class="line">cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,blkio)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="查看Cgroup"><a href="#查看Cgroup" class="headerlink" title="查看Cgroup"></a>查看Cgroup</h1><p>可以看到，在 /sys/fs/cgroup 下面有很多诸如 cpuset、cpu、 memory 这样的子目录，也叫子系统。这些都是我这台机器当前可以被 Cgroups 进行限制的资源种类。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ls /sys/fs/cgroup/</span><br><span class="line">blkio  cpu  cpuacct  cpu,cpuacct  cpuset  devices  freezer  hugetlb  memory  net_cls  net_cls,net_prio  net_prio  perf_event  pids  systemd</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>而在子系统对应的资源种类下，你就可以看到该类资源具体可以被限制的方法。</p>
+<h1 id="Cgroup子系统"><a href="#Cgroup子系统" class="headerlink" title="Cgroup子系统"></a>Cgroup子系统</h1><p>对实际资源的分配和管理是由各个Cgroup子系统来完成的。</p>
+<h2 id="cpuset子系统"><a href="#cpuset子系统" class="headerlink" title="cpuset子系统"></a>cpuset子系统</h2><p>cpuset可以为一组进程分配指定的CPU和内存节点。</p>
+<p>主要的接口有：</p>
+<ul>
+<li>cpuset.cpus: 允许进程使用的CPU列表</li>
+<li>cpuset.mems: 允许进程使用的内存节点列表</li>
+</ul>
+<h2 id="cpu子系统"><a href="#cpu子系统" class="headerlink" title="cpu子系统"></a>cpu子系统</h2><p>cpu子系统用于限制进程的CPU占用率。</p>
+<p>主要的接口有：</p>
+<ul>
+<li>cpu.shares：CPU比重分配</li>
+<li>cpu.cfs_period_us和cpu.cfs_quota_us：CPU带宽限制(微秒)</li>
+<li>cpu.rt_period_us和cpu.rt.runtime_us：实时进程的CPU带宽限制</li>
+</ul>
+<h2 id="cpuacct子系统"><a href="#cpuacct子系统" class="headerlink" title="cpuacct子系统"></a>cpuacct子系统</h2><p>cpuacct子系统用来统计各Cgroup的CPU使用情况。</p>
+<ul>
+<li>cpuacct.stat: 报告这个Cgroup分别在用户态和内核态消耗的CPU时间（USER_HZ）</li>
+<li>cpuacct.usage: 报告这个Cgroup消耗的总CPU时间</li>
+<li>cpuacct.usage_percpu: 报告这个Cgroup在各CPU上消耗的CPU时间</li>
+</ul>
+<h2 id="memory子系统"><a href="#memory子系统" class="headerlink" title="memory子系统"></a>memory子系统</h2><p>memory子系统用来限制Cgroup所使用的内存上限。</p>
+<ul>
+<li>memory.limit_in_bytes：内存上限</li>
+<li>memory.memsw.limit_in_bytes：内存+swap上限</li>
+<li>memory.oom_control：设置为0则当内存使用量超过上限时系统不会杀死进程，而是阻塞进程直到有内存被释放</li>
+<li>memory.stat： 汇报内存使用情况</li>
+</ul>
+<h2 id="blkio子系统"><a href="#blkio子系统" class="headerlink" title="blkio子系统"></a>blkio子系统</h2><p>blkio子系统用来限制Cgroup的block I/O带宽。</p>
+<ul>
+<li><p>blkio.weight: 设置权重</p>
+</li>
+<li><p>blkio.weight_device：对具体的设备设置权重</p>
+</li>
+<li><p>blkio.throttle.write_bps_device：对具体的设备设置每秒写磁盘的带宽上限</p>
+</li>
+<li><p>blkio.throttle.read_bps_device: 对具体的设备设置每秒读磁盘的带宽上限</p>
+</li>
+</ul>
+<h2 id="device子系统"><a href="#device子系统" class="headerlink" title="device子系统"></a>device子系统</h2><p>用来控制Cgroup的进程对那些设备有访问权限。</p>
+<ul>
+<li><p>devices.list：只读文件，显示目前允许被访问的设备列表</p>
+</li>
+<li><p>devices.deny：只写文件，允许相应的设备访问权限</p>
+</li>
+<li><p>devices.allow：只写文件，禁止相应的设备访问权限</p>
+</li>
+</ul>
+<h1 id="如何限制资源"><a href="#如何限制资源" class="headerlink" title="如何限制资源"></a>如何限制资源</h1><p>介绍了那么多Cgroup的概念，我们下面就拿限制cpu使用率为例，来讲讲如何限制这些资源。</p>
+<p>首先本地下载用来设置Cgroup的工具包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# yum install  libcgroup-tools.x86_64 -y</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>接下来通过cgcreate命令来创建一个自己的控制组slions。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 cpu]# cgcreate -g cpu:slions</span><br><span class="line">[root@slions_pc1 cpu]# ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cgroup.clone_children</span><br><span class="line">--w--w--w-.  1 root root 0 7月   9 14:54 cgroup.event_control</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cgroup.procs</span><br><span class="line">-r--r--r--.  1 root root 0 7月   9 14:54 cgroup.sane_behavior</span><br><span class="line">-r--r--r--.  1 root root 0 7月   9 14:54 cpuacct.stat</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cpuacct.usage</span><br><span class="line">-r--r--r--.  1 root root 0 7月   9 14:54 cpuacct.usage_percpu</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cpu.cfs_period_us</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cpu.cfs_quota_us</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cpu.rt_period_us</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cpu.rt_runtime_us</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 cpu.shares</span><br><span class="line">-r--r--r--.  1 root root 0 7月   9 14:54 cpu.stat</span><br><span class="line">drwxr-xr-x.  3 root root 0 7月  10 12:34 docker</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 notify_on_release</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 release_agent</span><br><span class="line">drwxr-xr-x.  2 root root 0 7月  10 21:50 slions</span><br><span class="line">drwxr-xr-x. 69 root root 0 7月  10 12:04 system.slice</span><br><span class="line">-rw-r--r--.  1 root root 0 7月   9 14:54 tasks</span><br><span class="line">drwxr-xr-x.  2 root root 0 7月  10 11:52 user.slice</span><br><span class="line">[root@slions_pc1 cpu]# ll slions/</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cgroup.clone_children</span><br><span class="line">--w--w----. 1 root root 0 7月  10 21:50 cgroup.event_control</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cgroup.procs</span><br><span class="line">-r--r--r--. 1 root root 0 7月  10 21:50 cpuacct.stat</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cpuacct.usage</span><br><span class="line">-r--r--r--. 1 root root 0 7月  10 21:50 cpuacct.usage_percpu</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cpu.cfs_period_us</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cpu.cfs_quota_us</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cpu.rt_period_us</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cpu.rt_runtime_us</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 cpu.shares</span><br><span class="line">-r--r--r--. 1 root root 0 7月  10 21:50 cpu.stat</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 notify_on_release</span><br><span class="line">-rw-rw-r--. 1 root root 0 7月  10 21:50 tasks</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>会发现/sys/fs/cgroup/cpu目录下已经多了一个slions的目录，并且自动创建了一些文件，其中task文件就是记录进程pid的地方，换句话说，只要是在此task中的进程都会被此控制组所限制。</p>
+<p>接着写一个死循环后台跑着，获得进程号为44577，执行top看到cpu使用率为100%</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 cpu]# while :;do :;done &amp;</span><br><span class="line">[1] 44577</span><br><span class="line">[root@slions_pc1 ~]# top -p 44577</span><br><span class="line">top - 22:00:31 up 10:35,  3 users,  load average: 0.78, 0.27, 0.13</span><br><span class="line">Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie</span><br><span class="line">%Cpu(s): 50.1 us,  0.0 sy,  0.0 ni, 49.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">KiB Mem :  3861520 total,  1600076 free,   391708 used,  1869736 buff/cache</span><br><span class="line">KiB Swap:  1044476 total,  1044476 free,        0 used.  3067128 avail Mem</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND</span><br><span class="line"> 44577 root      20   0  116296   1284    132 R   100  0.0   1:33.98 bash</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们把此进程号写入slions/tasks中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 cpu]# echo 44577 &gt; slions/tasks</span><br><span class="line">[root@slions_pc1 cpu]# cat slions/tasks</span><br><span class="line">44577</span><br><span class="line">[root@slions_pc1 cpu]# top -p 44577</span><br><span class="line">top - 22:05:02 up 10:39,  3 users,  load average: 0.99, 0.69, 0.35</span><br><span class="line">Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 50.2 us,  0.2 sy,  0.0 ni, 49.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  3861520 total,  1598680 free,   393096 used,  1869744 buff/cache</span><br><span class="line">KiB Swap:  1044476 total,  1044476 free,        0 used.  3065736 avail Mem</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND</span><br><span class="line"> 44577 root      20   0  116296   1284    132 R  99.7  0.0   6:04.97 bash</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>没有变化，这是因为默认没有任何限制。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 cpu]# cat slions/cpu.cfs_quota_us</span><br><span class="line">-1</span><br><span class="line">[root@slions_pc1 cpu]# cat slions/cpu.cfs_period_us</span><br><span class="line">100000</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们可以通过修改这些文件的内容来设置限制。</p>
+<p>向 slions组里的 cfs_quota_us 文件写入 30 ms（30000 us），它意味着在每 100 ms 的时间里，被该控制组限制的进程只能使用 30 ms 的 CPU 时间，也就是说这个进程只能使用到 30% 的 CPU 带宽。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 cpu]# echo 30000 &gt; slions/cpu.cfs_quota_us</span><br><span class="line">[root@slions_pc1 cpu]# top -p 44577</span><br><span class="line">top - 22:18:53 up 10:53,  3 users,  load average: 0.34, 0.79, 0.67</span><br><span class="line">Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 15.0 us,  0.0 sy,  0.0 ni, 85.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  3861520 total,  1599448 free,   392324 used,  1869748 buff/cache</span><br><span class="line">KiB Swap:  1044476 total,  1044476 free,        0 used.  3066508 avail Mem</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND</span><br><span class="line"> 44577 root      20   0  116296   1284    132 R  30.0  0.0  18:50.61 bash</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们可以再起一个死循环进程，并且放入slions控制组。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 cpu]# while :;do :;done &amp;</span><br><span class="line">[2] 44658</span><br><span class="line">[root@slions_pc1 cpu]# echo 44658 &gt;&gt; slions/tasks</span><br><span class="line">[root@slions_pc1 cpu]# cat slions/tasks</span><br><span class="line">44577</span><br><span class="line">44658</span><br><span class="line">[root@slions_pc1 cpu]#top</span><br><span class="line">top - 22:22:49 up 10:57,  3 users,  load average: 0.08, 0.43, 0.55</span><br><span class="line">Tasks: 129 total,   3 running, 126 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 15.3 us,  0.2 sy,  0.0 ni, 84.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  3861520 total,  1598784 free,   393092 used,  1869644 buff/cache</span><br><span class="line">KiB Swap:  1044476 total,  1044476 free,        0 used.  3065852 avail Mem</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND</span><br><span class="line"> 44577 root      20   0  116296   1284    132 R  15.3  0.0  19:45.59 bash</span><br><span class="line"> 44658 root      20   0  116296   1464    312 R  15.3  0.0   0:42.83 bash</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这两个进程各占了15%，加起来正好是我们的cfs_quota_us 限制。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Linux Cgroups 的设计还是比较易用的，简单粗暴地理解呢，它就是一个子系统目录加上一组资源限制文件的组合。而对于 Docker 等 Linux 容器项目来说，它们只需要在每个子系统下面，为每个容器创建一个控制组（即创建一个新目录），然后在启动容器进程之后，把这个进程的 PID 填写到对应控制组的 tasks 文件中就可以了。</p>
+
     </article>
     <!-- license  -->
     
@@ -452,7 +537,7 @@ height:50vh;
             <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
             <p>原文链接：<a href="https://slions.github.io/2021/07/10/%E8%81%8A%E8%81%8ACgroup/">https://slions.github.io/2021/07/10/%E8%81%8A%E8%81%8ACgroup/</a>
             <p>发表日期：<a href="https://slions.github.io/2021/07/10/%E8%81%8A%E8%81%8ACgroup/">July 10th 2021, 6:32:32 pm</a>
-            <p>更新日期：<a href="https://slions.github.io/2021/07/10/%E8%81%8A%E8%81%8ACgroup/">July 10th 2021, 6:46:42 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/07/10/%E8%81%8A%E8%81%8ACgroup/">July 10th 2021, 10:27:23 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -464,8 +549,8 @@ height:50vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/07/09/%E8%81%8A%E8%81%8Adocker/" title= "聊聊docker">
-                    <div class="prevTitle">聊聊docker</div>
+                <a href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" title= "大话docker">
+                    <div class="prevTitle">大话docker</div>
                 </a>
             
         </li>
@@ -616,7 +701,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCgroup"><span class="toc-number">1.</span> <span class="toc-text">什么是Cgroup</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BCgroup"><span class="toc-number">2.</span> <span class="toc-text">查看Cgroup</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cgroup%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.</span> <span class="toc-text">Cgroup子系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cpuset%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.1.</span> <span class="toc-text">cpuset子系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cpu%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.2.</span> <span class="toc-text">cpu子系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cpuacct%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.3.</span> <span class="toc-text">cpuacct子系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memory%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.4.</span> <span class="toc-text">memory子系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#blkio%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.5.</span> <span class="toc-text">blkio子系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#device%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.6.</span> <span class="toc-text">device子系统</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%99%90%E5%88%B6%E8%B5%84%E6%BA%90"><span class="toc-number">4.</span> <span class="toc-text">如何限制资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -628,6 +713,10 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
     
     
     
@@ -696,7 +785,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Adocker/" >聊聊docker</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
         </li>
     
     
@@ -706,7 +795,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace(1)/" >聊聊namespace(1)</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
         </li>
     
     

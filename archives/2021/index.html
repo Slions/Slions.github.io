@@ -389,7 +389,11 @@
                 <span>聊聊Cgroup</span>
         </a>
         <div class="abstract-content">
-            
+            此前已经聊了容器隔离技术，这次我们接着来看看如何来限制容器的资源。
+什么是CgroupCgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。
+在 Linux 中，Cgroups 给用户暴露出来的操作接口是文件系统，默认linux系统在启动时已经挂载到了 /sys/fs/cgroup 路径下。
+12345678910111213[root@slions_pc1 ~]# mount ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -413,9 +417,9 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Adocker/" >
+        <a class="abstract-title" href = "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >
             
-                <span>聊聊docker</span>
+                <span>大话docker</span>
         </a>
         <div class="abstract-content">
             唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openstack(kolla实现)，也算是逼自己要好好看看docker这块儿的东西了，当时九州云属于kolla项目的主要贡献者，也和我们有很多合作关系，所以期间有很多不太理解的地方也是请教了相关的几位大佬。
@@ -474,9 +478,9 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Anamespace(1)/" >
+        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >
             
-                <span>聊聊namespace(1)</span>
+                <span>聊聊namespace</span>
         </a>
         <div class="abstract-content">
             我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
@@ -671,6 +675,10 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
     
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 5
@@ -694,7 +702,7 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Adocker/" >聊聊docker</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
         </li>
     
     
@@ -704,7 +712,7 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace(1)/" >聊聊namespace(1)</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
         </li>
     
     
