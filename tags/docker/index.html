@@ -209,7 +209,8 @@
     
     <!-- 谷歌统计  -->
     
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
 
     
     
@@ -384,14 +385,43 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >
+            
+                <span>Centos镜像那么小能用么？</span>
+        </a>
+        <div class="abstract-content">
+            不知道大家在使用docker的过程中有没有过这种困惑，就是下载了个centos镜像，可以看到只有200多M,这和我们之前使用传统方式启一个centos系统动不动4、5个G简直有天壤之别，这么小能运行么，稳定么？
+1234567891011[root@slions_pc1 ~]# docker imagesREPOSITORY          TAG                 IMAG...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >
             
                 <span>浅谈docker框架</span>
         </a>
         <div class="abstract-content">
             如果你之前使用过docker应该发现其并不难，把所谓的三大核心“镜像”，“容器”，“仓库”掌握了就能满足日常工作中的大多数应用内容。但如果想要更深入些了解docker,就需要熟悉下docker的框架结构，正巧前段时间同组大佬通过docker源码来分享了一波学习心得，也使得我对docker的理解更深了些，下面来一起分析下docker的框架结构。
-docker架构在我的本地环境执行docker version，会发现里面有client端与server端，证明docker是一个C/S模式的架构。
-1234567891011121314151617181920212223242526272829...
+docker架构在我的本地环境执行docker ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -422,9 +452,7 @@ docker架构在我的本地环境执行docker version，会发现里面有client
         <div class="abstract-content">
             此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
 什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。
-在 Linux 中，Cgroups 给用户暴露出来的操作接口是文件系统，默认linux系统在启动时已经挂载到了 /sys/fs/cgroup 路径下。
-123456789101112...
+此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -453,8 +481,7 @@ docker架构在我的本地环境执行docker version，会发现里面有client
                 <span>大话docker</span>
         </a>
         <div class="abstract-content">
-            唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openstack(kolla实现)，也算是逼自己要好好看看docker这块儿的东西了，当时九州云属于kolla项目的主要贡献者，也和我们有很多合作关系，所以期间有很多不太理解的地方也是请教了相关的几位大佬。
-1...
+            唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openst...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -485,7 +512,7 @@ docker架构在我的本地环境执行docker version，会发现里面有client
         <div class="abstract-content">
             有网环境可联网的情况下，可以选择直接通过yum来安装指定版本的docker。
 验证环境当前我的环境可以联网，并且没有安装任何与docker有关的软件包。
-123456789101112[root@slions_pc1 ~]# ping www.baidu.comPING www.a.shifen.com (220.181.38.150) 56(84) bytes of data.64 bytes from 220.181.38.150 (220.181.38.150): icmp_seq=1 ttl=128 time=6.33 ms64 bytes from 220.181.38.150...
+123456789101112[root@slions_pc1 ~]# ping www.baidu.comPING www.a.shifen.com (220.181.38.150) 56(84) bytes of data.64 byt...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -517,9 +544,7 @@ docker架构在我的本地环境执行docker version，会发现里面有client
             我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
 namespace是什么
 Namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。
- ——摘自《Docker进阶与实战》
-
-举个例子，执行sethostname这个系统调用时，可以改变系统的主机名，这个主机名就是一个内核的全局资源，内核通过UTS Namespace，可以将不同的进程分隔...
+ —...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -602,6 +627,10 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
         
     
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
         
     
 
@@ -695,9 +724,20 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 6
+        Total : 7
         </div>
         <!-- search  -->
         
@@ -710,6 +750,11 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
     
     
         <li class="archive-post-item">
