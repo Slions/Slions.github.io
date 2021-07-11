@@ -397,16 +397,47 @@ height:60vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >
+            
+                <span>浅谈docker框架</span>
+        </a>
+        <div class="abstract-content">
+            如果你之前使用过docker应该发现其并不难，把所谓的三大核心“镜像”，“容器”，“仓库”掌握了就能满足日常工作中的大多数应用内容。但如果想要更深入些了解docker,就需要熟悉下docker的框架结构，正巧前段时间同组大佬通过docker源码来分享了一波学习心得，也使得我对docker的理解更深了些，下面来一起分析下docker的框架结构。
+docker架构在我的本地环境执行docker version，会发现里面有client端与server端，证明docker是一个C/S模式的架构。
+1234567891011121314151617181920212223242526272829...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >
             
                 <span>聊聊Cgroup</span>
         </a>
         <div class="abstract-content">
-            此前已经聊了容器隔离技术，这次我们接着来看看如何来限制容器的资源。
-什么是CgroupCgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+            此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
+什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
 此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。
 在 Linux 中，Cgroups 给用户暴露出来的操作接口是文件系统，默认linux系统在启动时已经挂载到了 /sys/fs/cgroup 路径下。
-12345678910111213[root@slions_pc1 ~]# mount ...
+123456789101112...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -770,9 +801,20 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 5
+        Total : 6
         </div>
         <!-- search  -->
         
@@ -785,6 +827,11 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
     
     
         <li class="archive-post-item">
