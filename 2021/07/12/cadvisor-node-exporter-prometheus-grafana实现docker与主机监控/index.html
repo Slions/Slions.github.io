@@ -20,21 +20,36 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="好早之前就有弄个自己博客的想法，但由于种种原因没能实现（其实就是懒），最近几年也一直更新维护着公司产品的文档中心与问题库，今天看到了几位大牛的博客感触颇深，终于在今天花了一下午时间把博客和主题啥的敲定了。 今后的日子里就是积累和产出的过程，自己也会把前几年记录的一些技术文档整理下不定时更新，也会发一些日常观察生活的图片文字。 希望做个高产的博主了，先说到这儿吧，晚安。">
+    <meta name="description" content="网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。 简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，prometheus会">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://slions.github.io/2021/07/08/hello-world/index.html">
+<meta property="og:title" content="cadvisor+node_exporter+prometheus+grafana实现docker与主机监控">
+<meta property="og:url" content="https://slions.github.io/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="好早之前就有弄个自己博客的想法，但由于种种原因没能实现（其实就是懒），最近几年也一直更新维护着公司产品的文档中心与问题库，今天看到了几位大牛的博客感触颇深，终于在今天花了一下午时间把博客和主题啥的敲定了。 今后的日子里就是积累和产出的过程，自己也会把前几年记录的一些技术文档整理下不定时更新，也会发一些日常观察生活的图片文字。 希望做个高产的博主了，先说到这儿吧，晚安。">
+<meta property="og:description" content="网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。 简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，prometheus会">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-07-08T06:30:33.217Z">
-<meta property="article:modified_time" content="2021-07-08T14:28:02.653Z">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-1.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-2.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-3.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-4.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-5.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-6.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-7.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-8.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-9.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-10.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-11.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/jk-12.png">
+<meta property="article:published_time" content="2021-07-12T15:49:40.000Z">
+<meta property="article:modified_time" content="2021-07-13T03:51:30.328Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="prometheus">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.github.io/doc_picture/jk-1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>Hello World · S_lion&#39;s Studio</title>
+    <title>cadvisor+node_exporter+prometheus+grafana实现docker与主机监控 · S_lion&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -249,7 +264,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">Hello World</a>
+            <a href="#" class="post-name">cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
         </div>
     </div>
     
@@ -292,7 +307,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Hello World
+            cadvisor+node_exporter+prometheus+grafana实现docker与主机监控
             <!-- 404 -->
             
         </h1>
@@ -309,14 +324,22 @@ height:50vh;
             <div class="post-intros">
                 <!-- 文章页标签  -->
                 
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "prometheus">prometheus</a>
+    
+</div>
+                
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">170</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/07/08</span>
+                    <span class="post-intro-time">2021/07/12</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -440,18 +463,93 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>好早之前就有弄个自己博客的想法，但由于种种原因没能实现（其实就是懒），最近几年也一直更新维护着公司产品的文档中心与问题库，今天看到了几位大牛的博客感触颇深，终于在今天花了一下午时间把博客和主题啥的敲定了。</p>
-<p>今后的日子里就是积累和产出的过程，自己也会把前几年记录的一些技术文档整理下不定时更新，也会发一些日常观察生活的图片文字。</p>
-<p>希望做个高产的博主了，先说到这儿吧，晚安。</p>
+        <p>网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。</p>
+<p>简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，prometheus会收集这些采集器的监控数据，存储到内置的数据库中，后续可以通过Prometheus表达式来进行过滤查看等操作（这篇不作为重点讲），最后Grafana 会对接Prometheus，将监控数据通过Web UI的方式展示出来。</p>
+<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>先说下我本地的环境：</p>
+<table>
+<thead>
+<tr>
+<th align="left">主机名</th>
+<th align="left">IP地址</th>
+<th align="left">已运行docker容器</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">slions_pc1</td>
+<td align="left">192.168.100.10</td>
+<td align="left">slions_nginx1;slions_busybox1</td>
+</tr>
+<tr>
+<td align="left">slions_pc2</td>
+<td align="left">192.168.100.11</td>
+<td align="left">slions_nginx2;slions_busybox2</td>
+</tr>
+</tbody></table>
+<p>准备了2台机器，并且上面已经启动了一些容器。</p>
+<h1 id="安装node-exporter"><a href="#安装node-exporter" class="headerlink" title="安装node_exporter"></a>安装node_exporter</h1><p>2台机器都执行以下命令（–name处根据自己喜好改）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# docker run -d \</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">   --net=<span class="string">&quot;host&quot;</span> \</span></span><br><span class="line"><span class="bash">&gt;   --pid=<span class="string">&quot;host&quot;</span> \</span></span><br><span class="line"><span class="bash">&gt;   -v <span class="string">&quot;/:/host:ro,rslave&quot;</span> \</span></span><br><span class="line"><span class="bash">&gt;   --name slions_node-exporter1 \</span></span><br><span class="line"><span class="bash">&gt;   quay.io/prometheus/node-exporter:latest \</span></span><br><span class="line"><span class="bash">&gt;   --path.rootfs=/host</span></span><br></pre></td></tr></table></figure>
+
+<p>安装好后可以检查下node_exporter默认的监听端口是否存在，如下说明正常</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ss -lntp|grep 9100</span><br><span class="line">LISTEN     0      128         :::9100                    :::*                   users:((&quot;node_exporter&quot;,pid=12094,fd=3))</span><br></pre></td></tr></table></figure>
+
+<p>可以使用chrome访问下，出现如下则说明成功，如果你使用浏览器刷不出来数据请先确保防火墙是否关闭。</p>
+<p><img src="/doc_picture/jk-1.png" alt="image-20210713101912265"></p>
+<h1 id="安装cadvisor"><a href="#安装cadvisor" class="headerlink" title="安装cadvisor"></a>安装cadvisor</h1><p>2台机器都执行以下命令（–name处根据自己喜好改）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# docker run \</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">   --volume=/:/rootfs:ro \</span></span><br><span class="line"><span class="bash">&gt;   --volume=/var/run:/var/run:ro \</span></span><br><span class="line"><span class="bash">&gt;   --volume=/sys:/sys:ro \</span></span><br><span class="line"><span class="bash">&gt;   --volume=/var/lib/docker/:/var/lib/docker:ro \</span></span><br><span class="line"><span class="bash">&gt;   --publish=8080:8080 \</span></span><br><span class="line"><span class="bash">&gt;   --detach=<span class="literal">true</span> \</span></span><br><span class="line"><span class="bash">&gt;   --name=slions_cadvisor1 \</span></span><br><span class="line"><span class="bash">&gt;   --privileged \</span></span><br><span class="line"><span class="bash">&gt;   --network host \</span></span><br><span class="line"><span class="bash">&gt;   google/cadvisor</span></span><br></pre></td></tr></table></figure>
+
+<p>安装好后可以检查下node_exporter默认的监听端口是否存在，如下说明正常</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ss -lntp|grep 8080</span><br><span class="line">LISTEN     0      128         :::8080                    :::*                   users:((&quot;cadvisor&quot;,pid=12344,fd=9))</span><br></pre></td></tr></table></figure>
+
+<p>同样我们可以使用chrome访问下主机的8080，如图出现了cadvisor的监控数据。</p>
+<p><img src="/doc_picture/jk-2.png" alt="image-20210713104008822"></p>
+<h1 id="安装prometheus"><a href="#安装prometheus" class="headerlink" title="安装prometheus"></a>安装prometheus</h1><p>选择第一台机器作为prometheus服务端，prometheus服务需要通过配置文件来读取监控目标，我们先在本地编写配置文件，后续通过挂载的方式置入服务中：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions_pc1</span> <span class="string">~</span>]<span class="comment"># cat prometheus/prometheus.yml</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line">  <span class="attr">scrape_interval:</span>     <span class="string">15s</span> <span class="comment"># By default, scrape targets every 15 seconds.</span></span><br><span class="line">  <span class="attr">evaluation_interval:</span> <span class="string">15s</span> <span class="comment"># Evaluate rules every 15 seconds.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Attach these extra labels to all timeseries collected by this Prometheus instance.</span></span><br><span class="line">  <span class="attr">external_labels:</span></span><br><span class="line">    <span class="attr">monitor:</span> <span class="string">&#x27;slions-monitor&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line"><span class="comment">#  - &#x27;prometheus.rules.yml&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">&#x27;prometheus&#x27;</span></span><br><span class="line">    <span class="attr">scrape_interval:</span> <span class="string">5s</span></span><br><span class="line">    <span class="attr">static_configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">targets:</span> [<span class="string">&#x27;localhost:9090&#x27;</span>]</span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">&#x27;node&#x27;</span></span><br><span class="line">    <span class="attr">scrape_interval:</span> <span class="string">5s</span></span><br><span class="line">    <span class="attr">static_configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">targets:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.100</span><span class="number">.10</span><span class="string">:9100</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.100</span><span class="number">.11</span><span class="string">:9100</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">&#x27;docker&#x27;</span></span><br><span class="line">    <span class="attr">scrape_interval:</span> <span class="string">5s</span></span><br><span class="line">    <span class="attr">static_configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">targets:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.100</span><span class="number">.10</span><span class="string">:8080</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.100</span><span class="number">.11</span><span class="string">:8080</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>启动Prometheus服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# docker run -d -p 9090:9090 --volume /root/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml --name slions_prometheus --network host prom/prometheus</span><br></pre></td></tr></table></figure>
+
+<p>验证服务是否正常启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ss -lntp|grep 9090</span><br><span class="line">LISTEN     0      128         :::9090                    :::*                   users:((&quot;prometheus&quot;,pid=13113,fd=7))</span><br></pre></td></tr></table></figure>
+
+<p>chrome访问<code>http://192.168.100.10:9090</code>可以看到已经出现了prometheus的页面</p>
+<p><img src="/doc_picture/jk-3.png" alt="image-20210713110434391"></p>
+<p>点击<code>Status</code>中的<code>Targets</code>按钮，会发现正是我们配置的那几个监控目标</p>
+<p><img src="/doc_picture/jk-4.png" alt="image-20210713110811438"></p>
+<h1 id="安装grafana"><a href="#安装grafana" class="headerlink" title="安装grafana"></a>安装grafana</h1><p>在第一台机器部署grafana，启动时设置登录密码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# docker run -itd --name slions_grafana -p 3000:3000 -e &quot;GF_SERVER_ROOT_URL=http://grafana.server.name&quot; -e &quot;GF_SECURITY_ADMIN_PASSWORD=slions&quot; --network host grafana/grafana</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查看服务是否正常：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ss -lntp|grep 3000</span><br><span class="line">LISTEN     0      128         :::3000                    :::*                   users:((&quot;grafana-server&quot;,pid=13581,fd=10))</span><br></pre></td></tr></table></figure>
+
+<p>使用浏览器查看，用户名为admin,密码是我启动服务时设置的slions</p>
+<p><img src="/doc_picture/jk-5.png" alt="image-20210713111849209"></p>
+<p>选择<code>DATA SOURCES</code>来添加数据源:</p>
+<p><img src="/doc_picture/jk-6.png" alt="image-20210713112133355"></p>
+<p>选择Prometheus后，将URL填写上我们自己的服务地址就可以保存了：</p>
+<p><img src="/doc_picture/jk-7.png" alt="image-20210713112328341"></p>
+<p>我们可以直接找一个合适的模板来导入</p>
+<p><img src="/doc_picture/jk-8.png" alt="image-20210713112714427"></p>
+<p>模板在grafana官网找就好：</p>
+<p><img src="/doc_picture/jk-9.png" alt="image-20210713112947279"></p>
+<p>比如我找到一个看起来不错的模板，点击Download JSON下载到本地</p>
+<p><img src="/doc_picture/jk-10.png" alt="image-20210713113715380"></p>
+<p>然后在import页面导入此JSON文件就好了，选择生效于我们刚创建好的slions_Prometheus:</p>
+<p><img src="/doc_picture/jk-11.png" alt="image-20210713113812164"></p>
+<p>最后让我们看一下监控的效果吧。</p>
+<p><img src="/doc_picture/jk-12.png" alt="image-20210713114101676"></p>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p>cadvisor: <a target="_blank" rel="noopener" href="https://github.com/google/cadvisor">https://github.com/google/cadvisor</a></p>
+<p>node_exporter:  <a target="_blank" rel="noopener" href="https://github.com/prometheus/node_exporter">https://github.com/prometheus/node_exporter</a></p>
+<p>prometheus: <a target="_blank" rel="noopener" href="https://github.com/prometheus/prometheus">https://github.com/prometheus/prometheus</a>  、<a target="_blank" rel="noopener" href="https://prometheus.io/">https://prometheus.io/</a></p>
+<p>grafana:  <a target="_blank" rel="noopener" href="https://grafana.com/docs/grafana/latest/installation/docker/">https://grafana.com/docs/grafana/latest/installation/docker/</a></p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
-            <p>原文链接：<a href="https://slions.github.io/2021/07/08/hello-world/">https://slions.github.io/2021/07/08/hello-world/</a>
-            <p>发表日期：<a href="https://slions.github.io/2021/07/08/hello-world/">July 8th 2021, 2:30:33 pm</a>
-            <p>更新日期：<a href="https://slions.github.io/2021/07/08/hello-world/">July 8th 2021, 10:28:02 pm</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/">https://slions.github.io/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/">July 12th 2021, 11:49:40 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/">July 13th 2021, 11:51:30 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -459,13 +557,13 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" title= "聊聊namespace">
-                    <div class="nextTitle">聊聊namespace</div>
-                </a>
-            
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" title= "理解存储驱动overlay2">
+                    <div class="prevTitle">理解存储驱动overlay2</div>
+                </a>
             
         </li>
     </ul>
@@ -480,7 +578,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1625725833217'
+        let idOption = '1626104980000'
         
         idOption = location.pathname
         
@@ -619,7 +717,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85node-exporter"><span class="toc-number">2.</span> <span class="toc-text">安装node_exporter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85cadvisor"><span class="toc-number">3.</span> <span class="toc-text">安装cadvisor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85prometheus"><span class="toc-number">4.</span> <span class="toc-text">安装prometheus</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85grafana"><span class="toc-number">5.</span> <span class="toc-text">安装grafana</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">6.</span> <span class="toc-text">参考文档</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
