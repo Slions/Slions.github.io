@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2021-07-13T15:38:37.956Z</updated>
+  <updated>2021-07-13T15:53:25.927Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -21,14 +21,15 @@
     <link href="https://slions.github.io/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/"/>
     <id>https://slions.github.io/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/</id>
     <published>2021-07-13T15:20:49.000Z</published>
-    <updated>2021-07-13T15:38:37.956Z</updated>
+    <updated>2021-07-13T15:53:25.927Z</updated>
     
-    <content type="html"><![CDATA[<p><a href="/%E8%81%8A%E8%81%8Anamespace.html">之前的文章</a>提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和<strong>iptables</strong>规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，这对于云计算中租户网络隔离非常重要，<strong>Docker</strong>中的网络隔离也是基于此实现的</p>]]></content>
+    <content type="html"><![CDATA[<a href="#">Post not found: 聊聊namespace.md 之前的文章</a><p>提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和<strong>iptables</strong>规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，这对于云计算中租户网络隔离非常重要，<strong>Docker</strong>中的网络隔离也是基于此实现的</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;/%E8%81%8A%E8%81%8Anamespace.html&quot;&gt;之前的文章&lt;/a&gt;提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和&lt;st</summary>
+    <summary type="html">&lt;a href=&quot;#&quot;&gt;Post not found: 聊聊namespace.md 之前的文章&lt;/a&gt;
+&lt;p&gt;提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和&lt;st</summary>
       
     
     
