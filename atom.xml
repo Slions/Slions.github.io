@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2021-07-14T08:51:24.816Z</updated>
+  <updated>2021-07-14T16:34:35.454Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux添加新硬盘无法识别解决方法</title>
+    <link href="https://slions.github.io/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
+    <id>https://slions.github.io/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</id>
+    <published>2021-07-14T16:18:03.000Z</published>
+    <updated>2021-07-14T16:34:35.454Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。</p><p>重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就可以了。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> i <span class="keyword">in</span> /sys/class/scsi_host/host*/scan;<span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&quot;- - -&quot;</span> &gt;<span class="variable">$i</span>;<span class="keyword">done</span></span></span><br></pre></td></tr></table></figure><blockquote><p>其中‘- - -’代表channel，target和LUN编号。以上命令会使系统重新扫描所有channel，target以及可见LUN。</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。&lt;/p&gt;
+&lt;p&gt;重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就</summary>
+      
+    
+    
+    
+    
+    <category term="linux" scheme="https://slions.github.io/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>手工安装heketi管理glusterfs</title>
