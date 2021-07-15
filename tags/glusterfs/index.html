@@ -385,6 +385,69 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >
+            
+                <span>glusterfs回收站功能</span>
+        </a>
+        <div class="abstract-content">
+            功能简述glusterfs有一个类似windows回收站的功能，可以帮助用户获取和恢复临时被删除的数据。每个块都会保留一个隐藏的目录.trash，它将会被用于存放被从各个块删除的文件。这个translator以后还会增强功能来支持被删除文件的恢复。
+回收站的目录名应该是可配置的。trash translator也会被用于内部操作比如自卷的自修复以及再平衡。
+1# gluster volume...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/16</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >
+            
+                <span>k8s-v1.11使用glusterfs</span>
+        </a>
+        <div class="abstract-content">
+            Glusterfs提供底层存储功能，heketi为glusterfs提供restful风格的api，Heketi要求在每个glusterfs节点上配备裸磁盘，目前heketi仅支持使用裸磁盘(未格式化)添加为device，不支持文件系统，因为Heketi要用来创建PV和VG方便管理glusterfs。
+集群托管于heketi后，不能使用命令管理存储卷，以免与Heketi数据库中存储的信息不一...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >
             
                 <span>手工安装heketi管理glusterfs</span>
@@ -650,9 +713,35 @@ heketi + glusterfs提供两种部署形式：
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -665,6 +754,16 @@ heketi + glusterfs提供两种部署形式：
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -740,6 +839,8 @@ heketi + glusterfs提供两种部署形式：
         <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
     
         <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
