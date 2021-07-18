@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="环境描述   主机名 ip地址 系统环境 角色    k8s-1 IP:192.168.186.10 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_master,Gluster_master,Heketi_master   K8s-2 IP:192.168.186.11 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_node,Gl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="glusterfs可用性测试">
+<meta property="og:url" content="https://slions.github.io/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="环境描述   主机名 ip地址 系统环境 角色    k8s-1 IP:192.168.186.10 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_master,Gluster_master,Heketi_master   K8s-2 IP:192.168.186.11 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_node,Gl">
+<meta property="og:locale">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-1.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-2.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-3.jpg">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-4.jpg">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-5.jpg">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-6.jpg">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-7.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-8.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-9.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-10.png">
+<meta property="article:published_time" content="2021-07-18T10:58:16.000Z">
+<meta property="article:modified_time" content="2021-07-18T11:44:07.694Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="glusterfs">
+<meta property="article:tag" content="kubernetes storage">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.github.io/doc_picture/gfs-test-1.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>glusterfs可用性测试 · S_lion&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/1.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">glusterfs可用性测试</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            glusterfs可用性测试
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.2k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/07/18</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h1><table>
+<thead>
+<tr>
+<th><strong>主机名</strong></th>
+<th>ip地址</th>
+<th><strong>系统环境</strong></th>
+<th><strong>角色</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k8s-1</td>
+<td>IP:192.168.186.10</td>
+<td>cpu:x2  mem:2GB  disk:/dev/sdb 40GB</td>
+<td>K8s_master,Gluster_master,Heketi_master</td>
+</tr>
+<tr>
+<td>K8s-2</td>
+<td>IP:192.168.186.11</td>
+<td>cpu:x2  mem:2GB  disk:/dev/sdb 40GB</td>
+<td>K8s_node,Gluster_node</td>
+</tr>
+<tr>
+<td>K8s-3</td>
+<td>IP:192.168.186.12</td>
+<td>cpu:x2  mem:2GB  disk:/dev/sdb 40GB</td>
+<td>K8s_master,Gluster_node</td>
+</tr>
+</tbody></table>
+<h1 id="集群扩容"><a href="#集群扩容" class="headerlink" title="集群扩容"></a>集群扩容</h1><h2 id="添加新磁盘"><a href="#添加新磁盘" class="headerlink" title="添加新磁盘"></a>添加新磁盘</h2><blockquote>
+<p>添加设备时，请记住将设备添加为一组。例如，如果创建的卷使用副本为2，则应将device添加到两个节点（每个节点一个device）。如果使用副本3，则将device添加到三个节点。</p>
+</blockquote>
+<h3 id="命令行方式"><a href="#命令行方式" class="headerlink" title="命令行方式"></a>命令行方式</h3><p>假设在k8s-3上增加磁盘，查看k8s-3部署的pod name及IP：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# kubectl get po -o wide -l glusterfs-node</span><br><span class="line">NAME             READY      STATUS    RESTARTS   AGE           IP            NODE</span><br><span class="line">glusterfs-5npwn   1/1       Running   0          20h       192.168.186.10   k8s-1</span><br><span class="line">glusterfs-8zfzq   1/1       Running   0          20h       192.168.186.11   k8s-2</span><br><span class="line">glusterfs-bd5dx   1/1       Running   0          20h       192.168.186.12   k8s-3</span><br></pre></td></tr></table></figure>
+
+<p>在k8s-3上确认新添加的盘符：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/sdc: 42.9 GB, 42949672960 bytes, 83886080 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br></pre></td></tr></table></figure>
+
+<p>使用heketi-cli查看cluster ID和所有node ID：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli cluster list</span><br><span class="line">Clusters:</span><br><span class="line">Id:5dec5676c731498c2bdf996e110a3e5e [file][block]</span><br><span class="line">[root@k8s-1 ~]# heketi-cli cluster info 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Cluster id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Nodes:</span><br><span class="line">0f00835397868d3591f45432e432ba38</span><br><span class="line">d38819746cab7d567ba5f5f4fea45d91</span><br><span class="line">fb181b0cef571e9af7d84d2ecf534585</span><br><span class="line">Volumes:</span><br><span class="line">32146a51be9f980c14bc86c34f67ebd5</span><br><span class="line">56d636b452d31a9d4cb523d752ad0891</span><br><span class="line">828dc2dfaa00b7213e831b91c6213ae4</span><br><span class="line">b9c68075c6f20438b46db892d15ed45a</span><br><span class="line">Block: true</span><br><span class="line">File: true</span><br></pre></td></tr></table></figure>
+
+<p>找到对应的k8s-3的node ID：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli node info 0f00835397868d3591f45432e432ba38</span><br><span class="line">Node Id: 0f00835397868d3591f45432e432ba38</span><br><span class="line">State: online</span><br><span class="line">Cluster Id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Zone: 1</span><br><span class="line">Management Hostname: k8s-node02</span><br><span class="line">Storage Hostname: 192.168.186.12</span><br><span class="line">Devices:</span><br><span class="line">Id:82af8e5f2fb2e1396f7c9e9f7698a178   Name:/dev/sdb            State:online    Size (GiB):39      Used (GiB):25      Free (GiB):14      Bricks:4</span><br></pre></td></tr></table></figure>
+
+<p>添加磁盘至GFS集群的k8s-3：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli device add --name=/dev/sdc --node=0f00835397868d3591f45432e432ba38</span><br><span class="line">Device added successfully</span><br></pre></td></tr></table></figure>
+
+<p>查看结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli node info 0f00835397868d3591f45432e432ba38</span><br><span class="line">Node Id: 0f00835397868d3591f45432e432ba38</span><br><span class="line">State: online</span><br><span class="line">Cluster Id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Zone: 1</span><br><span class="line">Management Hostname: k8s-3</span><br><span class="line">Storage Hostname: 192.168.186.12</span><br><span class="line">Devices:</span><br><span class="line">Id:5539e74bc2955e7c70b3a20e72c04615   Name:/dev/sdc            State:online    Size (GiB):39      Used (GiB):0       Free (GiB):39      Bricks:0       </span><br><span class="line">Id:82af8e5f2fb2e1396f7c9e9f7698a178   Name:/dev/sdb            State:online    Size (GiB):39      Used (GiB):25      Free (GiB):14      Bricks:4</span><br></pre></td></tr></table></figure>
+
+<h3 id="拓扑文件方式"><a href="#拓扑文件方式" class="headerlink" title="拓扑文件方式"></a>拓扑文件方式</h3><p>当一次添加多个设备的一种更简单的方法是将新设备添加到用于设置群集的拓扑文件(topology.json)中的节点描述中。然后重新运行该命令以加载新拓扑。下面是我们向节点添加新的/dev/sdc磁盘的示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;topology.json&lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;clusters&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">&quot;nodes&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;hostnames&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;manage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;k8s-1&quot;</span></span><br><span class="line">              ],</span><br><span class="line">              <span class="attr">&quot;storage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;192.168.186.10&quot;</span></span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">&quot;zone&quot;</span>: <span class="number">1</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">&quot;devices&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;/dev/sdb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/dev/sdc&quot;</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;hostnames&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;manage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;k8s-2&quot;</span></span><br><span class="line">              ],</span><br><span class="line">              <span class="attr">&quot;storage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;192.168.186.11&quot;</span></span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">&quot;zone&quot;</span>: <span class="number">1</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">&quot;devices&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;/dev/sdb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/dev/sdc&quot;</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;hostnames&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;manage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;k8s-3&quot;</span></span><br><span class="line">              ],</span><br><span class="line">              <span class="attr">&quot;storage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;192.168.186.12&quot;</span></span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">&quot;zone&quot;</span>: <span class="number">1</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">&quot;devices&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;/dev/sdb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/dev/sdc&quot;</span></span><br><span class="line">          ]                                                                                    </span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>heketi加载拓扑配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli topology load --json=topology.json</span></span><br><span class="line">   Creating cluster ... ID: 224a5a6555fa5c0c930691111c63e863</span><br><span class="line">     Allowing file volumes on cluster.</span><br><span class="line">     Allowing block volumes on cluster.</span><br><span class="line">     Creating node 192.168.186.10 ... ID: 7946b917b91a579c619ba51d9129aeb0</span><br><span class="line">Found device /dev/sdb</span><br><span class="line">Adding device /dev/sdc ... OK</span><br><span class="line">     Creating node 192.168.186.11 ... ID: 5d10e593e89c7c61f8712964387f959c</span><br><span class="line">Found device /dev/sdb</span><br><span class="line">            Adding device /dev/sdc ... OK</span><br><span class="line">     Creating node 192.168.186.12 ... ID: de620cb2c313a5461d5e0a6ae234c553</span><br><span class="line">Found device /dev/sdb</span><br><span class="line">            Adding device /dev/sdc ... OK</span><br></pre></td></tr></table></figure>
+
+<h2 id="添加新节点"><a href="#添加新节点" class="headerlink" title="添加新节点"></a>添加新节点</h2><p>假设将k8s-4，IP为192.168.186.13的加入glusterfs集群，并将该节点的/dev/sdb,/dev/sdc加入到集群。</p>
+<p>先给node加标签，之后会自动创建pod：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 kubernetes]# kubectl label node k8s-4 storagenode=glusterfs</span><br><span class="line">node/k8s-4 labeled</span><br><span class="line"></span><br><span class="line">[root@k8s-1 kubernetes]# kubectl  get pod -o wide -l glusterfs-node</span><br><span class="line">NAME        READY     STATUS        RESTARTS   AGE       IP          NODE</span><br><span class="line">glusterfs-5npwn   1/1     Running     0     21h       192.168.186.11        k8s-2</span><br><span class="line">glusterfs-8zfzq   1/1       Running      0    21h      192.168.186.10        k8s-1</span><br><span class="line">glusterfs-96w74   0/1  ContainerCreating   0   2m     192.168.186.13         k8s-4</span><br><span class="line">glusterfs-bd5dx   1/1     Running       0      21h       192.168.186.12     k8s-3</span><br></pre></td></tr></table></figure>
+
+<p>进入任意节点的gfs服务容器执行peer probe，加入新节点：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 kubernetes]# kubectl exec -ti glusterfs-5npwn -- gluster peer probe 192.168.186.13</span><br><span class="line">peer probe: success.</span><br></pre></td></tr></table></figure>
+
+<p>将新节点纳入heketi数据库统一管理：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 kubernetes]# heketi-cli cluster list</span><br><span class="line">Clusters:</span><br><span class="line">Id:5dec5676c731498c2bdf996e110a3e5e [file][block]</span><br><span class="line"></span><br><span class="line">[root@k8s-1 kubernetes]# heketi-cli node add --zone=1 --cluster=5dec5676c731498c2bdf996e110a3e5e --management-host-name=k8s-4 --storage-host-name=192.168.186.13</span><br><span class="line">Node information:</span><br><span class="line">Id: 150bc8c458a70310c6137e840619758c</span><br><span class="line">State: online</span><br><span class="line">Cluster Id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Zone: 1</span><br><span class="line">Management Hostname k8s-4</span><br><span class="line">Storage Hostname 192.168.186.13</span><br></pre></td></tr></table></figure>
+
+<p>将新节点的磁盘加入到集群中，参考上面的两种方式之一即可。</p>
+<h1 id="存储卷扩容"><a href="#存储卷扩容" class="headerlink" title="存储卷扩容"></a>存储卷扩容</h1><h2 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h2><p>扩容volume可使用命令（单位为G）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli volume expand --volume=volumeID --expand-size=10</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="集群缩容"><a href="#集群缩容" class="headerlink" title="集群缩容"></a>集群缩容</h1><p>Heketi也支持降低存储容量。这可以通过删除device，节点和集群来实现。可以使用API或使用heketi-cli执行这些更改。</p>
+<blockquote>
+<p> heketi删除device的前提是device没有被使用（Used为0）</p>
+</blockquote>
+<p>以下是如何从Heketi删除没有device被使用的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli topology info</span></span><br><span class="line">Cluster Id: 6fe4dcffb9e077007db17f737ed999fe </span><br><span class="line">Volumes:</span><br><span class="line"></span><br><span class="line">    Nodes:</span><br><span class="line">  </span><br><span class="line">        Node Id: 61d019bb0f717e04ecddfefa5555bc41</span><br><span class="line">        State: online</span><br><span class="line">        Cluster Id: 6fe4dcffb9e077007db17f737ed999fe</span><br><span class="line">        Zone: 1</span><br><span class="line">        Management Hostname: k8s-3</span><br><span class="line">        Storage Hostname: 192.168.186.12</span><br><span class="line">        Devices:</span><br><span class="line">                Id:e4805400ffa45d6da503da19b26baad6   Name:/dev/sdb            State:online    Size (GiB):40     Used (GiB):0       Free (GiB):40</span><br><span class="line">                        Bricks:</span><br><span class="line">                Id:ecc3c65e4d22abf3980deba4ae90238c   Name:/dev/sdc            State:online    Size (GiB):40     Used (GiB):0       Free (GiB):40</span><br><span class="line">                        Bricks:</span><br><span class="line">  </span><br><span class="line">        Node Id: e97d77d0191c26089376c78202ee2f20</span><br><span class="line">        State: online</span><br><span class="line">        Cluster Id: 6fe4dcffb9e077007db17f737ed999fe</span><br><span class="line">        Zone: 2</span><br><span class="line">        Management Hostname: k8s-4</span><br><span class="line">        Storage Hostname: 192.168.186.13</span><br><span class="line">        Devices:</span><br><span class="line">                Id:3dc3b3f0dfd749e8dc4ee98ed2cc4141   Name:/dev/sdb            State:online    Size (GiB):40     Used (GiB):0       Free (GiB):40</span><br><span class="line">                        Bricks:</span><br><span class="line">                Id:4122bdbbe28017944a44e42b06755b1c   Name:/dev/sdc            State:online    Size (GiB):40     Used (GiB):0       Free (GiB)40</span><br><span class="line">                        Bricks:</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> d=`heketi-cli topology info | grep Size | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> | cut -d: -f 2`</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$d</span> ; <span class="keyword">do</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> heketi-cli device delete <span class="variable">$i</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="keyword">done</span></span></span><br><span class="line">Device e4805400ffa45d6da503da19b26baad6 deleted</span><br><span class="line">Device ecc3c65e4d22abf3980deba4ae90238c deleted</span><br><span class="line">Device 3dc3b3f0dfd749e8dc4ee98ed2cc4141 deleted</span><br><span class="line">Device 4122bdbbe28017944a44e42b06755b1c deleted</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli node delete <span class="variable">$node1</span></span></span><br><span class="line">Node 61d019bb0f717e04ecddfefa5555bc41 deleted</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli node delete <span class="variable">$node2</span></span></span><br><span class="line">Node e97d77d0191c26089376c78202ee2f20 deleted</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli cluster delete <span class="variable">$cluster</span></span></span><br><span class="line">Cluster 6fe4dcffb9e077007db17f737ed999fe deleted</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="可用性测试"><a href="#可用性测试" class="headerlink" title="可用性测试"></a>可用性测试</h1><h2 id="添加节点"><a href="#添加节点" class="headerlink" title="添加节点"></a>添加节点</h2><p>通过restful api添加一台glusterfs主机，可以正常使用，前提是在添加之前要在新节点安装好glusterfs和lvm，加载 dm_thin_pool 模块，开启相关端口，给新节点打glusterfs的tag(daemonset用)，集群内节点可以互相解析域名。</p>
+<h2 id="关闭节点"><a href="#关闭节点" class="headerlink" title="关闭节点"></a>关闭节点</h2><p>测试高可用中的坑。</p>
+<p>三个glusterfs节点，关闭一台，客户端可读可写。</p>
+<p>三个glusterfs节点，关闭两台，客户端可读不可写。</p>
+<p>关闭虚机后发现heketi中还是显示节点在线，bricks不会同步到新增的虚机上，尝试把那台关了的机器剔除，发现bricks同步到了新增的节点。具体操作如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@redhat1 /]# heketi-cli -s http://redhat1:30080 node list</span><br><span class="line">Id:05ac57499e3fbc0f8ec5a3301fac92c7	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">Id:5e10a4c264a2fc13ecdf8d2482ba7281	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">Id:b1e3ba52f6e8c82e8b3e512798348876	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">Id:f1bd8cd0f52b2d91b13e79799a34c2ed	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">f1bd8cd0f52b2d91b13e79799a34c2ed为已关闭的节点</span><br><span class="line">5e10a4c264a2fc13ecdf8d2482ba7281为新添加的节点</span><br><span class="line"> </span><br><span class="line">[root@redhat1 /]# heketi-cli -s http://redhat1:30080 node disable f1bd8cd0f52b2d91b13e79799a34c2ed</span><br><span class="line">Node f1bd8cd0f52b2d91b13e79799a34c2ed is now offline</span><br><span class="line"></span><br><span class="line">[root@redhat1 /]#heketi-cli-s http://redhat1:30080 node remove f1bd8cd0f52b2d91b13e79799a34c2ed</span><br><span class="line">Node f1bd8cd0f52b2d91b13e79799a34c2ed is now removed</span><br><span class="line"></span><br><span class="line">[root@redhat1 /]#heketi-cli -s http://redhat1:30080 device delete ff257d2350f05f7f5ebaa2853e5815e8</span><br><span class="line">Error: Failed to delete device /dev/sdb with id ff257d2350f05f7f5ebaa2853e5815e8 on host redhat3: error dialing backend: dial tcp 192.168.186.12:10250: connect: no route to host</span><br><span class="line"></span><br><span class="line">[root@redhat1 /]# heketi-cli -s http://redhat1:30080 node delete f1bd8cd0f52b2d91b13e79799a34c2ed</span><br><span class="line">Error: Unable to delete node [f1bd8cd0f52b2d91b13e79799a34c2ed] because it contains devices</span><br></pre></td></tr></table></figure>
+
+<p>报错是因为关机了连不上节点，此时再查看关闭的哪个节点上bricks已经没了，同步到了新增加的节点上。</p>
+<blockquote>
+<p> 在旧节点从群集中完全清除之前，新增的节点不能和原先关闭的节点共用同样的标识。</p>
+</blockquote>
+<h2 id="硬盘损坏"><a href="#硬盘损坏" class="headerlink" title="硬盘损坏"></a>硬盘损坏</h2><p>本地三台gfs节点，每台挂载一块裸盘，把其中一块盘给删除模拟磁盘损坏，此时heketi中还能看到device，并且正在使用，登录那台节点执行partprobe更新下磁盘后发现lv和vg没有了，pv会存在残留数据，重启此节点后残留数据消失，heketi端还显示device正在使用。</p>
+<p>手动删除device报以下错误</p>
+<p>Error: Failed to remove device, error: No Replacement was found for resource</p>
+<p>此错误是因为存储设备当前没有达到副本数要求的三个。</p>
+<p><strong>解决方案：</strong></p>
+<p>添加device后删除原先的device即可。</p>
+<h2 id="brick损坏"><a href="#brick损坏" class="headerlink" title="brick损坏"></a>brick损坏</h2><p>手动删除gfs节点的一个brick:</p>
+<p><img src="/doc_picture/gfs-test-1.png" alt="image-20210718192918628"></p>
+<p>查看当前volume的状态，此时brick显示离线:</p>
+<p><img src="/doc_picture/gfs-test-2.png" alt="image-20210718192931819"></p>
+<p><strong>解决方案：</strong></p>
+<p>先从volume端删除此brick</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> gluster volume remove-brick &lt;volume-name&gt;  replica &lt;count&gt; force</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>replica  2参数，开始我们创建卷时复制数是3，现在变为2。</p>
+</blockquote>
+<p><img src="/doc_picture/gfs-test-3.jpg" alt="img"> </p>
+<p>此时查看volume状态，brick已经删除，volume变为2副本</p>
+<p><img src="/doc_picture/gfs-test-4.jpg" alt="img"> </p>
+<p>重新添加回此brick:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> gluster volume add-brick &lt;volume-name&gt;  replica &lt;count&gt; force</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/doc_picture/gfs-test-5.jpg" alt="img"> </p>
+<p>查看volume状态，brick已经添加回来了</p>
+<p><img src="/doc_picture/gfs-test-6.jpg" alt="img"> </p>
+<p>查看此brick中数据已恢复。</p>
+<p>上述方法是模拟其中一个brick故障，如果此卷可以重启的话可以快速重启尝试恢复。</p>
+<h2 id="创建大于剩余空间的卷"><a href="#创建大于剩余空间的卷" class="headerlink" title="创建大于剩余空间的卷"></a>创建大于剩余空间的卷</h2><p>创建不出来，报错</p>
+<p><img src="/doc_picture/gfs-test-7.png" alt="image-20210718193341163"></p>
+<h2 id="扩容volume"><a href="#扩容volume" class="headerlink" title="扩容volume"></a>扩容volume</h2><p>提前申请一个1g大小的pvc并且挂载到应用服务，写一些数据，然后将应用服务停掉，扩容pvc到2G大小，再把应用服务开启，测试写，因为扩容volume想当于是在原先子卷的情况下又加了一个子卷，但是就算是新加入的子卷有剩余空间，glusterfs的hash寻址机制也会一直读写老的子卷（找之前的文件hash值），尝试给卷做rebalance操作来触发数据均衡操作，（扩容后会自动进行rebalance），没有效果。</p>
+<p>创建存储盘使应提前预估好使用量大小。</p>
+<p><img src="/doc_picture/gfs-test-8.png" alt="image-20210718193421419"></p>
+<p><img src="/doc_picture/gfs-test-9.png" alt="image-20210718193430193"></p>
+<p><img src="/doc_picture/gfs-test-10.png" alt="image-20210718193443985"></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/">https://slions.github.io/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/">July 18th 2021, 6:58:16 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/">July 18th 2021, 7:44:07 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" title= "glusterfs回收站功能">
+                    <div class="prevTitle">glusterfs回收站功能</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1626605896000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: idOption,
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9"><span class="toc-number">2.</span> <span class="toc-text">集群扩容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A3%81%E7%9B%98"><span class="toc-number">2.1.</span> <span class="toc-text">添加新磁盘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-number">2.1.1.</span> <span class="toc-text">命令行方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E6%89%91%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F"><span class="toc-number">2.1.2.</span> <span class="toc-text">拓扑文件方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E8%8A%82%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">添加新节点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%8D%B7%E6%89%A9%E5%AE%B9"><span class="toc-number">3.</span> <span class="toc-text">存储卷扩容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9"><span class="toc-number">3.1.</span> <span class="toc-text">扩容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%BC%A9%E5%AE%B9"><span class="toc-number">4.</span> <span class="toc-text">集群缩容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">可用性测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%8A%82%E7%82%B9"><span class="toc-number">5.1.</span> <span class="toc-text">添加节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9"><span class="toc-number">5.2.</span> <span class="toc-text">关闭节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E7%9B%98%E6%8D%9F%E5%9D%8F"><span class="toc-number">5.3.</span> <span class="toc-text">硬盘损坏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#brick%E6%8D%9F%E5%9D%8F"><span class="toc-number">5.4.</span> <span class="toc-text">brick损坏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%A4%A7%E4%BA%8E%E5%89%A9%E4%BD%99%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8D%B7"><span class="toc-number">5.5.</span> <span class="toc-text">创建大于剩余空间的卷</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9volume"><span class="toc-number">5.6.</span> <span class="toc-text">扩容volume</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 15
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
