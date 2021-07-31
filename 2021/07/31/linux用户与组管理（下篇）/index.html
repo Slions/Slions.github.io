@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="用户和组管理命令useradd 和 adduseradduser是useradd的一个软链接。 12[root@slions_pc1 ~]# ls -l &#x2F;usr&#x2F;sbin&#x2F;adduserlrwxrwxrwx. 1 root root 7 5月  21 16:45 &#x2F;usr&#x2F;sbin&#x2F;adduser -&gt; useradd  useradd用法： 12345678910111213141516">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux用户与组管理（下篇）">
+<meta property="og:url" content="https://slions.github.io/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="用户和组管理命令useradd 和 adduseradduser是useradd的一个软链接。 12[root@slions_pc1 ~]# ls -l &#x2F;usr&#x2F;sbin&#x2F;adduserlrwxrwxrwx. 1 root root 7 5月  21 16:45 &#x2F;usr&#x2F;sbin&#x2F;adduser -&gt; useradd  useradd用法： 12345678910111213141516">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-07-31T07:27:52.000Z">
+<meta property="article:modified_time" content="2021-07-31T08:17:10.390Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>linux用户与组管理（下篇） · S_lion&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/1.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">linux用户与组管理（下篇）</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            linux用户与组管理（下篇）
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.8k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/07/31</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="用户和组管理命令"><a href="#用户和组管理命令" class="headerlink" title="用户和组管理命令"></a>用户和组管理命令</h1><h2 id="useradd-和-adduser"><a href="#useradd-和-adduser" class="headerlink" title="useradd 和 adduser"></a>useradd 和 adduser</h2><p>adduser是useradd的一个软链接。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ls -l /usr/sbin/adduser</span><br><span class="line">lrwxrwxrwx. 1 root root 7 5月  21 16:45 /usr/sbin/adduser -&gt; useradd</span><br></pre></td></tr></table></figure>
+
+<p>useradd用法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">useradd [options] login_name</span><br><span class="line">选项说明：</span><br><span class="line">-b：指定家目录的basedir，默认为/home目录</span><br><span class="line">-d：指定用户家目录，不写时默认为/home/user_name</span><br><span class="line">-m：要创建家目录时，若家目录不存在则自动创建，若不指定该项且/etc/login.defs中的CREATE_HOME未启用时将不会创建家目录</span><br><span class="line">-M：显式指明不要创建家目录，会覆盖/etc/login.defs中的CREATE_HOME设置</span><br><span class="line"> </span><br><span class="line">-g：指定用户主组，要求组已存在</span><br><span class="line">-G：指定用户的辅助组，多个组以逗号分隔</span><br><span class="line">-N：明确指明不要创建和用户名同名的组名</span><br><span class="line">-U：明确指明要创建一个和用户名同名的组，并将用户加入到此组中</span><br><span class="line"></span><br><span class="line">-o：允许创建一个重复UID的用户，只有和-u选项同时使用时才生效</span><br><span class="line">-r：创建一个系统用户。useradd命令不会为此选项的系统用户创建家目录，除非明确使用-m选项</span><br><span class="line">-s：指定用户登录的shell，默认留空。此时将选择/etc/default/useradd中的SHELL变量设置</span><br><span class="line">-u：指定用户uid，默认uid必须唯一，除非使用了-o选项</span><br><span class="line">-c：用户的注释信息 </span><br><span class="line"></span><br><span class="line">-k：指定骨架目录(skeleton)</span><br><span class="line">-K：修改/etc/login.defs文件中有关于用户的配置项，不能修改组相关的配置。设置方式为KEY=VALUE，如-K UID_MIN=100</span><br><span class="line">-D：修改useradd创建用户时的默认选项，就修改/etc/default/useradd文件</span><br><span class="line">-e：帐户过期时间，格式为&quot;YYYY-MM-DD&quot;</span><br><span class="line">-f：密码过期后，该账号还能存活多久才被禁用，设置为0表示密码过期立即禁用帐户，设置为-1表示禁用此功能</span><br><span class="line">-l：不要将用户的信息写入到lastlog和faillog文件中。默认情况下，用户信息会写入到这两个文件中</span><br><span class="line"></span><br><span class="line">useradd -D [options]</span><br><span class="line">修改/etc/default/useradd文件</span><br><span class="line">选项说明：不加任何选项时会列出默认属性</span><br><span class="line">-b, --base-dir BASE_DIR</span><br><span class="line">-e, --expiredate EXPIRE_DATE</span><br><span class="line">-f, --inactive INACTIVE</span><br><span class="line">-g, --gid GROUP</span><br><span class="line">-s, --shell SHELL</span><br></pre></td></tr></table></figure>
+
+<p>useradd创建用户时，默认会自动创建一个和用户名相同的用户组，这是<code>/etc/login.defs</code>中的USERGROUP_ENAB变量控制的。</p>
+<p>useradd创建普通用户时，不加任何和家目录相关的选项时，是否创建家目录是由<code>/etc/login.defs</code>中的CREATE_HOME变量控制的。</p>
+<h2 id="批量创建用户-newusers"><a href="#批量创建用户-newusers" class="headerlink" title="批量创建用户 newusers"></a>批量创建用户 newusers</h2><p>newusers用于批量创建或修改已有用户信息。在创建用户时，它会读取<code>/etc/login.defs</code>文件中的配置项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# newusers -h</span><br><span class="line">用法：newusers [选项]</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -c, --crypt-method 方法        加密方法(NONE DES MD5 SHA256 SHA512 中的一个)</span><br><span class="line">  -h, --help                    显示此帮助信息并推出</span><br><span class="line">  -r, --system                  创建系统帐号</span><br><span class="line">  -R, --root CHROOT_DIR         chroot 到的目录</span><br><span class="line">  -s, --sha-rounds              SHA* 加密算法中的 SHA 旁边的数字</span><br></pre></td></tr></table></figure>
+
+<p>newusers命令从file中或标准输入中读取要创建或修改用户的信息，文件中每行格式都一样(同passwd格式)，一行代表一个用户。格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name:passwd:uid:gid:note:homedir:shell</span><br></pre></td></tr></table></figure>
+
+<p>newusers首先尝试创建或修改所有指定的用户，然后将信息写入到user和group的文件中。如果尝试创建或修改用户过程中发生错误，则所有动作都将回滚，但如果在写入过程中发生错误，则写入成功的不会回滚，这将可能导致文件的不一致性。要检查用户、组文件的一致性，可以使用showdow-utils包提供的grpck和pwck命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat batch_adduser</span><br><span class="line">s1:123456:7295:7295::/home/s1:/bin/bash</span><br><span class="line">s2:123456:::::/bin/bash</span><br><span class="line">[root@slions_pc1 ~]# newusers -c SHA512 batch_adduser</span><br><span class="line">[root@slions_pc1 ~]# tail -2 /etc/passwd</span><br><span class="line">s1:x:7295:7295::/home/s1:/bin/bash</span><br><span class="line">s2:x:7296:7296:::/bin/bash</span><br><span class="line">[root@slions_pc1 ~]# tail -2 /etc/shadow</span><br><span class="line">s1:$6$OSCVQmJiFP/U4CbD$72ZkAJNKs4ehMgfxJR..tqNuy7yKHINycOiB/.lW4ANBtuIMuIcsphgw8mcfkR7A1tvhKifG6vmPbc8VjmfmV.:18839:0:99999:7:::</span><br><span class="line">s2:$6$/7nes/BRVe5pw7Gw$qV8.mVjf4Mpv9zVwjsKDSmtmx8qCwZwX03hmsbuFM.CEHJ.X76pX6Css8dvIAE87j7GcihAJN8lSn3Lg.KD.Q.:18839:0:99999:7:::</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建组-groupadd"><a href="#创建组-groupadd" class="headerlink" title="创建组 groupadd"></a>创建组 groupadd</h2><p>用法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# groupadd -h</span><br><span class="line">用法：groupadd [选项] 组</span><br><span class="line"></span><br><span class="line">选项:</span><br><span class="line">  -f, --force           如果组已经存在则成功退出</span><br><span class="line">                        并且如果 GID 已经存在则取消 -g</span><br><span class="line">  -g, --gid GID                 为新组使用 GID</span><br><span class="line">  -h, --help                    显示此帮助信息并推出</span><br><span class="line">  -K, --key KEY=VALUE           不使用 /etc/login.defs 中的默认值</span><br><span class="line">  -o, --non-unique              允许创建有重复 GID 的组</span><br><span class="line">  -p, --password PASSWORD       为新组使用此加密过的密码</span><br><span class="line">  -r, --system                  创建一个系统账户</span><br><span class="line">  -R, --root CHROOT_DIR         chroot 到的目录</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改密码-passwd"><a href="#修改密码-passwd" class="headerlink" title="修改密码 passwd"></a>修改密码 passwd</h2><p>修改密码的工具。默认passwd命令不允许为用户创建空密码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# passwd  --help</span><br><span class="line">用法: passwd [选项...] &lt;帐号名称&gt;</span><br><span class="line">  -k, --keep-tokens       保持身份验证令牌不过期</span><br><span class="line">  -d, --delete            删除已命名帐号的密码(只有根用户才能进行此操作)</span><br><span class="line">  -l, --lock              锁定指名帐户的密码(仅限 root 用户)</span><br><span class="line">  -u, --unlock            解锁指名账户的密码(仅限 root 用户)</span><br><span class="line">  -e, --expire            终止指名帐户的密码(仅限 root 用户)</span><br><span class="line">  -f, --force             强制执行操作</span><br><span class="line">  -x, --maximum=DAYS      密码的最长有效时限(只有根用户才能进行此操作)</span><br><span class="line">  -n, --minimum=DAYS      密码的最短有效时限(只有根用户才能进行此操作)</span><br><span class="line">  -w, --warning=DAYS      在密码过期前多少天开始提醒用户(只有根用户才能进行此操作)</span><br><span class="line">  -i, --inactive=DAYS     当密码过期后经过多少天该帐号会被禁用(只有根用户才能进行此操作)</span><br><span class="line">  -S, --status            报告已命名帐号的密码状态(只有根用户才能进行此操作)</span><br><span class="line">  --stdin                 从标准输入读取令牌(只有根用户才能进行此操作)</span><br></pre></td></tr></table></figure>
+
+<h2 id="批量修改密码-chpasswd"><a href="#批量修改密码-chpasswd" class="headerlink" title="批量修改密码 chpasswd"></a>批量修改密码 chpasswd</h2><p>以批处理模式从标准输入中获取提供的用户和密码来修改用户密码，可以一次修改多个用户密码。也就是说不用交互。适用于一次性创建了多个用户时为他们提供密码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# chpasswd --help</span><br><span class="line">用法：chpasswd [选项]</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -c, --crypt-method 方法        加密方法(NONE DES MD5 SHA256 SHA512 中的一个)</span><br><span class="line">  -e, --encrypted               提供的密码已经加密</span><br><span class="line">  -h, --help                    显示此帮助信息并推出</span><br><span class="line">  -m, --md5             使用 MD5 算法加密明文密码</span><br><span class="line">  -R, --root CHROOT_DIR         chroot 到的目录</span><br><span class="line">  -s, --sha-rounds              SHA* 加密算法中的 SHA 旁边的数字</span><br></pre></td></tr></table></figure>
+
+<p>chpasswd会读取<code>/etc/login.defs</code>中的相关配置，修改成功后会将密码信息写入到密码文件中。</p>
+<p>该命令的修改密码的处理方式是先在内存中修改，如果所有用户的密码都能设置成功，然后才写入到磁盘密码文件中。在内存中修改过程中出错，则所有修改都回滚，但若在写入密码文件过程中出错，则成功的不会回滚。</p>
+<p>修改单个用户密码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;s1:123456&quot;</span> | chpasswd -c SHA512</span></span><br></pre></td></tr></table></figure>
+
+<p>修改多个用户密码，则提供的每个用户对都要分行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span>  -e <span class="string">&#x27;s1:123456\ns2:123456&#x27;</span> | chpasswd</span></span><br></pre></td></tr></table></figure>
+
+<p>更方便的是写入到文件中，每行一个用户密码对。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat /tmp/passwdfile</span></span><br><span class="line">s1:123456</span><br><span class="line">s2:123456</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> chapasswd -c SHA512 &lt;/tmp/passwdfile</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="chage"><a href="#chage" class="headerlink" title="chage"></a>chage</h2><p>chage命令主要修改或查看和密码时间相关的内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-l：列出指定用户密码相关信息</span><br><span class="line">-E：指定帐户(不是密码)过期时间，所以是强锁定，如果指定为0，则立即过期，即直接锁定该用户</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# chage -l s1|column -t</span><br><span class="line">最近一次密码修改时间            ：7月    31,  2021</span><br><span class="line">密码过期时间                    ：从不</span><br><span class="line">密码失效时间                    ：从不</span><br><span class="line">帐户过期时间                    ：从不</span><br><span class="line">两次改变密码之间相距的最小天数  ：0</span><br><span class="line">两次改变密码之间相距的最大天数  ：99999</span><br><span class="line">在密码过期之前警告的天数        ：7</span><br><span class="line">[root@slions_pc1 ~]# chage -E 0 s1</span><br><span class="line">[root@slions_pc1 ~]# chage -l s1|column -t</span><br><span class="line">最近一次密码修改时间            ：7月    31,  2021</span><br><span class="line">密码过期时间                    ：从不</span><br><span class="line">密码失效时间                    ：从不</span><br><span class="line">帐户过期时间                    ：1月    01,  1970</span><br><span class="line">两次改变密码之间相距的最小天数  ：0</span><br><span class="line">两次改变密码之间相距的最大天数  ：99999</span><br><span class="line">在密码过期之前警告的天数        ：7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="删除用户-userdel"><a href="#删除用户-userdel" class="headerlink" title="删除用户 userdel"></a>删除用户 userdel</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">userdel [options] login_name</span><br><span class="line">-r：递归删除家目录，默认不删除家目录。</span><br><span class="line">-f：强制删除用户，即使这个用户正处于登录状态。同时也会强制删除家目录。</span><br></pre></td></tr></table></figure>
+
+<p>一般不直接删除家目录，即不用-r，可以vim /etc/passwd，将不需要的用户直接注释掉。</p>
+<h2 id="删除组-groupdel"><a href="#删除组-groupdel" class="headerlink" title="删除组 groupdel"></a>删除组 groupdel</h2><p>如果要删除的组是某用户的主组，需要先删除主组中的用户。</p>
+<h2 id="修改帐户属性信息-usermod"><a href="#修改帐户属性信息-usermod" class="headerlink" title="修改帐户属性信息 usermod"></a>修改帐户属性信息 usermod</h2><p>修改帐户属性信息。必须要确保在执行该命令的时候，待修改的用户没有在执行进程。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">usermod [options] login</span><br><span class="line">选项说明：</span><br><span class="line">-l：修改用户名，仅仅只是改用户名，其他的一切都不会改动(uid、家目录等)</span><br><span class="line">-u：新的uid，新的uid必须唯一，除非同时使用了-o选项</span><br><span class="line">-g：修改用户主组，可以是以gid或组名。对于那些以旧组为所属组的文件(除原家目录)，需要重新手动修改其所属组</span><br><span class="line">-m：移动家目录内容到新的位置，该选项只在和-d选项一起使用时才生效</span><br><span class="line">-d：修改用户的家目录位置，若不存在则自动创建。默认旧的家目录不会删除</span><br><span class="line">    如果同时指定了-m选项，则旧的家目录中的内容会移到新家目录</span><br><span class="line">    如果当前用户家目录不存在或没有家目录，则也不会创建新的家目录</span><br><span class="line">-o：允许用户使用非唯一的UID</span><br><span class="line">-s：修改用的shell，留空则选择默认shell</span><br><span class="line">-c：修改用户注释信息</span><br><span class="line"></span><br><span class="line">-a：将用户以追加的方式加入到辅助组中，只能和-G选项一起使用</span><br><span class="line">-G：将用户加入指定的辅助组中，若此处未列出某组，而此前该用户又是该组成员，则会删除该组中此成员</span><br><span class="line"></span><br><span class="line">-L：锁定用户的密码，将在/etc/shadow的密码列加上前缀&quot;!&quot;或&quot;!!&quot;</span><br><span class="line">-U：解锁用户的密码，解锁的方式是移除shadow文件密码列的前缀&quot;!&quot;或&quot;!!&quot;</span><br><span class="line">-e：帐户过期时间，时间格式为&quot;YYYY-MM-DD&quot;，如果给一个空的参数，则立即禁用该帐户</span><br><span class="line">-f：密码过期后多少天，帐户才过期被禁用，0表示密码过期帐户立即禁用，-1表示禁用该功能</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>同样，还有groupmod修改组信息，用法非常简单，几乎也用不上，不多说了。</p>
+<h2 id="vipw和vigr"><a href="#vipw和vigr" class="headerlink" title="vipw和vigr"></a>vipw和vigr</h2><p>vipw和vigr是编辑用户和组文件的工具，vipw可以修改/etc/passwd和/etc/shadow，vigr可以修改/etc/group和/etc/gshadow，用这两个工具比较安全，在修改的时候会检查文件的一致性。</p>
+<p>删除用户出错时，提示用户正在被进程占用。可以使用vi编辑/etc/paswd和/etc/shadow文件将该用户对应的行删除掉。也可以使用vipw和vipw -s来分别编辑/etc/paswd和/etc/shadow文件。它们的作用是一样的。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">https://slions.github.io/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">July 31st 2021, 3:27:52 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">July 31st 2021, 4:17:10 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" title= "linux用户与组管理（上篇）">
+                    <div class="prevTitle">linux用户与组管理（上篇）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1627716472000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: idOption,
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">用户和组管理命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#useradd-%E5%92%8C-adduser"><span class="toc-number">1.1.</span> <span class="toc-text">useradd 和 adduser</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7-newusers"><span class="toc-number">1.2.</span> <span class="toc-text">批量创建用户 newusers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BB%84-groupadd"><span class="toc-number">1.3.</span> <span class="toc-text">创建组 groupadd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81-passwd"><span class="toc-number">1.4.</span> <span class="toc-text">修改密码 passwd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81-chpasswd"><span class="toc-number">1.5.</span> <span class="toc-text">批量修改密码 chpasswd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chage"><span class="toc-number">1.6.</span> <span class="toc-text">chage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7-userdel"><span class="toc-number">1.7.</span> <span class="toc-text">删除用户 userdel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%BB%84-groupdel"><span class="toc-number">1.8.</span> <span class="toc-text">删除组 groupdel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%B8%90%E6%88%B7%E5%B1%9E%E6%80%A7%E4%BF%A1%E6%81%AF-usermod"><span class="toc-number">1.9.</span> <span class="toc-text">修改帐户属性信息 usermod</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vipw%E5%92%8Cvigr"><span class="toc-number">1.10.</span> <span class="toc-text">vipw和vigr</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 18
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >linux用户与组管理（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >linux用户与组管理（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >harbor集群系统负载升高原因分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+        <span class="sidebar-tag-name" data-tags="harbor"><span class="iconfont-archer">&#xe606;</span>harbor</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
