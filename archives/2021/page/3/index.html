@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/page/2/index.html">
+<meta property="og:url" content="https://slions.github.io/archives/2021/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale">
 <meta property="article:author" content="Jingyu Shi">
@@ -85,6 +85,8 @@
 
     <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -211,10 +213,8 @@
 </head>
 
     
-        <body class="home-body">
     
-    
-<header class="header index-header">
+<header class="header">
 
     <!-- top read progress line -->
     <div class="header-element">
@@ -238,7 +238,7 @@
     
 </header>
     
-<footer class="footer-fixed index-footer-fixed">
+<footer class="footer-fixed">
 
     <!-- back to top button -->
     <div class="footer-fixed-element">
@@ -259,34 +259,21 @@
 
 
 
-
-height:60vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 文章页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/p1.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            S_lion's Studio
-            <!-- 文章页  -->
-            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
-            
-            
-                生活本来苦闷 , 但跑起来就会有风
-            
-            <!-- 文章页  -->
             
         </p>
         <!-- 文章页meta -->
@@ -398,311 +385,22 @@ height:60vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >
+        <a class="abstract-title" href = "/2021/07/08/hello-world/" >
             
-                <span>手工安装heketi管理glusterfs</span>
+                <span>Hello World</span>
         </a>
         <div class="abstract-content">
-            GlusterFS（gfs）由此名字也可看出是文件系统存储相关的软件，它是一个开源的分布式文件系统，具有强大的横向扩展能力。Heketi是一个GlusterFs管理软件，可以管理glusterFS集群的卷创建、删除等操作。Glusterfs作为kubernetes支持的多种卷类型之一，可以为上层应用提供多种挂载形式。
-heketi + glusterfs提供两种部署形式：
+            好早之前就有弄个自己博客的想法，但由于种种原因没能实现（其实就是懒），最近几年也一直更新维护着公司产品的文档中心与问题库，今天看到了几位大牛的博客感触颇深，终于在今天花了一下午时间把博客和主题啥的敲定了。
+今后的日子里就是积累和产出的过程，自己也会把前几年记录的一些技术文档整理下不定时更新，也会发一些日常观察生活的图片文字。
+希望做个高产的博主了，先说到这儿吧，晚安。
 
-容器化
-传统服务...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/14</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/08</span>
             </div>
             <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "heketi">heketi</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >
-            
-                <span>自己动手实现network namespace</span>
-        </a>
-        <div class="abstract-content">
-            之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实我们通过ip命令就可以模拟出网络命名空间。
-
-安装软件首先我们需要安装iprouter软件：
-12[root@slion...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >
-            
-                <span>cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</span>
-        </a>
-        <div class="abstract-content">
-            网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。
-简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，promethe...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "prometheus">prometheus</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >
-            
-                <span>理解存储驱动overlay2</span>
-        </a>
-        <div class="abstract-content">
-            容器中通过使用不同的rootfs来模拟了不同的操作系统及应用，不过，如果使用每个镜像都需要一个独立的根文件系统的话，那想必磁盘早已拥挤不堪了；且一个镜像可以同时运行多个容器，每个容器对文件的改动该怎么办？
-Linux提供了一种叫做联合文件系统的文件系统，它具备如下特性：
-
-联合挂载：将多个目录按层次组合，一并挂载到一个联合挂载点。
-写时复制：对联合挂载点的修改不会影响到底层的多个目录，而是使...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >
-            
-                <span>Centos镜像那么小能用么？</span>
-        </a>
-        <div class="abstract-content">
-            不知道大家在使用docker的过程中有没有过这种困惑，就是下载了个centos镜像，可以看到只有200多M,这和我们之前使用传统方式启一个centos系统动不动4、5个G简直有天壤之别，这么小能运行么，稳定么？
-1234567891011[root@slions_pc1 ~]# docker imagesREPOSITORY          TAG                 IMAG...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >
-            
-                <span>浅谈docker框架</span>
-        </a>
-        <div class="abstract-content">
-            如果你之前使用过docker应该发现其并不难，把所谓的三大核心“镜像”，“容器”，“仓库”掌握了就能满足日常工作中的大多数应用内容。但如果想要更深入些了解docker,就需要熟悉下docker的框架结构，正巧前段时间同组大佬通过docker源码来分享了一波学习心得，也使得我对docker的理解更深了些，下面来一起分析下docker的框架结构。
-docker架构在我的本地环境执行docker ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >
-            
-                <span>聊聊Cgroup</span>
-        </a>
-        <div class="abstract-content">
-            此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
-什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >
-            
-                <span>大话docker</span>
-        </a>
-        <div class="abstract-content">
-            唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openst...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >
-            
-                <span>安装docker</span>
-        </a>
-        <div class="abstract-content">
-            有网环境可联网的情况下，可以选择直接通过yum来安装指定版本的docker。
-验证环境当前我的环境可以联网，并且没有安装任何与docker有关的软件包。
-123456789101112[root@slions_pc1 ~]# ping www.baidu.comPING www.a.shifen.com (220.181.38.150) 56(84) bytes of data.64 byt...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >
-            
-                <span>聊聊namespace</span>
-        </a>
-        <div class="abstract-content">
-            我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
-namespace是什么
-Namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。
- —...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
             
         </div>
     </article>
@@ -710,116 +408,11 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
+        <a class="extend prev" rel="prev" href="/archives/2021/page/2/">&lt; PREV</a><a class="page-number" href="/archives/2021/">1</a><a class="page-number" href="/archives/2021/page/2/">2</a><span class="page-number current">3</span>
     </nav>
     
 </main>
             <!-- profile -->
-            
-            <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/touxiang.jpg >
-    <div class="profile-name">Jingyu Shi</div>
-    
-    <div class="profile-signature">
-        follow oneself
-    </div>
-    
-    
-    <div class="profile-social">
-        
-    
-        
-            
-                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
-                    
-                    <img class="profile-qr" src="/assets/wechat_p.png" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
-            
-        
-    
-
-    </div>
-    
-    
-        <div class="friends">
-            <div>FRIENDS</div>
-            
-                
-                    <span>
-                        <a href= //zhangguanzhang.github.io/ target="_black">zhangguanzhang</a>
-                    </span>
-                
-            
-                
-                    <span>
-                        <a href= //junedayday.github.io/ target="_black">junedayday</a>
-                    </span>
-                
-            
-                
-                    <span>
-                        <a href= //i4t.com/ target="_black">abcdocker</a>
-                    </span>
-                
-            
-        </div>
-    
-    
-        <div class="about-me">
-            <a href = "/about" >ABOUT ME</a>
-        </div>
-    
-</div>
             
         </div>
         <footer class="footer footer-unloaded">
