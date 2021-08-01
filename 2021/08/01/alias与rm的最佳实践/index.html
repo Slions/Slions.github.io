@@ -20,17 +20,22 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2021/07/page/2/index.html">
+    <meta name="description" content="不论是刚入职的运维萌新，还是工作多年的运维老油条，当在服务器上敲下rm时必须要保证命令的准确，在技术贴吧中也常常有人调侃到不想干了就rm -rf &#x2F;与删库跑路等等的段子，如何让rm的操作更有保障呢，以下会提供一种解题思路。 alias的用法Linux alias命令用于设置指令的别名。 语法： 1alias[别名]&#x3D;[指令名称]  使用不带参数的alias将列出当前shell环境下所有的已定义的别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="alias与rm的最佳实践">
+<meta property="og:url" content="https://slions.github.io/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="不论是刚入职的运维萌新，还是工作多年的运维老油条，当在服务器上敲下rm时必须要保证命令的准确，在技术贴吧中也常常有人调侃到不想干了就rm -rf &#x2F;与删库跑路等等的段子，如何让rm的操作更有保障呢，以下会提供一种解题思路。 alias的用法Linux alias命令用于设置指令的别名。 语法： 1alias[别名]&#x3D;[指令名称]  使用不带参数的alias将列出当前shell环境下所有的已定义的别">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-08-01T03:37:38.000Z">
+<meta property="article:modified_time" content="2021-08-01T04:34:42.396Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>alias与rm的最佳实践 · S_lion&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -213,6 +218,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -235,6 +242,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">alias与rm的最佳实践</a>
+        </div>
+    </div>
     
 </header>
     
@@ -259,24 +277,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            alias与rm的最佳实践
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.5k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -377,257 +445,127 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >
-            
-                <span>理解存储驱动overlay2</span>
-        </a>
-        <div class="abstract-content">
-            容器中通过使用不同的rootfs来模拟了不同的操作系统及应用，不过，如果使用每个镜像都需要一个独立的根文件系统的话，那想必磁盘早已拥挤不堪了；且一个镜像可以同时运行多个容器，每个容器对文件的改动该怎么办？
-Linux提供了一种叫做联合文件系统的文件系统，它具备如下特性：
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>不论是刚入职的运维萌新，还是工作多年的运维老油条，当在服务器上敲下rm时必须要保证命令的准确，在技术贴吧中也常常有人调侃到不想干了就<code>rm -rf /</code>与删库跑路等等的段子，如何让<code>rm</code>的操作更有保障呢，以下会提供一种解题思路。</p>
+<h1 id="alias的用法"><a href="#alias的用法" class="headerlink" title="alias的用法"></a>alias的用法</h1><p>Linux alias命令用于设置指令的别名。</p>
+<p>语法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias[别名]=[指令名称]</span><br></pre></td></tr></table></figure>
 
-联合挂载：将多个目录按层次组合，一并挂载到一个联合挂载点。
-写时复制：对联合挂载点的修改不会影响到底层的多个目录，而是使...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >
-            
-                <span>Centos镜像那么小能用么？</span>
-        </a>
-        <div class="abstract-content">
-            不知道大家在使用docker的过程中有没有过这种困惑，就是下载了个centos镜像，可以看到只有200多M,这和我们之前使用传统方式启一个centos系统动不动4、5个G简直有天壤之别，这么小能运行么，稳定么？
-1234567891011[root@slions_pc1 ~]# docker imagesREPOSITORY          TAG                 IMAG...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >
-            
-                <span>浅谈docker框架</span>
-        </a>
-        <div class="abstract-content">
-            如果你之前使用过docker应该发现其并不难，把所谓的三大核心“镜像”，“容器”，“仓库”掌握了就能满足日常工作中的大多数应用内容。但如果想要更深入些了解docker,就需要熟悉下docker的框架结构，正巧前段时间同组大佬通过docker源码来分享了一波学习心得，也使得我对docker的理解更深了些，下面来一起分析下docker的框架结构。
-docker架构在我的本地环境执行docker ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >
-            
-                <span>聊聊Cgroup</span>
-        </a>
-        <div class="abstract-content">
-            此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
-什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >
-            
-                <span>大话docker</span>
-        </a>
-        <div class="abstract-content">
-            唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openst...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >
-            
-                <span>安装docker</span>
-        </a>
-        <div class="abstract-content">
-            有网环境可联网的情况下，可以选择直接通过yum来安装指定版本的docker。
-验证环境当前我的环境可以联网，并且没有安装任何与docker有关的软件包。
-123456789101112[root@slions_pc1 ~]# ping www.baidu.comPING www.a.shifen.com (220.181.38.150) 56(84) bytes of data.64 byt...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >
-            
-                <span>聊聊namespace</span>
-        </a>
-        <div class="abstract-content">
-            我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
-namespace是什么
-Namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。
- —...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/08/hello-world/" >
-            
-                <span>Hello World</span>
-        </a>
-        <div class="abstract-content">
-            好早之前就有弄个自己博客的想法，但由于种种原因没能实现（其实就是懒），最近几年也一直更新维护着公司产品的文档中心与问题库，今天看到了几位大牛的博客感触颇深，终于在今天花了一下午时间把博客和主题啥的敲定了。
-今后的日子里就是积累和产出的过程，自己也会把前几年记录的一些技术文档整理下不定时更新，也会发一些日常观察生活的图片文字。
-希望做个高产的博主了，先说到这儿吧，晚安。
+<p>使用不带参数的alias将列出当前shell环境下所有的已定义的别名。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# alias</span><br><span class="line">alias cp=&#x27;cp -i&#x27;</span><br><span class="line">alias egrep=&#x27;egrep --color=auto&#x27;</span><br><span class="line">alias fgrep=&#x27;fgrep --color=auto&#x27;</span><br><span class="line">alias grep=&#x27;grep --color=auto&#x27;</span><br><span class="line">alias l.=&#x27;ls -d .* --color=auto&#x27;</span><br><span class="line">alias ll=&#x27;ls -l --color=auto&#x27;</span><br><span class="line">alias ls=&#x27;ls --color=auto&#x27;</span><br><span class="line">alias mv=&#x27;mv -i&#x27;</span><br><span class="line">alias rm=&#x27;rm -i&#x27;</span><br><span class="line">alias which=&#x27;alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde&#x27;</span><br></pre></td></tr></table></figure>
 
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/08</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
+<p>另外需要说明的是，当别名和命令同名时，将优先执行别名(否则别名就没有意义了)，这可以从which的结果中看出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 home]# which rm</span><br><span class="line">alias rm=&#x27;rm -i&#x27;</span><br><span class="line">        /usr/bin/rm</span><br></pre></td></tr></table></figure>
+
+<p>如果定义的命名名称和原始命令同名(例如定义的别名 ls=’ls -l’ )，此时如果想要明确使用原始命令，可以删除别名或者使用绝对路径或者使用转义符来还原命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# \ls</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 home]# /usr/bin/ls</span><br><span class="line">slions</span><br></pre></td></tr></table></figure>
+
+<p>alias命令是临时定义别名，要定义长久生效的别名就将别名定义语句写入<code>/etc/profile</code>或<code>~/.bash_profile</code>或<code>~/.bashrc</code>，第一个对所有用户有效，后面两个对对应用户有效。修改后记得使用source来重新调取这些配置文件。</p>
+<p>使用unalias可以临时取消别名。</p>
+<h1 id="alias与rm"><a href="#alias与rm" class="headerlink" title="alias与rm"></a>alias与rm</h1><p>如何让alias与rm配合起来能减少误操作引发的影响呢，整体思路就是rm变为mv操作，后续给备份目录增加个时效性机制，保障磁盘空间的可用性。</p>
+<h2 id="alias的bug"><a href="#alias的bug" class="headerlink" title="alias的bug"></a>alias的bug</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# ls</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 home]# touch testfile</span><br><span class="line">[root@slions_pc1 home]# alias rmm=&#x27;cp $@ /tmp/backup;rm $@&#x27;</span><br><span class="line">[root@slions_pc1 home]# rmm testfile</span><br><span class="line">cp: 在&quot;/tmp/backup&quot; 后缺少了要操作的目标文件</span><br><span class="line">Try &#x27;cp --help&#x27; for more information.</span><br><span class="line">rm：是否删除普通空文件 &quot;testfile&quot;？y</span><br><span class="line">[root@slions_pc1 home]# ls</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 home]# ls /tmp/backup/</span><br></pre></td></tr></table></figure>
+
+<p>该别名的目的是删除文件时先备份到<code>/tmp/backup</code>目录下，然后再删除。<strong>按照man bash里的说明，别名rmm只是第一个cp命令的别名，分号后的rm不是别名的一部分，而是紧跟在别名后的下一行命令。当执行别名rmm时，首先读取别名到分号位置处，然后进行别名扩展，执行完别名命令后，再执行分号后的rm命令。</strong></p>
+<p>上面的命令没有达到预期效果，问题出在cp的参数”$@”，该变量本表示提供的所有参数，但由于cp命令后使用分号分隔并定义了另一个命令，这使得执行别名命令时，参数无法传递到cp命令上，而只能传递到最后一个命令rm上，也就是说cp后的”$@”是空值。</p>
+<p>可以测试下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# touch testfile</span><br><span class="line">[root@slions_pc1 home]# alias rmm=&#x27;echo cp $@ /tmp/backup;echo rm $@&#x27;</span><br><span class="line">[root@slions_pc1 home]# rmm testfile</span><br><span class="line">cp /tmp/backup</span><br><span class="line">rm testfile</span><br></pre></td></tr></table></figure>
+
+<p>从上面的结果中看到cp后的”$@”根本就没有进行扩展，而是空值。</p>
+<p>那如果别名定义语句中没有使用分号或其他方法定义额外的命令，而是只有一个命令呢？别名一定就能正确工作吗？</p>
+<p>测试会发现也有问题：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# alias rmm=&#x27;echo cp $@ /tmp/backup&#x27;</span><br><span class="line">[root@slions_pc1 home]# rmm testfile</span><br><span class="line">cp /tmp/backup testfile</span><br></pre></td></tr></table></figure>
+
+<p>之所以无法正常工作，是因为<code>/tmp/backup</code>也是”$@”的一部分，且是”$@”中最前面的参数。</p>
+<p>从上面的分析可以知道，alias是有其缺陷的，它只适合进行简单的命令和参数替换、补全，想要实现复杂的命令替代有点难度。因此man bash中建议尽量使用<strong>函数</strong>来取代别名。</p>
+<h2 id="alias最佳实践"><a href="#alias最佳实践" class="headerlink" title="alias最佳实践"></a>alias最佳实践</h2><p>例如，为了让rm安全执行，使用以下方法定义别名：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# alias rmm=&#x27;move()&#123; /bin/mv -f $@ /tmp/backup; &#125;;move $@&#x27;</span><br><span class="line">[root@slions_pc1 home]# rmm testfile</span><br><span class="line">[root@slions_pc1 home]# ls</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 home]# ls /tmp/backup/</span><br><span class="line">testfile</span><br></pre></td></tr></table></figure>
+
+<p>因为执行别名时的参数只能传递给最后一个命令即move函数，但”$@”代表的参数可以传递给函数，让函数中的”$@”得到正确的扩展，于是整个别名都能合理且正确地执行。</p>
+<p>或者直接定义一个shell function替代rm。例如向/etc/profile.d/rm.sh文件中写入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function rm()&#123; [ -d /tmp/rmbackup ] || mkdir /tmp/rmbackup;/bin/mv -f $@ /tmp/rmbackup; &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 home]# chmod +x /etc/profile.d/rm.sh</span><br><span class="line">[root@slions_pc1 home]# source /etc/profile.d/rm.sh</span><br></pre></td></tr></table></figure>
+
+<p>如此，执行rm命令时，便会执行此处定义的rm函数，使得rm变得更安全。但注意，这样的函数默认无法直接在脚本中使用，除非使用 <code>export -f function_name </code>导出函数，使其可以被子shell继承。</p>
+<p>所以，可在/etc/profile.d/rm.sh文件的尾部加上导出语句：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">function rm()&#123; [ -d /tmp/rmbackup ] || mkdir /tmp/rmbackup;/bin/mv -f $@ /tmp/rmbackup; &#125;</span><br><span class="line">export -f rm</span><br></pre></td></tr></table></figure>
+
+<p>如果function名和命令名相同，则默认优先执行function，除非使用command明确指定。例如上面定义了rm函数，如果想执行rm命令，除了使用/bin/rm，还可以如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command rm testfile</span><br></pre></td></tr></table></figure>
+
+<p>最后，如果是**在shell脚本里涉及到rm命令，那么更建议在每次rm之前先cd到那个目录下，然后再rm相对路径，这样至少能保证不出现符号”/“**。当然，最重要的是习惯和责任心，切勿忙中出错。</p>
+
     </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">https://slions.github.io/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">August 1st 2021, 11:37:38 am</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">August 1st 2021, 12:34:42 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" title= "linux用户与组管理（下篇）">
+                    <div class="prevTitle">linux用户与组管理（下篇）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/2021/07/">&lt; PREV</a><a class="page-number" href="/archives/2021/07/">1</a><span class="page-number current">2</span>
-    </nav>
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1627789058000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: idOption,
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -717,6 +655,24 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#alias%E7%9A%84%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">alias的用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#alias%E4%B8%8Erm"><span class="toc-number">2.</span> <span class="toc-text">alias与rm</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#alias%E7%9A%84bug"><span class="toc-number">2.1.</span> <span class="toc-text">alias的bug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#alias%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">2.2.</span> <span class="toc-text">alias最佳实践</span></a></li></ol></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1153,6 +1109,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
