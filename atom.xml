@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2021-08-02T13:10:20.506Z</updated>
+  <updated>2021-08-03T10:56:15.644Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>df与du结果不一致问题</title>
+    <link href="https://slions.github.io/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/"/>
+    <id>https://slions.github.io/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/</id>
+    <published>2021-08-03T10:37:53.000Z</published>
+    <updated>2021-08-03T10:56:15.644Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>df</code>与<code>du</code>命令都是运维人员常用的检测存储空间大小的命令，平时我们并不太关注这两个命令的差别，但是经常会遇到这样一种场景，使用df查看到空间使用率已经非常高了，但使用du命令排查时发现不存在占用空间大的文件， 两者间的结果不一致。</p><h1 id="du与df"><a href="#du与df" class="headerlink" title="du与df"></a>du与df</h1><p><strong>du</strong>，disk usage,是通过搜索文件来计算每个文件的大小然后累加，du能看到的文件只是一些当前存在的，没有被删除的。他计算的大小就是当前他认为存在的所有文件大小的累加和。</p><p><strong>df</strong>，disk free，通过文件系统来快速获取空间大小的信息，当我们删除一个文件的时候，这个文件不是马上就在文件系统当中消失了，而是暂时消失了，当所有程序都不用时，才会根据OS的规则释放掉已经删除的文件， df记录的是通过文件系统获取到的文件的大小，他比du强的地方就是能够看到已经删除的文件，而且计算大小的时候，把这一部分的空间也加上了，更精确了。</p><p>因此,如果用户删除了一个正在运行的应用所打开的某个目录下的文件，则du命令返回的值显示出减去了该文件后的目录的大小。但df命令并不显示减去该文件后的大小。直到该运行的应用关闭了这个打开的文件，df返回的值才显示出减去了该文件后的文件系统的使用情况。</p><p>通过lsof工具我们可以直观的排查到具体的问题进程，以便解决：</p><h1 id="模拟案例"><a href="#模拟案例" class="headerlink" title="模拟案例"></a>模拟案例</h1><p>分别创建一个500M和1000M大小的文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> dd <span class="keyword">if</span>=/dev/zero of=500mFile bs=1M count=500</span></span><br><span class="line">记录了500+0 的读入</span><br><span class="line">记录了500+0 的写出</span><br><span class="line">524288000字节(524 MB)已复制，1.34728 秒，389 MB/秒</span><br><span class="line"><span class="meta">$</span><span class="bash"> dd <span class="keyword">if</span>=/dev/zero of=1000mFile bs=1M count=1000</span></span><br><span class="line">记录了1000+0 的读入</span><br><span class="line">记录了1000+0 的写出</span><br><span class="line">1048576000字节(1.0 GB)已复制，13.3469 秒，78.6 MB/秒</span><br><span class="line"><span class="meta">$</span><span class="bash"> du -ha *</span></span><br><span class="line">1000M   1000mFile</span><br><span class="line">500M    500mFile</span><br><span class="line"><span class="meta">$</span><span class="bash"> df -h `<span class="built_in">pwd</span>`</span></span><br><span class="line">文件系统                 容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/centos-root   18G  4.0G   15G   22% /</span><br></pre></td></tr></table></figure><p>然后开两个终端分别使用tail命令查看。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 终端1执行</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tail -f 500mFile</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 终端2执行</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tail -f 1000mFile</span></span><br></pre></td></tr></table></figure><p>再开启一个终端使用lsof命令查看这两个文件的状态。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> lsof |grep File</span></span><br><span class="line">tail      10105                root    3r      REG              253,0  524288000   51733031 /home/slions/500mFile</span><br><span class="line">tail      10106                root    3r      REG              253,0 1048576000   51738061 /home/slions/1000mFile</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>这个时候我们使用rm命令来删除了这两个文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> rm -rf 1000mFile 500mFile</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> du -ha .</span></span><br><span class="line">0       .</span><br><span class="line"><span class="meta">$</span><span class="bash"> df -h `<span class="built_in">pwd</span>`</span></span><br><span class="line">文件系统                 容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/centos-root   18G  4.0G   15G   22% /</span><br></pre></td></tr></table></figure><p>可以看到du已经显示为0，df无任何变化。通过lsof再看下进程状态。(sort -nrk 7是进行大小排序)</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> lsof |grep File |sort -nrk 7</span></span><br><span class="line">tail      10106                root    3r      REG              253,0 1048576000   51738061 /home/slions/1000mFile (deleted)</span><br><span class="line">tail      10105                root    3r      REG              253,0  524288000   51733031 /home/slions/500mFile (deleted)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>这个deleted表示该已经删除了的文件，但是文件句柄未释放。</p><p>想要释放此句柄直接kill掉对应进程就好了。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">kill</span> -9 10106</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">kill</span> -9 10105</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> df -h `<span class="built_in">pwd</span>`</span></span><br><span class="line">文件系统                 容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/centos-root   18G  2.5G   16G   14% /</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>可以看到，df的已用容量对应减少了1.5G。</p><p>在日常的运维工作中，我们可以直接通过以下命令来快速定位未释放文件句柄的进程，从而进行解决。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> lsof |grep deleted</span></span><br></pre></td></tr></table></figure><h1 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h1><p>在日常运维过程中，如果我们需要删除比较大的文件 可以使用 <code>&gt; filename </code>，这种可以直接释放磁盘空间，使用 rm 如果有进程在访问文件，则有可能出现磁盘空间不释放的情况。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;code&gt;df&lt;/code&gt;与&lt;code&gt;du&lt;/code&gt;命令都是运维人员常用的检测存储空间大小的命令，平时我们并不太关注这两个命令的差别，但是经常会遇到这样一种场景，使用df查看到空间使用率已经非常高了，但使用du命令排查时发现不存在占用空间大的文件， 两者间的结果不</summary>
+      
+    
+    
+    
+    
+    <category term="linux" scheme="https://slions.github.io/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>磁盘分区工具</title>
@@ -449,28 +471,6 @@
       
     <summary type="html">&lt;p&gt;此前已经聊了容器隔离技术&lt;code&gt;namespace&lt;/code&gt;,这次我们接着来看看如何来限制容器的资源。&lt;/p&gt;
 &lt;h1 id=&quot;什么是Cgroup&quot;&gt;&lt;a href=&quot;#什么是Cgroup&quot; class=&quot;headerlink&quot; title=&quot;什么是Cgroup&quot;&gt;</summary>
-      
-    
-    
-    
-    
-    <category term="docker" scheme="https://slions.github.io/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>大话docker</title>
-    <link href="https://slions.github.io/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/"/>
-    <id>https://slions.github.io/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/</id>
-    <published>2021-07-09T09:10:41.000Z</published>
-    <updated>2021-07-10T11:30:46.686Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="唠唠背景"><a href="#唠唠背景" class="headerlink" title="唠唠背景"></a>唠唠背景</h1><p>自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openstack(kolla实现)，也算是逼自己要好好看看docker这块儿的东西了，当时九州云属于kolla项目的主要贡献者，也和我们有很多合作关系，所以期间有很多不太理解的地方也是请教了相关的几位大佬。</p><p>18年离开了上海，入职了北京某家金融领域解决方案提供商，主要做的也一直是容器化相关的事，从docker到k8s，从慢慢摸索到推出适合本公司产品的定制化容器云平台，期间我会有很多时候需要向甲方以及公司同事介绍我们在做的事儿，以及用到的技术、行业的现状等等，借着最近时间充裕，打算写一篇关于介绍docker的文章，如果有幸被您看到，也请提出宝贵的意见，十分感谢。</p><blockquote><p>以下内容多属于普及性文字，不会涉及太多技术点，如果有时间会抽专门的章节来具体阐述。</p></blockquote><h1 id="什么是容器"><a href="#什么是容器" class="headerlink" title="什么是容器"></a>什么是容器</h1><blockquote><p>纵观整个IT界历史长河，一个新兴技术能够火爆与当时的市场痛点是息息相关的，就比如当初如日中天的AWS和Openstack提供了云计算的模式，使得万物云化，资源按需使用，大大的提高了服务器的资源利用率，降低了人力物力的成本。慢慢的人们发现，当申请好一批虚拟机后，通过手工或者自动化脚本部署自己的应用时会出现各种奇奇怪怪的问题，因为本地环境与云端虚拟机环境不一致，所以导致了大量的排错过程。后面PaaS理念的一经提出（应用托管），赢得了广大开发者的关注，而docker项目的发布为应用打包问题提供了一份近乎完美的解决方案。</p></blockquote><h2 id="容器与操作系统"><a href="#容器与操作系统" class="headerlink" title="容器与操作系统"></a>容器与操作系统</h2><p>我们经常把容器叫做docker,但其实容器还有coreOS的rkt。在介绍容器前，大家可以先想想操作系统是如何管理进程的，我们登录到一个操作系统内执行</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ps -elf</span> </span><br></pre></td></tr></table></figure><p>可以看到各种进程，这些进程包括了系统自带的和用户部署的，并且进程间可以互相看到，也可以互相通信，这些进程共享着同一份的文件系统，意味着他们可以操作同一份文件，最后他们还使用着同样的系统资源。</p><p>上述这些特点会产生一系列的问题：</p><ul><li>具有高级权限的进程可以攻击其他进程</li><li>具有高级权限的进程可以对其他进程所需的文件增删改查</li><li>应用之间会存在资源争抢问题</li></ul><p>容器本质上是把系统中为同一个业务目标服务的相关进程合成一组，放在一个叫做<strong>namespace</strong>的空间中，同一个namespace中的进程能够互相通信，但看不见其他namespace中的进程。每个namespace可以拥有自己独立的主机名、进程ID系统、IPC、网络、文件系统、用户等等资源。使得容器这个父进程只对自己的子进程有感知，而对于宿主机其他进程互不感知。</p><p>linux提供了<strong>chroot</strong>的系统调用方式可以把一个子目录变为根目录，容器会在chroot的帮助下获得一个独立的文件系统，这样进程对文件系统的增删改查都不会影响到其他进程的使用。</p><p>此外，为了限制namespace对物理资源的使用，对进程能使用的CPU、内存、io等资源需要做一定的限制。这就是<strong>Cgroup</strong>技术。</p><p><strong>总结：</strong></p><p><strong>基于传统应用部署方式的痛点，docker通过linux的namespaces实现了资源视图的隔离，通过chroot来提供独立的文件系统，通过cgroup控制资源使用率。</strong></p><h2 id="容器与虚拟机"><a href="#容器与虚拟机" class="headerlink" title="容器与虚拟机"></a>容器与虚拟机</h2><p>提容器不得不提虚拟机，他们都是为应用提供封装和隔离的。</p><ul><li>虚拟化层：虚拟机有Hypervisor层和GuestOS，Docker省去了Hypervisor，其虚拟化技术是基于内核的Cgroup和Namespace技术，Docker通过libcontainer与内核交互，所以在很多方面，它的性能与物理机非常接近。</li><li>启动速度：docker启动快速属于秒级别。虚拟机通常需要几分钟去启动。</li><li>隔离性：docker属于进程之间的隔离，那么多个容器还是使用着同一个操作系统内核，所以docker的隔离性更弱，虚拟机可实现系统级别隔离。</li><li>迭代：虚拟机可以通过导出模板实现环境交付的一致性，但镜像分发无法体系化；Docker在Dockerfile中记录了容器构建过程，可在集群中实现快速分发和快速部署，快速回滚。</li><li>系统支持量：同样配置的服务器支持的容器数是虚拟机的十倍以上。</li></ul><p><img src="/doc_picture/docker-1.png" alt="image-20210709184759385"></p><h1 id="docker的优势"><a href="#docker的优势" class="headerlink" title="docker的优势"></a>docker的优势</h1><ul><li>更快速的交付和部署；开发者可以使用一个标准的镜像来构建一套开发容器，开发完成之后，运维人员可以直接使用这个容器来 部署代码。 Docker 可以快速创建容器，快速迭代应用程序，并让整个过程全程可见，使团队中的其他成员 更容易理解应用程序是如何创建和工作的。 Docker 容器很轻很快！容器的启动时间是秒级的，大量地节约 开发、测试、部署的时间。</li><li>更高效的虚拟化；不需要额外的hypervisor 支持，它是内核级的虚拟化，因此可以实现更高的性能和效率。</li><li>更轻松的迁移和扩展；Docker 容器几乎可以在任意的平台上运行，包括物理机、虚拟机、云平台、服务器等。 这种兼容性可以让用户把一个应用程序从一个平台直接迁移到另外一个。 </li><li>更简单的管理；使用 Docker，只需要小小的修改，就可以替代以往大量的更新工作。所有的修改都以增量的方式被分发和 更新，从而实现自动化并且高效的管理。 </li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;唠唠背景&quot;&gt;&lt;a href=&quot;#唠唠背景&quot; class=&quot;headerlink&quot; title=&quot;唠唠背景&quot;&gt;&lt;/a&gt;唠唠背景&lt;/h1&gt;&lt;p&gt;自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬</summary>
       
     
     
