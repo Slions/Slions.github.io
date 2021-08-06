@@ -20,17 +20,24 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3/index.html">
+    <meta name="description" content="总所周知不论是机械硬盘还是固态磁盘大小都是固定的，当磁盘空间满了后只能通过删除无用数据来保持磁盘的可用性，这篇介绍的LVM(Logical Volume Manager)是建立在磁盘和分区之上的一个逻辑层，用来提高磁盘分区管理的灵活性，可以随时随地的扩缩容分区大小。 LVM术语 Physical Volume(PV) 实际分区需要调整 System ID 成为 LVM 表示(8e) ，然后经过 p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逻辑卷管理LVM">
+<meta property="og:url" content="https://slions.github.io/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="总所周知不论是机械硬盘还是固态磁盘大小都是固定的，当磁盘空间满了后只能通过删除无用数据来保持磁盘的可用性，这篇介绍的LVM(Logical Volume Manager)是建立在磁盘和分区之上的一个逻辑层，用来提高磁盘分区管理的灵活性，可以随时随地的扩缩容分区大小。 LVM术语 Physical Volume(PV) 实际分区需要调整 System ID 成为 LVM 表示(8e) ，然后经过 p">
 <meta property="og:locale">
+<meta property="og:image" content="https://slions.github.io/doc_picture/lvm.jpg">
+<meta property="article:published_time" content="2021-08-06T14:18:11.000Z">
+<meta property="article:modified_time" content="2021-08-06T15:33:17.957Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.github.io/doc_picture/lvm.jpg">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>逻辑卷管理LVM · S_lion&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -213,6 +220,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -235,6 +244,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">逻辑卷管理LVM</a>
+        </div>
+    </div>
     
 </header>
     
@@ -259,24 +279,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            逻辑卷管理LVM
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.5k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/06</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -377,42 +447,153 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >
-            
-                <span>Virtualbox虚机使用介绍</span>
-        </a>
-        <div class="abstract-content">
-             VMware workstation是最常见也是最常用的虚拟机工具，但是很多公司不会购买其商用授权，VirtualBox 也是一款虚拟化产品，重要的是其开源免费，好早之前在本地安装使用了下，感觉与VMware workstation比还是不太习惯，包括虚拟机的安装和设置也要重新习惯，本文主要讲下安装好软件后如何完成基础设置与网络配置，安装部分比较简单请自行解决。
-新建虚机
-进入virtua...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "虚拟机相关">虚拟机相关</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>总所周知不论是机械硬盘还是固态磁盘大小都是固定的，当磁盘空间满了后只能通过删除无用数据来保持磁盘的可用性，这篇介绍的LVM(Logical Volume Manager)是建立在磁盘和分区之上的一个逻辑层，用来提高磁盘分区管理的灵活性，可以随时随地的扩缩容分区大小。</p>
+<h1 id="LVM术语"><a href="#LVM术语" class="headerlink" title="LVM术语"></a>LVM术语</h1><ul>
+<li><p>Physical Volume(PV)</p>
+<p>实际分区需要调整 System ID 成为 LVM 表示(8e) ，然后经过 pvcreate 命令将他转为 LVM 最低层的 PV, 然后才能使用磁盘。</p>
+</li>
+<li><p>Volume Group(VG)</p>
+<p>将多个PV组合起来，使用vgcreate命令创建成卷组，这样卷组包含了多个PV就比较大了，相当于重新整合了多个分区后得到的磁盘。虽然VG是整合多个PV的，但是创建VG时会将VG所有的空间根据指定的PE大小划分为多个PE，在LVM模式下的存储都以PE为单元，类似于文件系统的Block。</p>
+</li>
+<li><p>Physical Extent(PE)</p>
+<p>LVM 预设使用 4MB 的 PE 区块，每个 LV 最多允许有 65534 个 PE ，即 256GB 。PE 属于 LVM 最小存储区。</p>
+</li>
+<li><p>Logical Volume(LV)</p>
+<p>VG相当于整合过的硬盘，那么LV就相当于分区，只不过该分区是通过VG来划分的。VG中有很多PE单元，可以指定将多少个PE划分给一个LV，也可以直接指定大小(如多少兆)来划分。划分为LV之后就相当于划分了分区，只需再对LV进行格式化即可变成普通的文件系统。</p>
+</li>
+<li><p>Logical extent(LE)</p>
+<p>PE是物理存储单元，而LE则是逻辑存储单元，也即为lv中的逻辑存储单元，和pe的大小是一样的。从vg中划分lv，实际上是从vg中划分vg中的pe，只不过划分lv后它不再称为pe，而是成为le。</p>
+</li>
+</ul>
+<p><strong>LVM之所以能够伸缩容量，其原因就在于能够将LV里空闲的PE移出，或向LV中添加空闲的PE。</strong></p>
+<h1 id="LVM的写入机制"><a href="#LVM的写入机制" class="headerlink" title="LVM的写入机制"></a>LVM的写入机制</h1><p>LV是从VG中划分出来的，LV中的PE很可能来自于多个PV。在向LV存储数据时，有多种存储机制，其中两种是：</p>
+<ul>
+<li>线性模式(linear)：先写完来自于同一个PV的PE，再写来自于下一个PV的PE。</li>
+<li>条带模式(striped)：一份数据拆分成多份，分别写入该LV对应的每个PV中，所以读写性能较好，类似于RAID 0。</li>
+</ul>
+<p>尽管striped读写性能较好也<strong>不建议</strong>使用该模式，因为lvm的着重点在于弹性容量扩展而非性能，要实现性能应该使用RAID来实现，而且使用striped模式时要进行容量的扩展和收缩将比较麻烦。默认的是使用线性模式。</p>
+<h1 id="LVM实现图解"><a href="#LVM实现图解" class="headerlink" title="LVM实现图解"></a>LVM实现图解</h1><p><img src="/doc_picture/lvm.jpg" alt="lvm"></p>
+<h1 id="LVM的实现"><a href="#LVM的实现" class="headerlink" title="LVM的实现"></a>LVM的实现</h1><p>看下我本地的环境，/dev/sdb已经分好了4个区，并且system id都设置为了8e。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> lsblk</span></span><br><span class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda               8:0    0   20G  0 disk</span><br><span class="line">├─sda1            8:1    0    1G  0 part /boot</span><br><span class="line">└─sda2            8:2    0   19G  0 part</span><br><span class="line">  ├─centos-root 253:0    0   18G  0 lvm  /</span><br><span class="line">  └─centos-swap 253:1    0 1020M  0 lvm  [SWAP]</span><br><span class="line">sdb               8:16   0   20G  0 disk</span><br><span class="line">├─sdb1            8:17   0    5G  0 part</span><br><span class="line">├─sdb2            8:18   0    2G  0 part</span><br><span class="line">├─sdb3            8:19   0   10G  0 part</span><br><span class="line">└─sdb4            8:20   0    3G  0 part</span><br><span class="line">sr0              11:0    1   10G  0 rom</span><br><span class="line"><span class="meta">$</span><span class="bash"> fdisk -l /dev/sdb</span></span><br><span class="line"></span><br><span class="line">磁盘 /dev/sdb：21.5 GB, 21474836480 字节，41943040 个扇区</span><br><span class="line">Units = 扇区 of 1 * 512 = 512 bytes</span><br><span class="line">扇区大小(逻辑/物理)：512 字节 / 512 字节</span><br><span class="line">I/O 大小(最小/最佳)：512 字节 / 512 字节</span><br><span class="line">磁盘标签类型：dos</span><br><span class="line">磁盘标识符：0x76721574</span><br><span class="line"></span><br><span class="line">   设备 Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sdb1            2048    10487807     5242880   8e  Linux LVM</span><br><span class="line">/dev/sdb2        10487808    14682111     2097152   8e  Linux LVM</span><br><span class="line">/dev/sdb3        14682112    35653631    10485760   8e  Linux LVM</span><br><span class="line">/dev/sdb4        35653632    41943039     3144704   8e  Linux LVM</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="管理pv"><a href="#管理pv" class="headerlink" title="管理pv"></a>管理pv</h2><p>管理PV有几个命令：pvscan、pvdisplay、pvcreate、pvremove和pvmove。</p>
+<p>命令很简单，基本都不需要任何选项。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建PV</td>
+<td>pvcreate</td>
+</tr>
+<tr>
+<td>扫描并列出所有的pv</td>
+<td>pvscan</td>
+</tr>
+<tr>
+<td>列出pv属性信息</td>
+<td>pvdisplay</td>
+</tr>
+<tr>
+<td>移除pv</td>
+<td>pvremove</td>
+</tr>
+<tr>
+<td>移动pv中的数据</td>
+<td>pvmove</td>
+</tr>
+</tbody></table>
+<h3 id="创建pv"><a href="#创建pv" class="headerlink" title="创建pv"></a>创建pv</h3><p>将/dev/sdb[1-3]创建为pv。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pvcreate /dev/sdb[1-3]</span></span><br><span class="line">  Physical volume &quot;/dev/sdb1&quot; successfully created.</span><br><span class="line">  Physical volume &quot;/dev/sdb2&quot; successfully created.</span><br><span class="line">  Physical volume &quot;/dev/sdb3&quot; successfully created.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看pv属性"><a href="#查看pv属性" class="headerlink" title="查看pv属性"></a>查看pv属性</h3><p>使用pvscan来查看哪些pv和基本属性。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pvscan</span></span><br><span class="line">  PV /dev/sda2   VG centos          lvm2 [&lt;19.00 GiB / 0    free]</span><br><span class="line">  PV /dev/sdb3                      lvm2 [10.00 GiB]</span><br><span class="line">  PV /dev/sdb1                      lvm2 [5.00 GiB]</span><br><span class="line">  PV /dev/sdb2                      lvm2 [2.00 GiB]</span><br><span class="line">  Total: 4 [&lt;36.00 GiB] / in use: 1 [&lt;19.00 GiB] / in no VG: 3 [17.00 GiB]</span><br></pre></td></tr></table></figure>
+
+<p>使用pvdisplay查看其中一个pv的属性信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pvdisplay /dev/sdb1</span></span><br><span class="line">  &quot;/dev/sdb1&quot; is a new physical volume of &quot;5.00 GiB&quot;</span><br><span class="line">  --- NEW Physical volume ---</span><br><span class="line">  PV Name               /dev/sdb1</span><br><span class="line">  VG Name</span><br><span class="line">  PV Size               5.00 GiB</span><br><span class="line">  Allocatable           NO</span><br><span class="line">  PE Size               0</span><br><span class="line">  Total PE              0</span><br><span class="line">  Free PE               0</span><br><span class="line">  Allocated PE          0</span><br><span class="line">  PV UUID               viN4Oq-ZeFx-3wTz-4zXf-0Z4N-Urcf-F2eMGi</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看pe分布"><a href="#查看pe分布" class="headerlink" title="查看pe分布"></a>查看pe分布</h3><p><code>pvdisplay  -m</code>可以查看该设备中PE的使用分布图。以下是某次显示结果。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pvdisplay  -m /dev/sda2</span></span><br><span class="line">  --- Physical volume ---</span><br><span class="line">  PV Name               /dev/sda2</span><br><span class="line">  VG Name               centos</span><br><span class="line">  PV Size               &lt;19.00 GiB / not usable 3.00 MiB</span><br><span class="line">  Allocatable           yes (but full)</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              4863</span><br><span class="line">  Free PE               0</span><br><span class="line">  Allocated PE          4863</span><br><span class="line">  PV UUID               0TXR4i-laLf-DqVh-lNVK-ybSt-io3c-QKDj5w</span><br><span class="line"></span><br><span class="line">  --- Physical Segments ---</span><br><span class="line">  Physical extent 0 to 4607:                    # 说明第0-4607的PE正被使用。PV中PE的序号是从0开始编号的</span><br><span class="line">    Logical volume      /dev/centos/root</span><br><span class="line">    Logical extents     0 to 4607               # 该PE在LV中的0-4607的LE位置上</span><br><span class="line">  Physical extent 4608 to 4862:                 # 说明4608-4862的PE正使用</span><br><span class="line">    Logical volume      /dev/centos/swap</span><br><span class="line">    Logical extents     0 to 254                # 该PE在LV中的位置是0-254</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>知道了PE的分布，就可以轻松地使用pvmove命令在设备之间进行PE数据的移动。具体关于pvmove的用法，见收缩lvm磁盘部分。</p>
+<h3 id="删除pv"><a href="#删除pv" class="headerlink" title="删除pv"></a>删除pv</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pvremove /dev/sdb3</span></span><br><span class="line">  Labels on physical volume &quot;/dev/sdb3&quot; successfully wiped.</span><br><span class="line"><span class="meta">$</span><span class="bash"> pvscan</span></span><br><span class="line">  PV /dev/sda2   VG centos          lvm2 [&lt;19.00 GiB / 0    free]</span><br><span class="line">  PV /dev/sdb1                      lvm2 [5.00 GiB]</span><br><span class="line">  PV /dev/sdb2                      lvm2 [2.00 GiB]</span><br><span class="line">  Total: 3 [&lt;26.00 GiB] / in use: 1 [&lt;19.00 GiB] / in no VG: 2 [7.00 GiB]</span><br></pre></td></tr></table></figure>
+
+
     </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/">https://slions.github.io/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/">August 6th 2021, 10:18:11 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/">August 6th 2021, 11:33:17 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" title= "Virtualbox虚机使用介绍">
+                    <div class="prevTitle">Virtualbox虚机使用介绍</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1628259491000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: idOption,
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -502,6 +683,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LVM%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.</span> <span class="toc-text">LVM术语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LVM%E7%9A%84%E5%86%99%E5%85%A5%E6%9C%BA%E5%88%B6"><span class="toc-number">2.</span> <span class="toc-text">LVM的写入机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LVM%E5%AE%9E%E7%8E%B0%E5%9B%BE%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">LVM实现图解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LVM%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">LVM的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E7%90%86pv"><span class="toc-number">4.1.</span> <span class="toc-text">管理pv</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BApv"><span class="toc-number">4.1.1.</span> <span class="toc-text">创建pv</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8Bpv%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.2.</span> <span class="toc-text">查看pv属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8Bpe%E5%88%86%E5%B8%83"><span class="toc-number">4.1.3.</span> <span class="toc-text">查看pe分布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4pv"><span class="toc-number">4.1.4.</span> <span class="toc-text">删除pv</span></a></li></ol></li></ol></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1082,6 +1281,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
