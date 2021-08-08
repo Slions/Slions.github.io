@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="setup-openshift-heketi-storage无空间glusterfs 4.1.7 heketi v9.0.0 部署 问题描述 运行setup-openshift-heketi-storage子命令时heketi-cli报告“无空间”错误： 123$ heketi-cli setup-openshift-heketi-storageError: Failed to allocate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gluster排故纪实">
+<meta property="og:url" content="https://slions.github.io/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="setup-openshift-heketi-storage无空间glusterfs 4.1.7 heketi v9.0.0 部署 问题描述 运行setup-openshift-heketi-storage子命令时heketi-cli报告“无空间”错误： 123$ heketi-cli setup-openshift-heketi-storageError: Failed to allocate">
+<meta property="og:locale">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs1.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs2.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs3.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs4.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs5.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs7.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs8.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs9.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs10.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs11.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs12.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs13.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs14.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs15.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs16.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs18.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs19.png">
+<meta property="og:image" content="https://slions.github.io/doc_picture/gfs20.png">
+<meta property="article:published_time" content="2021-08-08T01:55:01.000Z">
+<meta property="article:modified_time" content="2021-08-08T02:10:41.622Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="glusterfs">
+<meta property="article:tag" content="kubernetes storage">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.github.io/doc_picture/gfs1.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>gluster排故纪实 · S_lion&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/1.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">gluster排故纪实</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            gluster排故纪实
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.2k</span>阅读时长: <span class="post-count reading-time">8 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/08</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="setup-openshift-heketi-storage无空间"><a href="#setup-openshift-heketi-storage无空间" class="headerlink" title="setup-openshift-heketi-storage无空间"></a>setup-openshift-heketi-storage无空间</h1><p><code>glusterfs 4.1.7</code> <code>heketi v9.0.0</code> <code>部署</code></p>
+<p><strong>问题描述</strong></p>
+<p>运行setup-openshift-heketi-storage子命令时heketi-cli报告“无空间”错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> heketi-cli setup-openshift-heketi-storage</span></span><br><span class="line"></span><br><span class="line">Error: Failed to allocate new volume: No space</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题原因</strong></p>
+<p>运行topology load命令的时候，服务端和heketi-cli的版本不匹配造成的。</p>
+<p><strong>解决策略</strong></p>
+<p>停止正在运行的heketi pod：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment deploy-heketi --replicas=0</span><br></pre></td></tr></table></figure>
+
+<p>手动删除存储块设备中的任何签名：</p>
+<p>加载拓扑的操作是在gluster 中添加了Peer，所以需要手动detach peer</p>
+<p>然后继续运行heketi pod：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment deploy-heketi --replicas=1</span><br></pre></td></tr></table></figure>
+
+<p>用匹配版本的heketi-cli重新加载拓扑，然后重试该步骤。</p>
+<h1 id="gfs集群添加磁盘失败"><a href="#gfs集群添加磁盘失败" class="headerlink" title="gfs集群添加磁盘失败"></a>gfs集群添加磁盘失败</h1><p><code>glusterfs 4.1.7</code> <code>heketi v9.0.0</code> <code>部署</code></p>
+<p><strong>问题描述</strong></p>
+<p>给gfs集群添加设备时报错</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Adding device /dev/sdb ... Unable to add device: Unable to execute command on glusterfs-xp1nx:  Can&#x27;t initialize physical volume &quot;/dev/vdb&quot;of volume group &quot;vg_dc649bdf755667e58c5d779f9d900057&quot; without -ff</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题原因</strong></p>
+<p>原因是/dev/sdb已经创建过了pv,需要删除了重新创建</p>
+<p><strong>解决策略</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=/dev/sdb bs=1k count=1</span><br><span class="line"></span><br><span class="line">blockdev --rereadpt /dev/vdb</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pvcreate -ff --metadatasize=128M --dataalignment=256K /dev/sdb</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="创建heketidbstrorage失败"><a href="#创建heketidbstrorage失败" class="headerlink" title="创建heketidbstrorage失败"></a>创建heketidbstrorage失败</h1><p><code>glusterfs 4.1.7</code> <code>heketi v9.0.0</code> <code>部署</code></p>
+<p><strong>问题描述</strong></p>
+<p>给heketi创建持久卷时报错</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> heketi-cli setup-openshift-heketi-storage</span></span><br><span class="line"></span><br><span class="line">Error: Unable to execute command on glusterfs-pbzcj: volume create: heketidbstorage: failed: Staging failed on 192.168.186.10. Error: Host 192.168.186.10 is not in &#x27;Peer in Cluster&#x27; state</span><br><span class="line"></span><br><span class="line">Failed on setup openshift heketi storage</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题原因</strong></p>
+<p>登录相关pod，发现gluster peer status 显示有问题</p>
+<p><strong>解决策略</strong></p>
+<p>修改/etc/hosts 将所有node节点添加解析记录</p>
+<h1 id="创建heketidb卷引发机器重启"><a href="#创建heketidb卷引发机器重启" class="headerlink" title="创建heketidb卷引发机器重启"></a>创建heketidb卷引发机器重启</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code> <code>部署</code></p>
+<p><strong>问题描述</strong></p>
+<p>在运行heketi-cli setup-openshift-heketi-storage时发生机器重启，再次登录后发现gluster没有卷信息，但是lvs看已经生成了，手动删除这些lv也会导致机器重启</p>
+<p><strong>问题原因</strong></p>
+<p>系统内核 &lt; 3.10-863引发的bug</p>
+<p><strong>解决策略</strong></p>
+<p>升级系统内核，部署gfs时需保证内核不小于3.10-863</p>
+<h1 id="调整heketi的日志级别"><a href="#调整heketi的日志级别" class="headerlink" title="调整heketi的日志级别"></a>调整heketi的日志级别</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code> </p>
+<p><strong>问题描述</strong></p>
+<p>heketi的配置文件是通过secrets挂到容器中的，是通过heketi.json文件生成的，查看发现配置文件中并未指明日志的级别。</p>
+<p><strong>解决策略</strong></p>
+<p>默认的日志级别是debug，如果需要修改，则：</p>
+<p>在heketi.json中 “db”: “/var/lib/heketi/heketi.db”,下添加 <code>&quot;loglevel&quot;: &quot;info&quot;,</code></p>
+<p>注：日志级别(none, critical, error, warning, info, debug)</p>
+<p>注意后面的逗号</p>
+<p>重新生成heketi-config-secret，重启heketi pod即可。</p>
+<h1 id="节点Peer-Rejected"><a href="#节点Peer-Rejected" class="headerlink" title="节点Peer Rejected"></a>节点Peer Rejected</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code> </p>
+<p><strong>问题描述</strong></p>
+<p>删除一个节点的/var/lib/glusterd/*，从其他健康的gfs节点查看集群成员状态此节点已经变成了Peer Rejected 。</p>
+<p><strong>问题原因</strong></p>
+<p>此节点uuid改变</p>
+<p><strong>解决策略</strong></p>
+<p>需要手动恢复：在健康节点查看之前异常节点的uuid。然后修改异常节点的glusterd.info，再把健康节点的uuid拷贝到异常节点的peers目录下，重启异常节点的gfs pod 。</p>
+<h1 id="服务挂载卷消失-Server-authenication-failed"><a href="#服务挂载卷消失-Server-authenication-failed" class="headerlink" title="服务挂载卷消失 Server authenication failed"></a>服务挂载卷消失 Server authenication failed</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code> <code>kubernetes 1.11.0</code> </p>
+<p><strong>问题描述</strong></p>
+<p>机器断电重启后发现原先挂载了glusterfs存储的nginx容器里pv没了，查看glusterfs和heketi容器都正常运行，客户端nginx容器也能正常跑起来，查看容器的日志并没有什么报错。</p>
+<p><strong>问题原因</strong></p>
+<p>查看event中报错信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[2019-07-24 08:58:01.548933] E [MSGID: 114044] [client-handshake.c:1144:client_setvolume_cbk] 0-vol_0b6185b748a309fc93431319db6e8343-client-2: SETVOLUME on remote-host failed: Authentication failed [权限不够]</span><br><span class="line"></span><br><span class="line">[2019-07-24 08:58:01.548976] E [fuse-bridge.c:5338:notify] 0-fuse: Server authenication failed. Shutting down.</span><br></pre></td></tr></table></figure>
+
+<p>截图如下：</p>
+<p><img src="/doc_picture/gfs1.png" alt="image-gfstrouble"></p>
+<p><strong>解决策略</strong></p>
+<p>编辑 /etc/glusterfs/glusterd.vol添加<code>option rpc-auth-allow-insecure on</code>；</p>
+<p>重启glusterd服务然后删了nginx pod成功找回了挂载卷（数据还在）</p>
+<h1 id="transport-endpoint-is-not-connected"><a href="#transport-endpoint-is-not-connected" class="headerlink" title="transport endpoint is not connected"></a>transport endpoint is not connected</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code> </p>
+<p><strong>问题描述</strong></p>
+<p>客户端挂载盘报错：transport endpoint is not connected<br><img src="/doc_picture/gfs2.png" alt="image-gfstrouble"></p>
+<p><strong>问题原因</strong></p>
+<p>卷处于关闭状态、服务器间通信出现问题、glusterfs存储系统间数据不一致都会导致此现象产生。</p>
+<p><strong>解决策略</strong></p>
+<p>首先应该检查gfs服务是否正常，如果都是Run的状态则查看对应卷的状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods -n glusterfs</span><br></pre></td></tr></table></figure>
+
+<p>检查对应的卷的状态</p>
+<p>找到对应的pv</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pv -n $&lt;namespace&gt; </span><br></pre></td></tr></table></figure>
+
+<p>找到对应的卷</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pv  $PV |grep Path: </span><br></pre></td></tr></table></figure>
+
+<p>查看glusterfs volume的状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl exec -it -n glusterfs  $&lt;glusterfs_volume&gt;  --  gluster volume info $glusterfs_volume | grep Status </span><br></pre></td></tr></table></figure>
+
+<p>在客户端查看挂载对应盘的进程是否正常；</p>
+<p>若检查glusterfs状态均为正常，则表明其他原因导致（如节点网络异常等），重启该存储盘异常服务即可解决</p>
+<h1 id="pv-fail状态"><a href="#pv-fail状态" class="headerlink" title="pv fail状态"></a>pv fail状态</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code> <code>kubernetes 1.11.0</code></p>
+<p><strong>问题描述</strong></p>
+<p>测试时删除pvc时发现pvc已删除但是pv还在，是Failed的状态。<br><img src="/doc_picture/gfs3.png" alt="image-gfstrouble"></p>
+<p>使用heketi-cli volume delete删除卷报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">heketi-cli volume delete 3cf6a16d635c63a7ff7023a44d37c805</span></span><br><span class="line">Error: Failed to set up volume delete: The target exists, contains other items, or is in use.</span><br></pre></td></tr></table></figure>
+
+<p>先手动将pv删掉</p>
+<p>登录其中一台gluster执行如下命令，删除卷时发现报错：</p>
+<p>failed： some of the peers are down</p>
+<p><img src="/doc_picture/gfs4.png" alt="image-gfstrouble"></p>
+<p><strong>问题原因</strong></p>
+<p>因为我测试时把gfs集群中一台机器关机了，手动把这台剔除集群，发现可以删除了。<br><img src="/doc_picture/gfs5.png" alt="image-gfstrouble"></p>
+<p>上面这只是测试，不建议使用，因为heketi中的残留数据还在。</p>
+<p><strong>解决策略</strong></p>
+<p>最好的方式时恢复那台关机的节点。</p>
+<p>如果删除卷必须在信任池中节点都在才可以，那么必须保证信任池的健康。</p>
+<h1 id="gfs狂刷日志导致的节点down"><a href="#gfs狂刷日志导致的节点down" class="headerlink" title="gfs狂刷日志导致的节点down"></a>gfs狂刷日志导致的节点down</h1><p><code>glusterfs 4.1.7</code> <code>heketi v9.0.0</code> <code>kubernetes 1.11.0</code> </p>
+<p><strong>问题描述</strong></p>
+<p>其中一个gfs节点启动失败，一直在重启。</p>
+<p><strong>问题原因</strong></p>
+<p>登录此节点df发现根分区使用率为100%，发现gfs服务频繁刷新产生日志导致。<br><img src="/doc_picture/gfs7.png" alt="image-gfstrouble"></p>
+<p>每次卷的重建，客户端进程glusterfs都会被重启，但进程重启的过程中，新的进程产生，旧的进程并没有被关闭，并且还在持续调用被删除的卷，所以glusterfshd.log日志不停地在输出卷无法连接的错误。在K8s 1.11.0+gfs 4.1.7上可以通过批量创建卷再批量删除卷模拟此场景。</p>
+<p><strong>解决策略</strong></p>
+<p>临时解决方案先把大的日志备份压缩，重启此pods。如果本地资源紧张也可以直接删除问题日志。</p>
+<p>永久解决：</p>
+<p>gfs7.1版本已修复此问题。</p>
+<p>要保证存储节点有足够的根分区或给/var/挂一块足够的盘（最少30G）</p>
+<h1 id="创建pvc-pending"><a href="#创建pvc-pending" class="headerlink" title="创建pvc pending"></a>创建pvc pending</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code>  <code>kubernetes 1.17.0</code></p>
+<p><strong>问题描述</strong></p>
+<p>在健康的三节点gfs集群进行测试，进入其中一个gfs pods手动关闭glusterd服务，在k8s中创建pvc,一直pending。查看glusterfs日志：<br><img src="/doc_picture/gfs8.png" alt="image-gfstrouble"></p>
+<p><strong>问题原因</strong></p>
+<p>创建卷找不到可用的3副本</p>
+<p><strong>解决策略</strong></p>
+<p>把glusterd启动即可。</p>
+<h1 id="heketi-空间计算与实际brick不匹配"><a href="#heketi-空间计算与实际brick不匹配" class="headerlink" title="heketi 空间计算与实际brick不匹配"></a>heketi 空间计算与实际brick不匹配</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code>  <code>kubernetes 1.17.0</code></p>
+<p><strong>问题描述</strong></p>
+<p>创建pvc时发现报错没有空间<br><img src="/doc_picture/gfs9.png" alt="image-gfstrouble"></p>
+<p>查看heketi中的gfs集群状态发现只创建了3个G的卷但是却显示使用了19个G，没有剩余空间了<br><img src="/doc_picture/gfs10.png" alt="image-gfstrouble"></p>
+<p>查看db中是否存在待处理请求导致数据不一致的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">heketi-cli server operations info</span><br><span class="line">heketi-cli server operations list</span><br></pre></td></tr></table></figure>
+
+<p>发现没有异常状态<br><img src="/doc_picture/gfs11.png" alt="image-gfstrouble"></p>
+<p>检查db中的状态</p>
+<p>heketi-cli db check发现异常<br><img src="/doc_picture/gfs12.png" alt="image-gfstrouble"></p>
+<p><strong>问题原因</strong></p>
+<p>heketi与实际的存储设备使用空间不匹配</p>
+<p><strong>解决策略</strong></p>
+<p>尝试使用设备同步命令测试：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">heketi-cli device resync $&lt;device&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="heketi与gfs卷数量不一致"><a href="#heketi与gfs卷数量不一致" class="headerlink" title="heketi与gfs卷数量不一致"></a>heketi与gfs卷数量不一致</h1><p><code>glusterfs 7.1</code> <code>heketi v9.0.0</code>  <code>kubernetes 1.17.0</code></p>
+<p><strong>问题描述</strong></p>
+<p>通过heketi查看到的volume数量与gluster查看到的不一致</p>
+<p>通过heketi查看到的volume卷：1个10G、1个2G（heketidb）、3个1G。<br><img src="/doc_picture/gfs13.png" alt="image-gfstrouble"><br><img src="/doc_picture/gfs14.png" alt="image-gfstrouble"></p>
+<p>通过gluster查看volume卷，可以确认实际使用的卷为3个。1个10G、1个2G（heketidb）、2个1G。<br><img src="/doc_picture/gfs15.png" alt="image-gfstrouble"></p>
+<p><strong>解决策略</strong></p>
+<p>确认异常卷id信息</p>
+<p><img src="/doc_picture/gfs16.png" alt="image-gfstrouble"></p>
+<p>此时如果通过heketi-cli命令删除（heketi-cli volume delete VOLUME_ID）将会报设备繁忙：target is busy。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Error: umount: /var/lib/heketi/mounts/vg_NAME/brick_XXXXXX: target is busy.</span><br><span class="line">(In some cases useful info about processes that use the device is found by lsof(8) or fuser(1))</span><br></pre></td></tr></table></figure>
+
+<p>确认gfs节点上的异常lv设备<br><img src="/doc_picture/gfs18.png" alt="image-gfstrouble"></p>
+<p>查看该设备被那些进程或文件所占用。如下可以看到该brick被进程占用，所以删除时会报设备繁忙。<br><img src="/doc_picture/gfs19.png" alt="image-gfstrouble"></p>
+<p>通过fuser -kuc NAME进行搜索并且杀死进程后，可通过heketi-cli命令正常删除异常volume卷。</p>
+<p><img src="/doc_picture/gfs20.png" alt="image-gfstrouble"></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/">https://slions.github.io/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/">August 8th 2021, 9:55:01 am</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/">August 8th 2021, 10:10:41 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" title= "修改centos7主机名">
+                    <div class="prevTitle">修改centos7主机名</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1628387701000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: idOption,
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#setup-openshift-heketi-storage%E6%97%A0%E7%A9%BA%E9%97%B4"><span class="toc-number">1.</span> <span class="toc-text">setup-openshift-heketi-storage无空间</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#gfs%E9%9B%86%E7%BE%A4%E6%B7%BB%E5%8A%A0%E7%A3%81%E7%9B%98%E5%A4%B1%E8%B4%A5"><span class="toc-number">2.</span> <span class="toc-text">gfs集群添加磁盘失败</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAheketidbstrorage%E5%A4%B1%E8%B4%A5"><span class="toc-number">3.</span> <span class="toc-text">创建heketidbstrorage失败</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAheketidb%E5%8D%B7%E5%BC%95%E5%8F%91%E6%9C%BA%E5%99%A8%E9%87%8D%E5%90%AF"><span class="toc-number">4.</span> <span class="toc-text">创建heketidb卷引发机器重启</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%83%E6%95%B4heketi%E7%9A%84%E6%97%A5%E5%BF%97%E7%BA%A7%E5%88%AB"><span class="toc-number">5.</span> <span class="toc-text">调整heketi的日志级别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8A%82%E7%82%B9Peer-Rejected"><span class="toc-number">6.</span> <span class="toc-text">节点Peer Rejected</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%8C%82%E8%BD%BD%E5%8D%B7%E6%B6%88%E5%A4%B1-Server-authenication-failed"><span class="toc-number">7.</span> <span class="toc-text">服务挂载卷消失 Server authenication failed</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#transport-endpoint-is-not-connected"><span class="toc-number">8.</span> <span class="toc-text">transport endpoint is not connected</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pv-fail%E7%8A%B6%E6%80%81"><span class="toc-number">9.</span> <span class="toc-text">pv fail状态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#gfs%E7%8B%82%E5%88%B7%E6%97%A5%E5%BF%97%E5%AF%BC%E8%87%B4%E7%9A%84%E8%8A%82%E7%82%B9down"><span class="toc-number">10.</span> <span class="toc-text">gfs狂刷日志导致的节点down</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BApvc-pending"><span class="toc-number">11.</span> <span class="toc-text">创建pvc pending</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#heketi-%E7%A9%BA%E9%97%B4%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%AE%9E%E9%99%85brick%E4%B8%8D%E5%8C%B9%E9%85%8D"><span class="toc-number">12.</span> <span class="toc-text">heketi 空间计算与实际brick不匹配</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#heketi%E4%B8%8Egfs%E5%8D%B7%E6%95%B0%E9%87%8F%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="toc-number">13.</span> <span class="toc-text">heketi与gfs卷数量不一致</span></a></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 29
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >gluster排故纪实</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >修改centos7主机名</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >linux误删文件恢复思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href= "/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/" >逻辑卷管理LVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href= "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >Virtualbox虚机使用介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href= "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >df与du结果不一致问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >磁盘分区工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >ceph mimic对接k8s 1.17.0(ceph-csi)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >创建开机自启程序（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >创建开机自启程序（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" >alias与rm的最佳实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >linux用户与组管理（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >linux用户与组管理（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >harbor集群系统负载升高原因分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+        <span class="sidebar-tag-name" data-tags="harbor"><span class="iconfont-archer">&#xe606;</span>harbor</span>
+    
+        <span class="sidebar-tag-name" data-tags="ceph"><span class="iconfont-archer">&#xe606;</span>ceph</span>
+    
+        <span class="sidebar-tag-name" data-tags="虚拟机相关"><span class="iconfont-archer">&#xe606;</span>虚拟机相关</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
