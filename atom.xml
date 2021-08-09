@@ -34,9 +34,9 @@
     
     
     
-    <category term="heketi" scheme="https://slions.github.io/tags/heketi/"/>
-    
     <category term="kubernetes storage" scheme="https://slions.github.io/tags/kubernetes-storage/"/>
+    
+    <category term="heketi" scheme="https://slions.github.io/tags/heketi/"/>
     
   </entry>
   
@@ -481,9 +481,9 @@
     
     
     
-    <category term="heketi" scheme="https://slions.github.io/tags/heketi/"/>
-    
     <category term="glusterfs" scheme="https://slions.github.io/tags/glusterfs/"/>
+    
+    <category term="heketi" scheme="https://slions.github.io/tags/heketi/"/>
     
   </entry>
   
