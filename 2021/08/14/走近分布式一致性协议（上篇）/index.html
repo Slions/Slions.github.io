@@ -20,12 +20,12 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。 我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。 一致性的级别 强一致性 始终一致">
+    <meta name="description" content="从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。 我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。 1.    一致性的级别 强一致">
 <meta property="og:type" content="article">
 <meta property="og:title" content="走近分布式一致性协议（上篇）">
 <meta property="og:url" content="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。 我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。 一致性的级别 强一致性 始终一致">
+<meta property="og:description" content="从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。 我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。 1.    一致性的级别 强一致">
 <meta property="og:locale">
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/%E4%BA%8C%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.png">
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/zab4.png">
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/zab5.png">
 <meta property="article:published_time" content="2021-08-14T04:21:50.000Z">
-<meta property="article:modified_time" content="2021-08-14T07:43:46.906Z">
+<meta property="article:modified_time" content="2021-08-15T12:59:50.100Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="Distributed protocol">
 <meta name="twitter:card" content="summary">
@@ -456,7 +456,7 @@ height:50vh;
     <article class="article-entry">
         <p>从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。</p>
 <p>我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。</p>
-<h1 id="一致性的级别"><a href="#一致性的级别" class="headerlink" title="一致性的级别"></a>一致性的级别</h1><ul>
+<h1 id="1-一致性的级别"><a href="#1-一致性的级别" class="headerlink" title="1.    一致性的级别"></a>1.    一致性的级别</h1><ul>
 <li><p>强一致性</p>
 <p>始终一致，体验性最好但对系统的性能影响比较大。</p>
 </li>
@@ -467,7 +467,7 @@ height:50vh;
 <p>是弱一致性的一个特例，会保证在一个时间内，达到数据一致性。</p>
 </li>
 </ul>
-<h1 id="事务和分布式事务"><a href="#事务和分布式事务" class="headerlink" title="事务和分布式事务"></a>事务和分布式事务</h1><p>我们对于事务这个词听着比较熟悉，他在狭义上讲的是数据库事务，书上的解释是一系列对系统中数据进入访问与更新的操作所组成的一个程序执行逻辑单元。</p>
+<h1 id="2-事务和分布式事务"><a href="#2-事务和分布式事务" class="headerlink" title="2.     事务和分布式事务"></a>2.     事务和分布式事务</h1><p>我们对于事务这个词听着比较熟悉，他在狭义上讲的是数据库事务，书上的解释是一系列对系统中数据进入访问与更新的操作所组成的一个程序执行逻辑单元。</p>
 <p>事务有四个特性ACID，<code>原子性</code>，<code>一致性</code>，<code>隔离性</code>，<code>持久性</code>。</p>
 <p>在单机的时代我们可以很容易的实现一套满足ACID的事务处理系统，但分布式数据库中，数据散落在不同的机器上，怎么对这些数据进行分布式的事务就成为了挑战。</p>
 <p>CAP理论和BASE理论的提出：</p>
@@ -477,10 +477,10 @@ height:50vh;
 <p>分区一致性：在遇到任何网络分区的情况下还能满足一致性和可用性，除非网络通信全断了。</p>
 </blockquote>
 <p>BASE理论是基于CAP演变来的，基本可用，弱状态和最终一致性。</p>
-<h1 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h1><h2 id="二阶段提交协议"><a href="#二阶段提交协议" class="headerlink" title="二阶段提交协议"></a>二阶段提交协议</h2><p>分布式系统中，每个节点虽然可以知晓自己的操作时成功或者失败，却无法知道其他节点的操作的成功或失败。当一个事务跨越多个节点时，为了保持事务的ACID特性，需要引入一个作为<strong>协调者</strong>的组件来统一掌控所有节点(称作<strong>参与者</strong>)的操作结果并最终指示这些节点是否要把操作结果进行真正的提交(比如将更新后的数据写入磁盘等等)。</p>
+<h1 id="3-一致性协议"><a href="#3-一致性协议" class="headerlink" title="3.    一致性协议"></a>3.    一致性协议</h1><h2 id="3-1-二阶段提交协议"><a href="#3-1-二阶段提交协议" class="headerlink" title="3.1    二阶段提交协议"></a>3.1    二阶段提交协议</h2><p>分布式系统中，每个节点虽然可以知晓自己的操作时成功或者失败，却无法知道其他节点的操作的成功或失败。当一个事务跨越多个节点时，为了保持事务的ACID特性，需要引入一个作为<strong>协调者</strong>的组件来统一掌控所有节点(称作<strong>参与者</strong>)的操作结果并最终指示这些节点是否要把操作结果进行真正的提交(比如将更新后的数据写入磁盘等等)。</p>
 <p>因此，二阶段提交的算法思路可以概括为：<strong>参与者将操作成败通知协调者，再由协调者根据所有参与者的反馈情报决定各参与者是否要提交操作还是中止操作。</strong></p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/%E4%BA%8C%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.png"></p>
-<h3 id="过程介绍"><a href="#过程介绍" class="headerlink" title="过程介绍"></a>过程介绍</h3><p>所谓的两个阶段是指：第一阶段：准备阶段(投票阶段)和第二阶段：提交阶段（执行阶段）。</p>
+<h3 id="3-1-1-过程介绍"><a href="#3-1-1-过程介绍" class="headerlink" title="3.1.1    过程介绍"></a>3.1.1    过程介绍</h3><p>所谓的两个阶段是指：第一阶段：准备阶段(投票阶段)和第二阶段：提交阶段（执行阶段）。</p>
 <ol>
 <li><p>准备阶段</p>
 <p>1.由协调者发起并传递带有事务信息的请求给各个参与者，询问是否可以提交事务，并等待返回结果。</p>
@@ -505,12 +505,12 @@ height:50vh;
 <p>(3) 各参与者向协调者反馈Ack完成的消息。</p>
 <p>(4) 协调者收到所有参与者反馈的Ack消息后，即完成事务中断。</p>
 </blockquote>
-<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p>优点：原理简单，实现方便</p>
+<h3 id="3-1-2-优缺点"><a href="#3-1-2-优缺点" class="headerlink" title="3.1.2    优缺点"></a>3.1.2    优缺点</h3><p>优点：原理简单，实现方便</p>
 <p>缺点：同步阻塞，单点问题，脑裂问题</p>
 <blockquote>
 <p>在阶段2中，如果只有部分参与者接收并执行了Commit请求，会导致节点数据不一致。</p>
 </blockquote>
-<h2 id="三阶段提交协议"><a href="#三阶段提交协议" class="headerlink" title="三阶段提交协议"></a>三阶段提交协议</h2><h3 id="过程介绍-1"><a href="#过程介绍-1" class="headerlink" title="过程介绍"></a>过程介绍</h3><p>三阶段提交是在二基础提交上的改进，即将事务的提交过程分为CanCommit、PreCommit、do Commit三个阶段来进行处理。</p>
+<h2 id="3-2-三阶段提交协议"><a href="#3-2-三阶段提交协议" class="headerlink" title="3.2    三阶段提交协议"></a>3.2    三阶段提交协议</h2><h3 id="3-2-1-过程介绍"><a href="#3-2-1-过程介绍" class="headerlink" title="3.2.1    过程介绍"></a>3.2.1    过程介绍</h3><p>三阶段提交是在二基础提交上的改进，即将事务的提交过程分为CanCommit、PreCommit、do Commit三个阶段来进行处理。</p>
 <ol>
 <li><p>CanCommit</p>
 <p> 1.协调者向所有参与者发出包含事务内容的CanCommit请求，询问是否可以提交事务，并等待所有参与者答复。</p>
@@ -552,44 +552,47 @@ height:50vh;
 </blockquote>
 <p>注意：进入阶段三后，无论协调者出现问题，或者协调者与参与者网络出现问题，都会导致参与者无法接收到协调者发出的 do Commit请求或abort请求。此时，参与者都会在等待超时之后，继续执行事务提交。</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.png"></p>
-<h3 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a>优缺点</h3><p>优点：引入超时机制。同时在协调者和参与者中都引入超时机制。降低了阻塞范围，在等待超时后协调者或参与者会中断事务。避免了协调者单点问题，阶段3中协调者出现问题时，参与者会继续提交事务。</p>
+<h3 id="3-2-2-优缺点"><a href="#3-2-2-优缺点" class="headerlink" title="3.2.2    优缺点"></a>3.2.2    优缺点</h3><p>优点：引入超时机制。同时在协调者和参与者中都引入超时机制。降低了阻塞范围，在等待超时后协调者或参与者会中断事务。避免了协调者单点问题，阶段3中协调者出现问题时，参与者会继续提交事务。</p>
 <p>缺陷：脑裂问题依然存在，即在参与者收到PreCommit请求后等待最终指令，如果此时协调者无法与参与者正常通信，由于网络原因，协调者发送的abort响应没有及时被参与者接收到，那么参与者在等待超时之后执行了commit操作。这样就和其他接到abort命令并执行回滚的参与者之间存在数据不一致的情况。</p>
-<h2 id="Paxos协议"><a href="#Paxos协议" class="headerlink" title="Paxos协议"></a>Paxos协议</h2><p>上面我们可以看到二阶段和三阶段都可能出现数据不一致的现象，直到提出了paxos后，就持续垄断了分布式一致性算法，Paxos这个名词几乎等同于分布式一致性。</p>
+<h2 id="3-3-Paxos协议"><a href="#3-3-Paxos协议" class="headerlink" title="3.3    Paxos协议"></a>3.3    Paxos协议</h2><p>上面我们可以看到二阶段和三阶段都可能出现数据不一致的现象，直到提出了paxos后，就持续垄断了分布式一致性算法，Paxos这个名词几乎等同于分布式一致性。</p>
 <p>简单的说下paxos的提出是作者假想了一个叫paxos的希腊城邦，城邦要采用民主提议和投票的方式选出一个最终的决议，但由于城邦的居民没人愿意把精力都放在这种事情上，所以他们只能不定时的参加提议，不定时的来了解提议和投票进展，不定时的表达自己的意见，paxos算法的目标就是让他们按照少数服从多数的方式来最终达成一致意见。</p>
 <p>Paxos的最大特点就是难，不仅难以理解，更难以实现，所以现在大部分的一致性协议都是基于paxos的衍生实现，比如zab，raft。</p>
 <p>在2PC或3PC中，主要有协调者和参与者两种角色，在Paxos中，有三种角色，提议者，接收者和学习者。但是Paxos的基本流程主要在提议者和接收者之间发生。</p>
 <ul>
-<li>提议者（proposer）：提出提案，提案包含一个提案ID和一个提议的值。</li>
-<li>接收者(acceptor)：参与决策，就提议者提出的提案进行承诺接收，如半数以上的接收者同意提案，则提案被通过。</li>
-<li>学习者(learner)：参与决策，当提议者和接收者达成最终一致后，学习其最终值。</li>
+<li><p>提议者（proposer）：提出提案，提案包含一个提案ID和一个提议的值。</p>
+</li>
+<li><p>接收者(acceptor)：参与决策，就提议者提出的提案进行承诺接收，如半数以上的接收者同意提案，则提案被通过。</p>
+</li>
+<li><p>学习者(learner)：参与决策，当提议者和接收者达成最终一致后，学习其最终值。</p>
+</li>
 </ul>
-<h3 id="过程介绍-2"><a href="#过程介绍-2" class="headerlink" title="过程介绍"></a>过程介绍</h3><p>第一阶段：因为存在多个“提议者”，如果都提意见，那么“接受者“到底应该接受谁？所以要先明确哪个提议者有权提出提议，未来”接受者“们就主要处理这个”提议者“的提议（提出提议时就尽量让意见统一，尽早形成多数派）。</p>
+<h3 id="3-3-1-过程介绍"><a href="#3-3-1-过程介绍" class="headerlink" title="3.3.1    过程介绍"></a>3.3.1    过程介绍</h3><p>第一阶段：因为存在多个“提议者”，如果都提意见，那么“接受者“到底应该接受谁？所以要先明确哪个提议者有权提出提议，未来”接受者“们就主要处理这个”提议者“的提议（提出提议时就尽量让意见统一，尽早形成多数派）。</p>
 <p>第二阶段：由上阶段选出的提议者提出提议，”接受者“反馈意见。如果多数接受了一个提议，那么提议就通过了。</p>
-<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><ol>
+<h3 id="3-3-2-实现细节"><a href="#3-3-2-实现细节" class="headerlink" title="3.3.2    实现细节"></a>3.3.2    实现细节</h3><ol>
 <li>怎么明确谁应该是”合适“的提议者？通过编号。每个”提议者“在第一阶段先报个号，谁号大就当提议者。</li>
 <li>每个”提议者“不会执着于让自己的提议通过，而是每个”提议者“会执着于让提议尽快的达成一致意见。所以如果”提议者“在选举时发现”接受者“之前已经接受过别的”提议者“的提议了，那就算自己赢得了本次选举，也会默默的把自己的提议改成前面”提议者“的提议。（为了尽快的意见统一）</li>
 <li>号的大小很重要，号小的无论啥时候”接受者“都会直接拒绝。</li>
 <li>如果你是提议者，在选举时发现”接受者1“说”他见的提议者的提议是方案1“，而”接受者2“说”他见的提议者的提议是方案2“，那么还是要通过对比”号的大小“，”接受者“在接收提案时会记录下”相关提议者号的大小和提议内容（如果有的话）“，所以只需要判断哪个提议者号大就把自己的提议改成哪个提议者的。</li>
 </ol>
-<h2 id="zab协议"><a href="#zab协议" class="headerlink" title="zab协议"></a>zab协议</h2><p>Zab借鉴了Paxos算法，但又不像Paxos那样，是一种通用的分布式一致性算法。它是特别为Zookeeper设计的支持崩溃恢复的原子广播协议。Zab协议的全称是 Zookeeper Atomic Broadcast （Zookeeper原子广播）。Zookeeper 是通过 Zab 协议来保证分布式事务的最终一致性。</p>
+<h2 id="3-4-zab协议"><a href="#3-4-zab协议" class="headerlink" title="3.4    zab协议"></a>3.4    zab协议</h2><p>Zab借鉴了Paxos算法，但又不像Paxos那样，是一种通用的分布式一致性算法。它是特别为Zookeeper设计的支持崩溃恢复的原子广播协议。Zab协议的全称是 Zookeeper Atomic Broadcast （Zookeeper原子广播）。Zookeeper 是通过 Zab 协议来保证分布式事务的最终一致性。</p>
 <p>基于该协议，zk实现了一种主备模型（即Leader和Follower模型）的系统架构来保证集群中各个副本之间数据的一致性。这里的主备系统架构模型，就是指只有一台客户端（Leader）负责处理外部的<strong>写事务请求</strong>，然后Leader客户端将<strong>数据同步</strong>到其他Follower节点。</p>
 <p>Zookeeper 客户端会随机的链接到 zookeeper 集群中的一个节点，如果是读请求，就直接从当前节点中读取数据；如果是写请求，那么节点就会向 Leader 提交事务，Leader 接收到事务提交，会<strong>广播</strong>该事务，只要<strong>超过半数节点</strong>写入成功，该事务就会被<strong>提交</strong>。</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/%E4%B8%80%E8%87%B4%E6%80%A73.png"></p>
-<h3 id="实现细节-1"><a href="#实现细节-1" class="headerlink" title="实现细节"></a>实现细节</h3><ol>
+<h3 id="3-4-1-实现细节"><a href="#3-4-1-实现细节" class="headerlink" title="3.4.1    实现细节"></a>3.4.1    实现细节</h3><ol>
 <li>使用一个单一的主进程（Leader）来接收并处理客户端的事务请求（也就是写请求），并采用了Zab的原子广播协议，将服务器数据的状态变更以<strong>事务proposal</strong>（事务提议）的形式广播到所有的副本（Follower）进程上去。</li>
 <li>保证一个全局的变更序列被<strong>顺序引用</strong>。<br>Zab要保证同一个Leader发起的事务要按顺序被apply，同时还要保证只有先前Leader的事务被apply之后，新选举出来的Leader才能再次发起事务。</li>
 <li>当主进程出现异常的时候，整个zk集群依旧能正常工作。</li>
 </ol>
-<h3 id="如何实现数据一致性"><a href="#如何实现数据一致性" class="headerlink" title="如何实现数据一致性"></a>如何实现数据一致性</h3><p>可以通过Zab 协议的两种基本的模式：<strong>崩溃恢复</strong>和<strong>消息广播</strong>来研究。</p>
+<h3 id="3-4-2-如何实现数据一致性"><a href="#3-4-2-如何实现数据一致性" class="headerlink" title="3.4.2    如何实现数据一致性"></a>3.4.2    如何实现数据一致性</h3><p>可以通过Zab 协议的两种基本的模式：<strong>崩溃恢复</strong>和<strong>消息广播</strong>来研究。</p>
 <p>当整个集群启动过程中，或者当 Leader 服务器出现网络中弄断、崩溃退出或重启等异常时，Zab协议就会 进入崩溃恢复模式，选举产生新的Leader。</p>
 <p>当选举产生了新的 Leader，同时集群中有过半的机器与该 Leader 服务器完成了状态同步（即数据同步）之后，Zab协议就会退出崩溃恢复模式，进入消息广播模式。</p>
-<h4 id="消息广播"><a href="#消息广播" class="headerlink" title="消息广播"></a>消息广播</h4><p>1）客户端发起一个写操作请求。</p>
+<h4 id="3-4-2-1-消息广播"><a href="#3-4-2-1-消息广播" class="headerlink" title="3.4.2.1    消息广播"></a>3.4.2.1    消息广播</h4><p>1）客户端发起一个写操作请求。</p>
 <p>2）Leader 服务器将客户端的请求转化为事务 Proposal 提案，同时为每个 Proposal 分配一个全局的ID，即zxid。</p>
 <p>3）Leader 服务器为每个 Follower 服务器分配一个单独的队列，然后将需要广播的 Proposal 依次放到队列中取，并且根据 FIFO 策略进行消息发送。</p>
 <p>4）Follower 接收到 Proposal 后，会首先将其以事务日志的方式写入本地磁盘中，写入成功后向 Leader 反馈一个 Ack 响应消息。</p>
 <p>5）Leader 接收到超过半数以上 Follower 的 Ack 响应消息后，即认为消息发送成功，可以发送 commit 消息。</p>
 <p>6）Leader 向所有 Follower 广播 commit 消息，同时自身也会完成事务提交。Follower 接收到 commit 消息后，会将上一条事务提交。</p>
-<h4 id="崩溃恢复"><a href="#崩溃恢复" class="headerlink" title="崩溃恢复"></a>崩溃恢复</h4><p>Zab 协议崩溃恢复必须满足以下两个要求：<br>1）Zab 协议需要确保那些已经在 Leader 服务器上提交（Commit）的事务最终被所有的服务器提交。</p>
+<h4 id="3-4-2-2-崩溃恢复"><a href="#3-4-2-2-崩溃恢复" class="headerlink" title="3.4.2.2    崩溃恢复"></a>3.4.2.2    崩溃恢复</h4><p>Zab 协议崩溃恢复必须满足以下两个要求：<br>1）Zab 协议需要确保那些已经在 Leader 服务器上提交（Commit）的事务最终被所有的服务器提交。</p>
 <blockquote>
 <p>选择拥有 proposal 最大值（即 zxid 最大） 的节点作为新的 Leader</p>
 </blockquote>
@@ -611,9 +614,9 @@ height:50vh;
 <p><strong>数据恢复</strong></p>
 <p>1）完成 Leader 选举后（新的 Leader 具有最高的zxid），在正式开始工作之前（接收事务请求，然后提出新的 Proposal），Leader 服务器会首先确认事务日志中的所有的 Proposal 是否已经被集群中过半的服务器 Commit。</p>
 <p>2）Leader 服务器需要确保所有的 Follower 服务器能够接收到每一条事务的 Proposal ，并且能将所有已经提交的事务 Proposal 应用到内存数据中。等到 Follower 将所有尚未同步的事务 Proposal 都从 Leader 服务器上同步过啦并且应用到内存数据中以后，Leader 才会把该 Follower 加入到真正可用的 Follower 列表中。</p>
-<h3 id="zab协议核心"><a href="#zab协议核心" class="headerlink" title="zab协议核心"></a>zab协议核心</h3><p>定义了事务请求的处理方式</p>
+<h3 id="3-4-3-zab协议核心"><a href="#3-4-3-zab协议核心" class="headerlink" title="3.4.3    zab协议核心"></a>3.4.3    zab协议核心</h3><p>定义了事务请求的处理方式</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/zab4.png"></p>
-<h3 id="zab协议原理"><a href="#zab协议原理" class="headerlink" title="zab协议原理"></a>zab协议原理</h3><p>Zab协议要求每个 Leader 都要经历三个阶段：<strong>发现，同步，广播</strong>。</p>
+<h3 id="3-4-4-zab协议原理"><a href="#3-4-4-zab协议原理" class="headerlink" title="3.4.4    zab协议原理"></a>3.4.4    zab协议原理</h3><p>Zab协议要求每个 Leader 都要经历三个阶段：<strong>发现，同步，广播</strong>。</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/zab5.png"></p>
 <p>运行分析：</p>
 <p>在zab协议的设计中，每一个进程都有可能处于以下三种状态之一。</p>
@@ -631,7 +634,7 @@ height:50vh;
             <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
             <p>原文链接：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/">https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/</a>
             <p>发表日期：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/">August 14th 2021, 12:21:50 pm</a>
-            <p>更新日期：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/">August 14th 2021, 3:43:46 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/">August 15th 2021, 8:59:50 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -804,7 +807,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E7%BA%A7%E5%88%AB"><span class="toc-number">1.</span> <span class="toc-text">一致性的级别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">事务和分布式事务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">一致性协议</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.1.</span> <span class="toc-text">二阶段提交协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.1.1.</span> <span class="toc-text">过程介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.</span> <span class="toc-text">三阶段提交协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">过程介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paxos%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.3.</span> <span class="toc-text">Paxos协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E4%BB%8B%E7%BB%8D-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">过程介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-number">3.3.2.</span> <span class="toc-text">实现细节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#zab%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.4.</span> <span class="toc-text">zab协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82-1"><span class="toc-number">3.4.1.</span> <span class="toc-text">实现细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">3.4.2.</span> <span class="toc-text">如何实现数据一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E5%B9%BF%E6%92%AD"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">消息广播</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B4%A9%E6%BA%83%E6%81%A2%E5%A4%8D"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">崩溃恢复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zab%E5%8D%8F%E8%AE%AE%E6%A0%B8%E5%BF%83"><span class="toc-number">3.4.3.</span> <span class="toc-text">zab协议核心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zab%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86"><span class="toc-number">3.4.4.</span> <span class="toc-text">zab协议原理</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E7%BA%A7%E5%88%AB"><span class="toc-number">1.</span> <span class="toc-text">1.    一致性的级别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E4%BA%8B%E5%8A%A1%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">2.     事务和分布式事务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">3.    一致性协议</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E4%BA%8C%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.1.</span> <span class="toc-text">3.1    二阶段提交协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-%E8%BF%87%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.1.1.</span> <span class="toc-text">3.1.1    过程介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text">3.1.2    优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.</span> <span class="toc-text">3.2    三阶段提交协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-%E8%BF%87%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1    过程介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.2.2.</span> <span class="toc-text">3.2.2    优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Paxos%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.3.</span> <span class="toc-text">3.3    Paxos协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-1-%E8%BF%87%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.3.1    过程介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-2-%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.3.2    实现细节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-zab%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.4.</span> <span class="toc-text">3.4    zab协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-1-%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-number">3.4.1.</span> <span class="toc-text">3.4.1    实现细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-2-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">3.4.2.</span> <span class="toc-text">3.4.2    如何实现数据一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-2-1-%E6%B6%88%E6%81%AF%E5%B9%BF%E6%92%AD"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">3.4.2.1    消息广播</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-2-2-%E5%B4%A9%E6%BA%83%E6%81%A2%E5%A4%8D"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">3.4.2.2    崩溃恢复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-3-zab%E5%8D%8F%E8%AE%AE%E6%A0%B8%E5%BF%83"><span class="toc-number">3.4.3.</span> <span class="toc-text">3.4.3    zab协议核心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-4-zab%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86"><span class="toc-number">3.4.4.</span> <span class="toc-text">3.4.4    zab协议原理</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">

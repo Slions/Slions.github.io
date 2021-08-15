@@ -20,12 +20,12 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。  一致性协议Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。 在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候">
+    <meta name="description" content="上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。  3.5    Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。 在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="走近分布式一致性协议（下篇）">
 <meta property="og:url" content="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。  一致性协议Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。 在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候">
+<meta property="og:description" content="上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。  3.5    Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。 在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的">
 <meta property="og:locale">
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/raft7.png">
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/raft01.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/raft08.png">
 <meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/rsm01.png">
 <meta property="article:published_time" content="2021-08-14T07:42:00.000Z">
-<meta property="article:modified_time" content="2021-08-14T08:12:32.829Z">
+<meta property="article:modified_time" content="2021-08-15T13:05:36.981Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="Distributed protocol">
 <meta name="twitter:card" content="summary">
@@ -460,20 +460,22 @@ height:50vh;
     <article class="article-entry">
         <a href="/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" title="上篇">上篇</a>简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。
 
-<h1 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h1><h2 id="Raft协议"><a href="#Raft协议" class="headerlink" title="Raft协议"></a>Raft协议</h2><p>类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。</p>
+<h2 id="3-5-Raft协议"><a href="#3-5-Raft协议" class="headerlink" title="3.5    Raft协议"></a>3.5    Raft协议</h2><p>类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。</p>
 <p>在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候，将日志命令提交执行。当leader故障时，会选举产生一个新的leader。在强leader的帮助下，Raft将一致性问题分解为了三个子问题：</p>
 <ol>
 <li>leader选举：当已有的leader故障时必须选出一个新的leader。</li>
 <li>日志复制：leader接受来自客户端的命令，记录为日志，并复制给集群中的其他服务器，并强制其他节点的日志与leader保持一致。</li>
 <li>安全措施：通过一些措施确保系统的安全性，如确保所有状态机按照相同顺序执行相同命令的措施。</li>
 </ol>
-<h3 id="Raft基本流程"><a href="#Raft基本流程" class="headerlink" title="Raft基本流程"></a>Raft基本流程</h3><p>一个Raft集群拥有多个奇数台服务器，我们一般是三台，这样可以容忍一台服务器出现故障。服务器可能会处于如下三种角色：领导者（leader）、候选人（candidate）、跟随者（follower），正常运行的情况下，会有一个leader，其他全为follower，<strong>follower只会响应leader和candidate的请求，而客户端的请求则全部由leader处理</strong>，即使有客户端请求了一个follower也会将请求重定向到leader。candidate代表候选人，出现在选举leader阶段，选举成功后candidate将会成为新的leader。可能出现的状态转换关系如下图：</p>
+<h3 id="3-5-1-Raft基本流程"><a href="#3-5-1-Raft基本流程" class="headerlink" title="3.5.1    Raft基本流程"></a>3.5.1    Raft基本流程</h3><p>一个Raft集群拥有多个奇数台服务器，我们一般是三台，这样可以容忍一台服务器出现故障。服务器可能会处于如下三种角色：领导者（leader）、候选人（candidate）、跟随者（follower），正常运行的情况下，会有一个leader，其他全为follower，<strong>follower只会响应leader和candidate的请求，而客户端的请求则全部由leader处理</strong>，即使有客户端请求了一个follower也会将请求重定向到leader。candidate代表候选人，出现在选举leader阶段，选举成功后candidate将会成为新的leader。可能出现的状态转换关系如下图：</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft7.png"></p>
 <p>从图中可以看出，集群刚启动时，所有节点都是follower，之后在time out信号的驱使下，follower会转变成candidate去拉取选票，获得大多数选票后就会成为leader，这时候如果其他候选人发现了新的leader已经诞生，就会自动转变为follower；而如果另一个time out信号发出时，还没有选举出leader，将会重新开始一次新的选举。可见，time out信号是促使角色转换得关键因素，类似于操作系统中得中断信号。</p>
-<h3 id="term"><a href="#term" class="headerlink" title="term"></a>term</h3><p>在Raft协议中，将时间分成了一些任意长度的时间片，称为term，term使用连续递增的编号的进行识别。</p>
+<p><strong>term</strong></p>
+<p>在Raft协议中，将时间分成了一些任意长度的时间片，称为term，term使用连续递增的编号的进行识别。</p>
 <p>每一个term都从新的选举开始，candidate们会努力争取称为leader。一旦获胜，它就会在剩余的term时间内保持leader状态。</p>
 <p>term也起到了系统中逻辑时钟的作用，每一个server都存储了当前term编号，在server之间进行交流的时候就会带有该编号，如果一个server的编号小于另一个的，那么它会将自己的编号更新为较大的那一个；如果leader或者candidate发现自己的编号不是最新的了，就会自动转变为follower；如果接收到的请求的term编号小于自己的当前term将会拒绝执行。</p>
-<h3 id="rpc"><a href="#rpc" class="headerlink" title="rpc"></a>rpc</h3><p>server之间的交流是通过RPC进行的。只需要实现两种RPC就能构建一个基本的Raft集群：</p>
+<p><strong>rpc</strong></p>
+<p>server之间的交流是通过RPC进行的。只需要实现两种RPC就能构建一个基本的Raft集群：</p>
 <ul>
 <li>RequestVote RPC：它由选举过程中的candidate发起，用于拉取选票</li>
 <li>AppendEntries RPC：它由leader发起，用于复制日志或者发送心跳信号。</li>
@@ -482,7 +484,7 @@ height:50vh;
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft01.png"></p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft02.png"></p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft03.png"></p>
-<h3 id="Leader选举"><a href="#Leader选举" class="headerlink" title="Leader选举"></a>Leader选举</h3><p>Raft通过<strong>心跳机制</strong>发起leader选举。节点都是从follower状态开始的，如果收到了来自leader或candidate的RPC，那它就保持follower状态，避免争抢成为candidate。Leader会发送空的AppendEntries RPC作为心跳信号来确立自己的地位，（心跳间隔时间）如果follower一段时间(选举超时时间)没有收到心跳，它就会认为leader已经挂了，发起新的一轮选举。</p>
+<h3 id="3-5-2-Leader选举"><a href="#3-5-2-Leader选举" class="headerlink" title="3.5.2    Leader选举"></a>3.5.2    Leader选举</h3><p>Raft通过<strong>心跳机制</strong>发起leader选举。节点都是从follower状态开始的，如果收到了来自leader或candidate的RPC，那它就保持follower状态，避免争抢成为candidate。Leader会发送空的AppendEntries RPC作为心跳信号来确立自己的地位，（心跳间隔时间）如果follower一段时间(选举超时时间)没有收到心跳，它就会认为leader已经挂了，发起新的一轮选举。</p>
 <p>选举发起后，一个follower会增加自己的当前term编号并转变为candidate。它会首先投自己一票，然后向其他所有节点并行发起RequestVote RPC，之后candidate状态将可能发生如下三种变化:</p>
 <ul>
 <li>赢得选举称为leader: 如果它在一个term内收到了大多数的选票，将会在接下的剩余term时间内称为leader，然后就可以通过发送心跳确立自己的地位。(每一个server在一个term内只能投一张选票，并且按照先到先得的原则投出)</li>
@@ -490,8 +492,8 @@ height:50vh;
 <li>选票被瓜分,选举失败：如果没有candidate获取大多数选票, 则没有leader产生, candidate们等待超时后发起另一轮选举。为了防止下一次选票还被瓜分,必须采取一些额外的措施, <strong>raft采用随机election timeout的机制防止选票被持续瓜分</strong>。通过将timeout随机设为一段区间上的某个值, 因此很大概率会有某个candidate率先超时然后赢得大部分选票.（随机重试机制）</li>
 </ul>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft05.png"></p>
-<h3 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h3><p>一旦leader被选举成功，就可以对客户端提供服务了。客户端提交每一条命令都会被按<strong>顺序</strong>记录到leader的日志中，每一条命令都包含term编号和顺序索引，然后向其他节点并行发送<strong>AppendEntries RPC</strong>用以复制命令(如果命令丢失会<strong>不断重发</strong>)，当复制成功也就是大多数节点成功复制后，leader就会提交命令，即执行该命令并且将执行结果返回客户端，raft保证已经提交的命令最终也会被其他节点成功执行。leader会保存有当前已经提交的<strong>最高日志编号</strong>。顺序性确保了相同日志索引处的命令是相同的，而且之前的命令也是相同的。当发送AppendEntries RPC时，会<strong>包含leader上一条刚处理过的命令</strong>，接收节点如果发现上一条命令不匹配，就会拒绝执行。</p>
-<h3 id="安全措施"><a href="#安全措施" class="headerlink" title="安全措施"></a>安全措施</h3><ul>
+<h3 id="3-5-3-日志复制"><a href="#3-5-3-日志复制" class="headerlink" title="3.5.3    日志复制"></a>3.5.3    日志复制</h3><p>一旦leader被选举成功，就可以对客户端提供服务了。客户端提交每一条命令都会被按<strong>顺序</strong>记录到leader的日志中，每一条命令都包含term编号和顺序索引，然后向其他节点并行发送<strong>AppendEntries RPC</strong>用以复制命令(如果命令丢失会<strong>不断重发</strong>)，当复制成功也就是大多数节点成功复制后，leader就会提交命令，即执行该命令并且将执行结果返回客户端，raft保证已经提交的命令最终也会被其他节点成功执行。leader会保存有当前已经提交的<strong>最高日志编号</strong>。顺序性确保了相同日志索引处的命令是相同的，而且之前的命令也是相同的。当发送AppendEntries RPC时，会<strong>包含leader上一条刚处理过的命令</strong>，接收节点如果发现上一条命令不匹配，就会拒绝执行。</p>
+<h3 id="3-5-4-安全措施"><a href="#3-5-4-安全措施" class="headerlink" title="3.5.4    安全措施"></a>3.5.4    安全措施</h3><ul>
 <li><p>日志复制原则</p>
 <p>在Raft中，leader通过<strong>强制follower复制自己的日志</strong>来解决日志不一致的情形，那么冲突的日志将会被重写。为了让日志一致，先找到最新的一致的那条日志，然后把follower之后的日志全部删除，leader再把自己在那之后的日志一股脑推送给follower，这样就实现了一致。而寻找该条日志，可以通过AppendEntries RPC，该RPC中包含着<strong>下一次要执行的命令索引</strong>（nextIndex），如果能和follower的当前索引对上，那就执行，否则拒绝，然后leader将会逐次递减索引，直到找到相同的那条日志。</p>
 </li>
@@ -501,13 +503,13 @@ height:50vh;
 <li><p>如果命令已经被复制到了大部分节点上,但是还没来的及提交就崩溃了,这样后来的leader应该完成之前term未完成的提交. Raft通过让leader统计当前term内还未提交的命令已经被复制的数量是否<strong>半数以上</strong>, 然后进行提交。</p>
 </li>
 </ul>
-<h3 id="日志压缩"><a href="#日志压缩" class="headerlink" title="日志压缩"></a>日志压缩</h3><p>随着日志大小的增长，会占用更多的内存空间，处理起来也会耗费更多的时间，对系统的可用性造成影响，因此必须想办法压缩日志大小。Snapshotting是最简单的压缩方法，系统的全部状态会写入一个snapshot保存起来，然后丢弃截止到snapshot时间点之前的所有日志。Raft中的snapshot内容如下图所示：</p>
+<h3 id="3-5-5-日志压缩"><a href="#3-5-5-日志压缩" class="headerlink" title="3.5.5    日志压缩"></a>3.5.5    日志压缩</h3><p>随着日志大小的增长，会占用更多的内存空间，处理起来也会耗费更多的时间，对系统的可用性造成影响，因此必须想办法压缩日志大小。Snapshotting是最简单的压缩方法，系统的全部状态会写入一个snapshot保存起来，然后丢弃截止到snapshot时间点之前的所有日志。Raft中的snapshot内容如下图所示：</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft06.png"></p>
 <p>每一个server都有自己的snapshot，它只保存当前状态，如上图中的当前状态为x=0,y=9，而last included index和last included term代表snapshot之前最新的命令，用于AppendEntries的状态检查。</p>
 <p>虽然每一个server都保存有自己的snapshot，但是当follower严重落后于leader时，leader需要把自己的snapshot发送给follower加快同步，此时用到了一个新的RPC：<strong>InstallSnapshot RPC</strong>。follower收到snapshot时，需要决定如何处理自己的日志，如果收到的snapshot包含有更新的信息，它将<strong>丢弃自己已有的日志，按snapshot更新自己的状态</strong>，RPC的定义如下：</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft07.png"></p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft08.png"></p>
-<h1 id="复制状态机模型"><a href="#复制状态机模型" class="headerlink" title="复制状态机模型"></a>复制状态机模型</h1><p>当同一份数据存在多个副本的时候，怎么管理他们就成了重点。</p>
+<h1 id="4-复制状态机模型"><a href="#4-复制状态机模型" class="headerlink" title="4.    复制状态机模型"></a>4.    复制状态机模型</h1><p>当同一份数据存在多个副本的时候，怎么管理他们就成了重点。</p>
 <p>复制状态机（Repilcated State Machine，RSM）的基本思想是一个分布式的复制状态机系统由多个复制单元组成，每个复制单元均是一个状态机，它的状态保存在一组状态变量中，状态机的状态能够并且只能通过外部命令来改变。（比paxos提出的时间都早，可以算是一致性协议的方法论了）</p>
 <p>“一组状态变量”通常是基于操作日志来实现的，每一个复制单元存储一个包含一系列指令的日志，并且严格按照顺序逐条执行日志上的指令。</p>
 <p><img src="https://gitee.com/Slions/picbed/raw/master/img/rsm01.png"></p>
@@ -529,7 +531,7 @@ height:50vh;
             <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
             <p>原文链接：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/</a>
             <p>发表日期：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">August 14th 2021, 3:42:00 pm</a>
-            <p>更新日期：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">August 14th 2021, 4:12:32 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/">August 15th 2021, 9:05:36 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -697,7 +699,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text">一致性协议</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.1.</span> <span class="toc-text">Raft协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Raft%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">Raft基本流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#term"><span class="toc-number">1.1.2.</span> <span class="toc-text">term</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rpc"><span class="toc-number">1.1.3.</span> <span class="toc-text">rpc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leader%E9%80%89%E4%B8%BE"><span class="toc-number">1.1.4.</span> <span class="toc-text">Leader选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%A4%8D%E5%88%B6"><span class="toc-number">1.1.5.</span> <span class="toc-text">日志复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%8E%AA%E6%96%BD"><span class="toc-number">1.1.6.</span> <span class="toc-text">安全措施</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.1.7.</span> <span class="toc-text">日志压缩</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E7%8A%B6%E6%80%81%E6%9C%BA%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">复制状态机模型</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-Raft%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text">3.5    Raft协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-1-Raft%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">3.5.1    Raft基本流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-2-Leader%E9%80%89%E4%B8%BE"><span class="toc-number">1.2.</span> <span class="toc-text">3.5.2    Leader选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-3-%E6%97%A5%E5%BF%97%E5%A4%8D%E5%88%B6"><span class="toc-number">1.3.</span> <span class="toc-text">3.5.3    日志复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-4-%E5%AE%89%E5%85%A8%E6%8E%AA%E6%96%BD"><span class="toc-number">1.4.</span> <span class="toc-text">3.5.4    安全措施</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-5-%E6%97%A5%E5%BF%97%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.5.</span> <span class="toc-text">3.5.5    日志压缩</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%A4%8D%E5%88%B6%E7%8A%B6%E6%80%81%E6%9C%BA%E6%A8%A1%E5%9E%8B"><span class="toc-number"></span> <span class="toc-text">4.    复制状态机模型</span></a>
     </div>
     
     <div class="sidebar sidebar-hide">
