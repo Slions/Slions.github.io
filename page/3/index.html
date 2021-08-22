@@ -399,6 +399,87 @@ height:57vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >
+            
+                <span>glusterfs可用性测试</span>
+        </a>
+        <div class="abstract-content">
+            环境描述
+
+
+主机名
+ip地址
+系统环境
+角色
+
+
+
+k8s-1
+IP:192.168.186.10
+cpu:x2  mem:2GB  disk:/dev/sdb 40GB
+K8s_master,Gluster_master,Heketi_master
+
+
+K8s-2
+IP:192.168.186.11
+cpu:x2  mem:2GB  disk:/dev/sdb 40GB
+K8s_node...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >
+            
+                <span>glusterfs回收站功能</span>
+        </a>
+        <div class="abstract-content">
+            功能简述glusterfs有一个类似windows回收站的功能，可以帮助用户获取和恢复临时被删除的数据。每个块都会保留一个隐藏的目录.trash，它将会被用于存放被从各个块删除的文件。这个translator以后还会增强功能来支持被删除文件的恢复。
+回收站的目录名应该是可配置的。trash translator也会被用于内部操作比如自卷的自修复以及再平衡。
+1# gluster volume...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/16</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >
             
                 <span>k8s-v1.11使用glusterfs</span>
@@ -636,66 +717,6 @@ docker架构在我的本地环境执行docker ...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >
-            
-                <span>聊聊Cgroup</span>
-        </a>
-        <div class="abstract-content">
-            此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
-什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >
-            
-                <span>大话docker</span>
-        </a>
-        <div class="abstract-content">
-            唠唠背景自我工作以来就一直听到周围人在谈docker和容器，记得真正第一次接触docker是17年在上海，我当时被外派到某大型外资硬件提供商做云计算工程师， 主要做的工作就是负责维护原有的openstack云平台和ceph集群，以及日常服务器的一些上下架和维护工作。因为我之前的项目中openstack都是以传统服务来部署的，日常运维什么的基本没啥问题，而这次面对的环境是容器化后的openst...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
             </div>
             <!-- tags  -->
             
@@ -1352,9 +1373,43 @@ docker架构在我的本地环境执行docker ...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 33
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1370,7 +1425,17 @@ docker架构在我的本地环境执行docker ...
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/ansible%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89/" >ansible入门（一）</a>
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >hexo特殊符号的转义问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >（二）ansible初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >（一）ansible入门</a>
         </li>
     
     
@@ -1560,6 +1625,8 @@ docker架构在我的本地环境执行docker ...
     
         <span class="sidebar-tag-name" data-tags="ansible"><span class="iconfont-archer">&#xe606;</span>ansible</span>
     
+        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1612,6 +1679,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="分布式一致性协议"><span class="iconfont-archer">&#xe60a;</span>分布式一致性协议</span>
     
         <span class="sidebar-category-name" data-categories="ansible回炉"><span class="iconfont-archer">&#xe60a;</span>ansible回炉</span>
+    
+        <span class="sidebar-category-name" data-categories="hexo使用"><span class="iconfont-archer">&#xe60a;</span>hexo使用</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
