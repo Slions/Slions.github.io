@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2021-08-22T15:08:02.967Z</updated>
+  <updated>2021-08-23T09:50:03.891Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>实现科学上网</title>
+    <link href="https://slions.github.io/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    <id>https://slions.github.io/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</id>
+    <published>2021-08-23T08:23:54.000Z</published>
+    <updated>2021-08-23T09:50:03.891Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/shadowsocks/">shadowsocks</a>是当前比较受欢迎的科学上网工具。</p><p>这篇说下Windows系统如何配置。</p><h1 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h1><h2 id="准备代理服务器"><a href="#准备代理服务器" class="headerlink" title="准备代理服务器"></a>准备代理服务器</h2><p>首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。</p><h2 id="安装shadowsocks"><a href="#安装shadowsocks" class="headerlink" title="安装shadowsocks"></a>安装shadowsocks</h2><p>linux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> pip3 install shadowsocks</span></span><br><span class="line">WARNING: Running pip install with root privileges is generally not a good idea. Try `pip3 install --user` instead.</span><br><span class="line">Collecting shadowsocks</span><br><span class="line">  Downloading http://mirrors.tencentyun.com/pypi/packages/02/1e/e3a5135255d06813aca6631da31768d44f63692480af3a1621818008eb4a/shadowsocks-2.8.2.tar.gz</span><br><span class="line">Installing collected packages: shadowsocks</span><br><span class="line">  Running setup.py install for shadowsocks ... done</span><br><span class="line">Successfully installed shadowsocks-2.8.2</span><br></pre></td></tr></table></figure><h2 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h2><p>编写shadowsocks配置文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat &gt;&gt;shadowsocks.json&lt;&lt;<span class="string">EOF</span></span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">    &quot;server_port&quot;: 7295,</span><br><span class="line">    &quot;password&quot;: &quot;a7295&quot;,</span><br><span class="line">    &quot;method&quot;: &quot;aes-256-cfb&quot;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure><table><thead><tr><th>参数</th><th>参数说明</th></tr></thead><tbody><tr><td>server</td><td>服务监听地址</td></tr><tr><td>server_port</td><td>服务监听端口</td></tr><tr><td>password</td><td>服务密码</td></tr><tr><td>method</td><td>加密方式，可选<code>aes-128-cfb, aes-192-cfb, aes-256-cfb, bf-cfb, cast5-cfb, des-cfb, rc4-md5, chacha20, salsa20, rc4, table</code></td></tr></tbody></table><p><code>server_port</code>、<code>password</code>、<code>method</code>在配置 shadowsocks 客户端时需要保持一致。</p><h2 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h2><p>shadowsocks是通过ssserver命令启动的，首先看下当前环境此命令的执行路径。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">which</span> ssserver</span></span><br><span class="line">/usr/local/bin/ssserver</span><br></pre></td></tr></table></figure><p>编写systemd service文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat &gt;&gt; /etc/systemd/system/shadowsocks.service &lt;&lt;<span class="string">EOF</span></span></span><br><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line">ExecStart=/usr/local/bin/ssserver -c /root/shadowsocks.json</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure><p>设置开机自启。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> shadowsocks</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start shadowsocks</span></span><br></pre></td></tr></table></figure><p>至此shadowsocks服务端就配置好了，需要注意的是：客户端会通过shadowsocks服务器的7295端口来连接外网，请提前开通相应的网络策略。</p><p><img src="https://slions.gitee.io/picbed/img/vpn.png"></p><h1 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h1><p>windows版本的shadowsocks请自行下载，以下只说如何配置。</p><p>打开下载的Shadowsocks，将如下信息按照之前服务端的配置填写好，其中服务器的地址是你虚机的外网地址，代理端口 1~65535 只要不被占用就可以。填写完点击确定。</p><p><img src="https://slions.gitee.io/picbed/img/shadowsocks.png"></p><p>右键托盘图标-启动系统代理服务，然后可以在托盘菜单中的系统代理模式中选择pac模式(只会代理根目录中PAC.txt文件中包含的网站)和全局模式(代理所有网站)。</p><p>之后就可以科学上网了。</p><p><img src="https://slions.gitee.io/picbed/img/youtube.png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/shadowsocks/&quot;&gt;shadowsocks&lt;/a&gt;是当前比较受欢迎的科学上网工具。&lt;/p&gt;
+&lt;p&gt;这篇说下Windows系统如何配置。&lt;/p&gt;
+&lt;h1 id=&quot;服务端配置&quot;&gt;&lt;a href=&quot;#服务端配置&quot; c</summary>
+      
+    
+    
+    
+    <category term="科学上网" scheme="https://slions.github.io/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    
+    
+    <category term="shadowsocks" scheme="https://slions.github.io/tags/shadowsocks/"/>
+    
+  </entry>
   
   <entry>
     <title>hexo特殊符号的转义问题</title>
@@ -492,30 +518,6 @@
     
     
     <category term="linux" scheme="https://slions.github.io/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>harbor集群系统负载升高原因分析</title>
-    <link href="https://slions.github.io/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/"/>
-    <id>https://slions.github.io/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/</id>
-    <published>2021-07-19T10:07:15.000Z</published>
-    <updated>2021-08-12T11:51:04.060Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>接到客户反馈，说是创建不了新的服务了，查看相关的Event日志，发现此服务拉取不了images，后台查看harbor节点的状态，发现问题，harbor集群的VIP丢失，并且在主机上执行命令都比较卡，top查看平均负载发现非常高。</p><p><img src="/doc_picture/harbor-1.png" alt="image-20210719181131471"></p><h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>首先我们需要排查什么原因导致harbor节点这个卡顿，负载一直升高。</p><blockquote><p>平均负载是指单位时间内，系统处于可运行状态和不可中断状态的平均进程数，也就是平均活跃进程数。所以，它不仅包括了正在使用CPU的进程，还包括等待CPU和等待I/O的进程。</p></blockquote><p>系统平均负载升高的原因主要有三种：</p><ul><li>CPU密集型进程，使用大量CPU会导致平均负载升高，此时CPU使用率跟平均负载是一致的；</li><li>I/O密集型进程，等待I/O也会导致平均负载升高，但CPU使用率不一定很高；</li><li>大量等待CPU的进程调度也会导致平均负载升高，此时CPU使用率也会比较高。</li></ul><p>首先sar -u 观察CPU情况。</p><p><img src="/doc_picture/harbor-2.png" alt="image-20210719182405728"></p><p>cpu使用率非常低，大部分为idle，说明没有进程在等待cpu资源。</p><p>sar -b 观察IO情况 IO设备的读写tps都几乎为0。</p><p><img src="/doc_picture/harbor-3.png" alt="image-20210719182429006"></p><p>发现并不存在CPU/IO密集型的进程后，执行了下df操作，发现命令hang死，另外开一个终端，通过strace去分析df命令的系统调用及信号情况，可以明显发现df是在系统调用尝试获取目录/harborimages的stat信息时挂起。</p><p><img src="/doc_picture/harbor-4.png" alt="image-20210719182846933"></p><p>通过ps aux抓取系统运行的df进程信息（状态为D+(无法中断的休眠状态)）：</p><p><img src="/doc_picture/harbor-5.png" alt="image-20210719182903747"></p><p>通过ps aux查看内存和cpu占用最多的5个进程发现了问题，没有cpu占用特别大的进程，但是有一个状态为Dl的进程（无法中断的休眠状态/多线程，克隆线程）</p><p><img src="/doc_picture/harbor-6.png" alt="image-20210719182922163"></p><p>我们再查看下此进程的线程状态：</p><p><img src="/doc_picture/harbor-7.png" alt="image-20210719182944057"></p><p>发现有一堆不可中断的线程，而且越来越多，cpu使用率都为0，此时可以定位问题了，有大量进程读写请求一直获取不到资源，从而进程一直是不可中断状态。造成负载很高。平均负载升高导致机器性能降低，内部的keepalived服务心跳机制超时，最后使得VIP丢失。</p><p><img src="/doc_picture/harbor-8.png" alt="image-20210719184236890"></p><p>registry是harbor中负责存储镜像文件的组件，同时负责处理镜像的pull/push命令。此服务会将宿主机的/harborimages作为挂载目录，为了保障可用性我们后端使用了客户现成的nas来挂载到了/harborimages目录，之前执行df hang住的地方正是这个目录。 又在本地创了个测试目录，使用之前的nas地址挂载发现异常。此时回想起来，前一天客户发通知说要进行xxx区机器网络进行调整，大概率是由于这个引起了。联系客户方运维协助排查，最后发现nas服务器因为重启过导致防火墙开启了。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;问题现象&quot;&gt;&lt;a href=&quot;#问题现象&quot; class=&quot;headerlink&quot; title=&quot;问题现象&quot;&gt;&lt;/a&gt;问题现象&lt;/h1&gt;&lt;p&gt;接到客户反馈，说是创建不了新的服务了，查看相关的Event日志，发现此服务拉取不了images，后台查看harbor节点的状</summary>
-      
-    
-    
-    
-    <category term="镜像仓库" scheme="https://slions.github.io/categories/%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93/"/>
-    
-    
-    <category term="harbor" scheme="https://slions.github.io/tags/harbor/"/>
     
   </entry>
   

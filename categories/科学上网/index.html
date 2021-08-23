@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/categories/k8s%E5%AD%98%E5%82%A8/index.html">
+<meta property="og:url" content="https://slions.github.io/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale">
 <meta property="article:author" content="Jingyu Shi">
@@ -386,92 +386,27 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >
+        <a class="abstract-title" href = "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >
             
-                <span>ceph mimic对接k8s 1.17.0(ceph-csi)</span>
+                <span>实现科学上网</span>
         </a>
         <div class="abstract-content">
-            最近测试ceph rbd在kubernetes的自动扩容问题，之前K8s v1.11.0时的策略是先找到目标卷，使用rbd resize命令对此卷扩容，找到挂载此卷的客户端宿主机，执行xfs_growfs等刷新文件系统的命令。查看网上资料k8s 在1.15版本后，ExpandInUsePersistentVolume功能被开启。意思大概就是不需要挂载到容器即可扩容PVC。按网上的手册设置相关...
+            shadowsocks是当前比较受欢迎的科学上网工具。
+这篇说下Windows系统如何配置。
+服务端配置准备代理服务器首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。
+安装shadowsockslinux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。
+1234567# pip3 inst...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/02</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/23</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ceph">ceph</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >
-            
-                <span>k8s-v1.11使用glusterfs</span>
-        </a>
-        <div class="abstract-content">
-            Glusterfs提供底层存储功能，heketi为glusterfs提供restful风格的api，Heketi要求在每个glusterfs节点上配备裸磁盘，目前heketi仅支持使用裸磁盘(未格式化)添加为device，不支持文件系统，因为Heketi要用来创建PV和VG方便管理glusterfs。
-集群托管于heketi后，不能使用命令管理存储卷，以免与Heketi数据库中存储的信息不一...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >
-            
-                <span>手工安装heketi管理glusterfs</span>
-        </a>
-        <div class="abstract-content">
-            GlusterFS（gfs）由此名字也可看出是文件系统存储相关的软件，它是一个开源的分布式文件系统，具有强大的横向扩展能力。Heketi是一个GlusterFs管理软件，可以管理glusterFS集群的卷创建、删除等操作。Glusterfs作为kubernetes支持的多种卷类型之一，可以为上层应用提供多种挂载形式。
-heketi + glusterfs提供两种部署形式：
-
-容器化
-传统服务...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "heketi">heketi</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "shadowsocks">shadowsocks</a>
     
 </div>
             
