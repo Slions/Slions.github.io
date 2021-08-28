@@ -20,22 +20,22 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="这篇讲解下如何修改Centos7的主机名。 Centos7中主机名分为了3类：  static类 就是我们常说的主机名。由&#x2F;etc&#x2F;hostname文件决定。  transient类 我们常说的临时主机名。默认在系统启动的时候会根据&#x2F;etc&#x2F;hostname文件中的静态主机名进行初始化。  pretty类 它可以提供非标准的主机名。它可以包含特殊符号，例如空格。   &#x2F;etc&#x2F;hostname文件">
+    <meta name="description" content="我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。 ansible之所以能成为当">
 <meta property="og:type" content="article">
-<meta property="og:title" content="修改centos7主机名">
-<meta property="og:url" content="https://slions.github.io/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/index.html">
+<meta property="og:title" content="（四）剧本文件playbook">
+<meta property="og:url" content="https://slions.github.io/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="这篇讲解下如何修改Centos7的主机名。 Centos7中主机名分为了3类：  static类 就是我们常说的主机名。由&#x2F;etc&#x2F;hostname文件决定。  transient类 我们常说的临时主机名。默认在系统启动的时候会根据&#x2F;etc&#x2F;hostname文件中的静态主机名进行初始化。  pretty类 它可以提供非标准的主机名。它可以包含特殊符号，例如空格。   &#x2F;etc&#x2F;hostname文件">
+<meta property="og:description" content="我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。 ansible之所以能成为当">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-08-07T13:45:26.000Z">
-<meta property="article:modified_time" content="2021-08-12T11:47:14.611Z">
+<meta property="article:published_time" content="2021-08-28T15:46:18.000Z">
+<meta property="article:modified_time" content="2021-08-28T16:53:38.720Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>修改centos7主机名 · S_lion&#39;s Studio</title>
+    <title>（四）剧本文件playbook · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -251,7 +251,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">修改centos7主机名</a>
+            <a href="#" class="post-name">（四）剧本文件playbook</a>
         </div>
     </div>
     
@@ -294,7 +294,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            修改centos7主机名
+            （四）剧本文件playbook
             <!-- 404 -->
             
         </h1>
@@ -313,18 +313,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">783</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.6k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/08/07</span>
+                    <span class="post-intro-time">2021/08/28</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -448,39 +448,129 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>这篇讲解下如何修改Centos7的主机名。</p>
-<p>Centos7中主机名分为了3类：</p>
-<ol>
-<li><p>static类</p>
-<p>就是我们常说的主机名。由<code>/etc/hostname</code>文件决定。</p>
-</li>
-<li><p>transient类</p>
-<p>我们常说的临时主机名。默认在系统启动的时候会根据<code>/etc/hostname</code>文件中的静态主机名进行初始化。</p>
-</li>
-<li><p>pretty类</p>
-<p>它可以提供非标准的主机名。它可以包含特殊符号，例如空格。</p>
-</li>
-</ol>
-<p><code>/etc/hostname</code>文件没有主机名的时候，在系统启动的时候，内核会将transient初始化为<code>localhost.localdomain</code>。</p>
-<h1 id="主机名修改方式"><a href="#主机名修改方式" class="headerlink" title="主机名修改方式"></a>主机名修改方式</h1><h2 id="hostname"><a href="#hostname" class="headerlink" title="hostname"></a>hostname</h2><p>使用<code>hostname</code>命令修改主机名，它修改是transient主机名，即临时生效的主机名。</p>
-<h2 id="etc-hostname"><a href="#etc-hostname" class="headerlink" title="/etc/hostname"></a>/etc/hostname</h2><p>直接修改/etc/hostname文件，它瞬时生效+永久生效。</p>
-<h2 id="nmtui"><a href="#nmtui" class="headerlink" title="nmtui"></a>nmtui</h2><p>通过<code>nmtui</code>命令在图形化界面修改主机名。会直接修改/etc/hostname文件，他会瞬时生效+永久生效的。</p>
-<h2 id="hostnamectl"><a href="#hostnamectl" class="headerlink" title="hostnamectl"></a>hostnamectl</h2><p>使用<code>hostnamectl</code>命令，它可以修改并查看static、transient或pretty三种主机名。当它修改了static主机名时，会直接写入*/etc/hostname*文件中，因此它也是瞬时生效+永久生效的。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hostnamectl --<span class="built_in">help</span></span></span><br><span class="line">hostnamectl [OPTIONS...] COMMAND ...</span><br><span class="line"></span><br><span class="line">Query or change system hostname.</span><br><span class="line"></span><br><span class="line">  -h --help              Show this help</span><br><span class="line">     --version           Show package version</span><br><span class="line">     --no-ask-password   Do not prompt for password</span><br><span class="line">  -H --host=[USER@]HOST  Operate on remote host</span><br><span class="line">  -M --machine=CONTAINER Operate on local container</span><br><span class="line">     --transient         Only set transient hostname</span><br><span class="line">     --static            Only set static hostname</span><br><span class="line">     --pretty            Only set pretty hostname</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  status                 Show current hostname settings</span><br><span class="line">  set-hostname NAME      Set system hostname</span><br><span class="line">  set-icon-name NAME     Set icon name for host</span><br><span class="line">  set-chassis NAME       Set chassis type for host</span><br><span class="line">  set-deployment NAME    Set deployment environment for host</span><br><span class="line">  set-location NAME      Set location for host</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <p>我们之前的例子都是使用<code>ansible &lt;host-pattern&gt; [-m module_name] [-a args]</code>这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为<code>ad-hoc</code>(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。</p>
+<p>ansible之所以能成为当今自动化运维的一杆大旗是基于它提供了另一种任务方式——<code>playbook</code>。</p>
+<p>playbook是剧本的意思，而之前提到的inventory就像是演员表，ansible的程序执行可以形象的看成拍电影，其中playbook中的每一个play就相当于是电影的每个片段，每一个play都可以有多个任务（tasks），相当于电影片段中的每一幕。每个play中可以定义专属的变量，对应电影片段中的场景布置，每个play中都需要指定执行该play的主机，即当期上场的演员名单。等等的这些组织多个任务多种行为的方式，正是ansible强大的地方——“编排”，而编写这些playbook的我们，即是整个电影的导演。</p>
+<h1 id="playbook示例"><a href="#playbook示例" class="headerlink" title="playbook示例"></a>playbook示例</h1><h2 id="环境清单"><a href="#环境清单" class="headerlink" title="环境清单"></a>环境清单</h2><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>操作系统版本</th>
+<th>内核版本</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>slions_pc1</td>
+<td>192.168.100.10</td>
+<td>CentOS  7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+<td>控制节点</td>
+</tr>
+<tr>
+<td>slions_pc2</td>
+<td>192.168.100.11</td>
+<td>CentOS  7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+<td>被控节点</td>
+</tr>
+<tr>
+<td>slions_pc3</td>
+<td>192.168.100.12</td>
+<td>CentOS  7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+<td>被控节点</td>
+</tr>
+</tbody></table>
+<p>所有的主机上都已启动sshd服务并保持默认配置（监听22端口）。</p>
+<p>为了后续控制目标节点方便些，事先在控制节点将所有节点的DNS解析配置好了。并且配置了控制节点到被控节点间的免密。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat /etc/hosts</span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.100.10 slions_pc1</span><br><span class="line">192.168.100.11 slions_pc2</span><br><span class="line">192.168.100.12 slions_pc3</span><br></pre></td></tr></table></figure>
 
-<h3 id="查看主机名"><a href="#查看主机名" class="headerlink" title="查看主机名"></a>查看主机名</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]#  hostnamectl</span><br><span class="line">   Static hostname: slions_pc1</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 72c6db2a36e54cc584626da0118ed9ca</span><br><span class="line">           Boot ID: 2cbdd44b889d40b29f932e9462e8ec15</span><br><span class="line">    Virtualization: vmware</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-957.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br></pre></td></tr></table></figure>
+<h2 id="inventory文件"><a href="#inventory文件" class="headerlink" title="inventory文件"></a>inventory文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible]# cat /etc/ansible/hosts</span><br><span class="line">[leader]</span><br><span class="line">slions_pc1</span><br><span class="line">slions_pc2</span><br><span class="line"></span><br><span class="line">[worker]</span><br><span class="line">slions_pc3</span><br></pre></td></tr></table></figure>
 
-<h3 id="同时修改3种主机名"><a href="#同时修改3种主机名" class="headerlink" title="同时修改3种主机名"></a>同时修改3种主机名</h3><p>当同时修改了pretty和(static | transient)中的一种时，将取pretty名的简化部分作为static主机名。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# hostnamectl set-hostname slions</span><br><span class="line">[root@slions_pc1 ~]# hostname</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 ~]# cat /etc/hostname</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 ~]# hostnamectl status</span><br><span class="line">   Static hostname: slions</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 72c6db2a36e54cc584626da0118ed9ca</span><br><span class="line">           Boot ID: 2cbdd44b889d40b29f932e9462e8ec15</span><br><span class="line">    Virtualization: vmware</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-957.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br><span class="line">[root@slions_pc1 ~]# hostnamectl --pretty</span><br></pre></td></tr></table></figure>
+<h2 id="playbook文件"><a href="#playbook文件" class="headerlink" title="playbook文件"></a>playbook文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible]# cat demo.yml</span><br><span class="line">---</span><br><span class="line">- name: play1</span><br><span class="line">  hosts: leader</span><br><span class="line">  gather_facts: false</span><br><span class="line">  tasks:</span><br><span class="line">  - name: task1 in play1</span><br><span class="line">    debug:</span><br><span class="line">      msg: &quot;output task1 in play1&quot;</span><br><span class="line">  - name: task2 in play1</span><br><span class="line">    debug:</span><br><span class="line">      msg: &quot;output task2 in play1&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- name: play2</span><br><span class="line">  hosts: worker</span><br><span class="line">  gather_facts: false</span><br><span class="line">  tasks:</span><br><span class="line">  - name: task1 in play2</span><br><span class="line">    debug:</span><br><span class="line">      msg: &quot;output task1 in play2&quot;</span><br><span class="line">  - name: task2 in play2</span><br><span class="line">    debug:</span><br><span class="line">      msg: &quot;output task2 in play2&quot;</span><br></pre></td></tr></table></figure>
 
-<p>可以从结果中看到，只改变了static和transient(内核动态维护的，一定会改变)，而pretty却没设置成功。这是因为这里给出的主机名”slions”是一个符合主机名标准的名称。如果指定一个非标准的主机名，例如包含特殊符号，那么也会设置pretty。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# hostnamectl set-hostname &quot;slions1 slions2&quot;</span><br><span class="line">[root@slions_pc1 ~]# hostnamectl status</span><br><span class="line">   Static hostname: slions1slions2</span><br><span class="line">   Pretty hostname: slions1 slions2</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 72c6db2a36e54cc584626da0118ed9ca</span><br><span class="line">           Boot ID: 2cbdd44b889d40b29f932e9462e8ec15</span><br><span class="line">    Virtualization: vmware</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-957.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br></pre></td></tr></table></figure>
+<p>使用ansible-playbook命令执行这个playbook：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible]# ansible-playbook demo.yml</span><br><span class="line"></span><br><span class="line">PLAY [play1] ****************************************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [task1 in play1] *******************************************************************************************************************************************************************</span><br><span class="line">ok: [slions_pc1] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;output task1 in play1&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [slions_pc2] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;output task1 in play1&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TASK [task2 in play1] *******************************************************************************************************************************************************************</span><br><span class="line">ok: [slions_pc1] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;output task2 in play1&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [slions_pc2] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;output task2 in play1&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY [play2] ****************************************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [task1 in play2] *******************************************************************************************************************************************************************</span><br><span class="line">ok: [slions_pc3] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;output task1 in play2&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TASK [task2 in play2] *******************************************************************************************************************************************************************</span><br><span class="line">ok: [slions_pc3] =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;output task2 in play2&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ******************************************************************************************************************************************************************************</span><br><span class="line">slions_pc1                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</span><br><span class="line">slions_pc2                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</span><br><span class="line">slions_pc3                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>pretty hostname已经改变，且static hostname是它的”简化版”。</p>
-<h3 id="修改某种类型的主机名"><a href="#修改某种类型的主机名" class="headerlink" title="修改某种类型的主机名"></a>修改某种类型的主机名</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname NAME --static</span><br><span class="line">hostnamectl set-hostname NAME --transient</span><br><span class="line">hostnamectl set-hostname NAME --pretty</span><br><span class="line"><span class="meta">#</span><span class="bash"> 还可以同时修改两种</span></span><br><span class="line">hostnamectl set-hostname NAME --static --transient</span><br><span class="line">hostnamectl set-hostname NAME --static --pretty</span><br><span class="line">hostnamectl set-hostname NAME --transient --pretty</span><br></pre></td></tr></table></figure>
+<p>从输出可以直观的看到，执行完”play 1”之后，执行”play 2”，在一个 play 之中,所有 hosts 会获取相同的任务指令，且PLAY和TASK后面都指明了play的名称、task的名称。</p>
+<p>最后输出的是每个主机执行任务的状态统计，比如某个主机节点执行成功的任务有几个，失败的有几个。</p>
+<h1 id="playbook语法：yaml"><a href="#playbook语法：yaml" class="headerlink" title="playbook语法：yaml"></a>playbook语法：yaml</h1><p>Playbooks 的格式是YAML，它以非常简洁的方式实现了json格式的事件描述，如果之前接触过kubernetes，对yaml应该就非常熟悉了。具体的语法可以百度查看，以下列举一些常用的规则。</p>
+<ul>
+<li>使用缩进表示层级关系</li>
+<li>缩进不允许使用tab建，只能使用空格键</li>
+<li>缩进空格数目不重要，只要相同层级的元素左对齐即可，程序判别配置的级别是通过缩进结合换行实现的</li>
+<li>在单一一个<code>playbook</code>文件中，可以连续三个连子号(<code>---</code>)区分多个<code>play</code></li>
+<li>使用#号注释代码</li>
+<li><code>YAML</code>文件内容和<code>Linux</code>系统大小写判断方式保持一致，是区分大小写的</li>
+</ul>
+<p>YAML支持三种数据结构：</p>
+<ul>
+<li>对象：key/value格式，也称为哈希结构、字典结构或关联数组</li>
+<li>数组：也称为列表</li>
+<li>标量(scalars)：单个值</li>
+</ul>
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>一组键值对，使用冒号隔开key和value。注意，冒号后必须至少一个空格。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">slions</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="修改、查看远程主机的主机名"><a href="#修改、查看远程主机的主机名" class="headerlink" title="修改、查看远程主机的主机名"></a>修改、查看远程主机的主机名</h3><p>使用”-H”或”–host”选项。连接基于SSH。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl -H [USER@]HOST set-hostname NAME</span><br><span class="line">hostnamectl -H [USER@]HOST status</span><br></pre></td></tr></table></figure>
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;slions&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">cat</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">pig</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;pig&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用行内数组(内联语法)的写法：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line">[<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;pig&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>再例如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">animal1:</span> <span class="string">cat</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">animal2:</span> <span class="string">pig</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;<span class="attr">&quot;animal1&quot;</span>: <span class="string">&quot;cat&quot;</span>&#125;, </span><br><span class="line">  &#123;<span class="attr">&quot;animal2&quot;</span>: <span class="string">&quot;pig&quot;</span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>将对象和数组混合：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">animal:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">cat</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pig</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;animal&quot;</span>: [<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;pig&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">animal:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">wangcai</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">dog</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">color:</span> <span class="string">black</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;animal&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;wangcai&quot;</span>, </span><br><span class="line">    <span class="attr">&quot;kind&quot;</span>: <span class="string">&quot;dog&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;age&quot;</span>: <span class="number">3</span>, </span><br><span class="line">    <span class="attr">&quot;color&quot;</span>: <span class="string">&quot;black&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用行内对象的写法：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">animal: &#123;name: wangcai, kind: dog, age: <span class="number">3</span>, color: black&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="字符串续行"><a href="#字符串续行" class="headerlink" title="字符串续行"></a>字符串续行</h2><p>字符串可以写成多行，从第二行开始，必须至少有一个单空格缩进。换行符会被转为空格。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">str:</span> <span class="string">hello</span></span><br><span class="line">  <span class="string">world</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;str&quot;</span>: <span class="string">&quot;hello world&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用<code>&gt;</code>换行，它类似于上面的多层缩进写法。此外，还可以使用<code>|</code>在换行时保留换行符。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">str1:</span> <span class="string">|</span></span><br><span class="line"><span class="string">  hello</span></span><br><span class="line"><span class="string">  world</span></span><br><span class="line"><span class="string"></span><span class="attr">str2:</span> <span class="string">&gt;</span></span><br><span class="line"><span class="string">  hello</span></span><br><span class="line"><span class="string">  world</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;str1&#x27;: &#x27;hello world&#x27;, &#x27;str2&#x27;: &#x27;hello\nworld\n&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p>YAML中某个key有时候不想为其赋值，可以直接写key但不写value，另一种方式是直接写null，还有一种比较少为人知的方式：波浪号~。</p>
+<p>下面几种方式全是等价的：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">key1:</span> </span><br><span class="line"><span class="attr">key2:</span> <span class="literal">null</span></span><br><span class="line"><span class="attr">key3:</span> <span class="literal">Null</span></span><br><span class="line"><span class="attr">key4:</span> <span class="literal">NULL</span></span><br><span class="line"><span class="attr">key5:</span> <span class="string">~</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="YAML中的单双引号和转义"><a href="#YAML中的单双引号和转义" class="headerlink" title="YAML中的单双引号和转义"></a>YAML中的单双引号和转义</h2><p>YAML中的字符串是可以不用使用引号包围的，但是如果包含了特殊符号，则需要使用引号包围。</p>
+<p>单引号包围字符串时，会将特殊符号保留。</p>
+<p>双引号包围字符串时，反斜线需要额外进行转义。</p>
+<p>例如，下面几对书写方式是等价的：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">key1:</span> <span class="string">&#x27;\.yml&#x27;</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">key2:</span> <span class="string">&quot;\\.yml&quot;</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">key3:</span> <span class="string">\.yml</span></span><br></pre></td></tr></table></figure>
+
+<p>等价于json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123; <span class="attr">&quot;key1&quot;</span>: <span class="string">&quot;\\.yml&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">&quot;key2&quot;</span>: <span class="string">&quot;\\.yml&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">&quot;key3&quot;</span>: <span class="string">&quot;\\.yml&quot;</span> &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
 
 
     </article>
@@ -488,9 +578,9 @@ height:50vh;
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
-            <p>原文链接：<a href="https://slions.github.io/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/">https://slions.github.io/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/</a>
-            <p>发表日期：<a href="https://slions.github.io/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/">August 7th 2021, 9:45:26 pm</a>
-            <p>更新日期：<a href="https://slions.github.io/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/">August 12th 2021, 7:47:14 pm</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/">https://slions.github.io/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/">August 28th 2021, 11:46:18 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/">August 29th 2021, 12:53:38 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -498,17 +588,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" title= "gluster排故纪实">
-                    <div class="nextTitle">gluster排故纪实</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" title= "linux误删文件恢复思路">
-                    <div class="prevTitle">linux误删文件恢复思路</div>
+                <a href= "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" title= "（三）主机清单inventory">
+                    <div class="prevTitle">（三）主机清单inventory</div>
                 </a>
             
         </li>
@@ -524,7 +609,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1628343926000'
+        let idOption = '1630165578000'
         
         idOption = location.pathname
         
@@ -663,7 +748,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%90%8D%E4%BF%AE%E6%94%B9%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">主机名修改方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hostname"><span class="toc-number">1.1.</span> <span class="toc-text">hostname</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#etc-hostname"><span class="toc-number">1.2.</span> <span class="toc-text">&#x2F;etc&#x2F;hostname</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nmtui"><span class="toc-number">1.3.</span> <span class="toc-text">nmtui</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hostnamectl"><span class="toc-number">1.4.</span> <span class="toc-text">hostnamectl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.1.</span> <span class="toc-text">查看主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E4%BF%AE%E6%94%B93%E7%A7%8D%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.2.</span> <span class="toc-text">同时修改3种主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%9F%90%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.3.</span> <span class="toc-text">修改某种类型的主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E3%80%81%E6%9F%A5%E7%9C%8B%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.4.</span> <span class="toc-text">修改、查看远程主机的主机名</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#playbook%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.</span> <span class="toc-text">playbook示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%B8%85%E5%8D%95"><span class="toc-number">1.1.</span> <span class="toc-text">环境清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inventory%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">inventory文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#playbook%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">playbook文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#playbook%E8%AF%AD%E6%B3%95%EF%BC%9Ayaml"><span class="toc-number">2.</span> <span class="toc-text">playbook语法：yaml</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.1.</span> <span class="toc-text">对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84"><span class="toc-number">2.2.</span> <span class="toc-text">数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E5%85%B8"><span class="toc-number">2.3.</span> <span class="toc-text">字典</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BB%AD%E8%A1%8C"><span class="toc-number">2.4.</span> <span class="toc-text">字符串续行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E5%80%BC"><span class="toc-number">2.5.</span> <span class="toc-text">空值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YAML%E4%B8%AD%E7%9A%84%E5%8D%95%E5%8F%8C%E5%BC%95%E5%8F%B7%E5%92%8C%E8%BD%AC%E4%B9%89"><span class="toc-number">2.6.</span> <span class="toc-text">YAML中的单双引号和转义</span></a></li></ol></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
