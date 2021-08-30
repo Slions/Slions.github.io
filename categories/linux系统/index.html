@@ -386,6 +386,42 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >
+            
+                <span>expect使用</span>
+        </a>
+        <div class="abstract-content">
+            使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。
+expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。
+安装1$ yum install -y expect
+
+
+
+使用方法
+​    定义脚本的执行shell，类似于bash...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >
             
                 <span>修改centos7主机名</span>
@@ -667,37 +703,6 @@ useradd用法：
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >
-            
-                <span>linux添加新硬盘无法识别解决方法</span>
-        </a>
-        <div class="abstract-content">
-            我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。
-重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就可以了。
-1# for i in /sys/class/scsi_host/host*/scan;do echo &quot;- - ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
             </div>
             <!-- tags  -->
             
@@ -1345,9 +1350,26 @@ useradd用法：
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 39
+        Total : 40
         </div>
         <!-- search  -->
         
@@ -1360,6 +1382,11 @@ useradd用法：
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >expect使用</a>
+        </li>
     
     
         <li class="archive-post-item">

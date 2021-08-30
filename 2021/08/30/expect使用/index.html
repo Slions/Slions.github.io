@@ -20,17 +20,22 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2021/08/index.html">
+    <meta name="description" content="使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。 expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。 安装1$ yum install -y expect    使用方法 ​    定义脚本的执行shell，类似于bash等sh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="expect使用">
+<meta property="og:url" content="https://slions.github.io/2021/08/30/expect%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。 expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。 安装1$ yum install -y expect    使用方法 ​    定义脚本的执行shell，类似于bash等sh">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-08-30T07:54:09.000Z">
+<meta property="article:modified_time" content="2021-08-30T12:18:27.875Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>expect使用 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +219,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +243,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">expect使用</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +278,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            expect使用
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/30</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,335 +446,148 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >
-            
-                <span>expect使用</span>
-        </a>
-        <div class="abstract-content">
-            使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。
-expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。
-安装1$ yum install -y expect
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。</p>
+<p>expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yum install -y expect</span></span><br></pre></td></tr></table></figure>
 
 
 
-使用方法
-​    定义脚本的执行shell，类似于bash...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >
-            
-                <span>（五）ansible常用模块</span>
-        </a>
-        <div class="abstract-content">
-            ansible基于模块工作，ansible 2.9.24版本已经有3387个模块了，当然这些模块不需要也没精力全懂，但了解些常用模块的使用方式对日常运维过程中大有脾益。
-123456789[root@slions_pc1 ansible]# ansible --versionansible 2.9.24  config file = /etc/ansible/ansible.cfg  con...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >
-            
-                <span>（四）剧本文件playbook</span>
-        </a>
-        <div class="abstract-content">
-            我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。
-ansible之所以能...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >
-            
-                <span>（三）主机清单inventory</span>
-        </a>
-        <div class="abstract-content">
-            上一章在讲ansible基本用法时的几个例子中host都是localhost,是因为在没有对ansible进行任何配置时，ansible只能通过localhost来控制本机。
-inventory⽤于定义ansible要管理的主机列表，可以定义单个主机和主机组。/etc/ansible/hosts就是默认的全局inventory，当然我们可以在配置文件中修改此配置项，但通常不会去修改这个配置项...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >
-            
-                <span>实现科学上网</span>
-        </a>
-        <div class="abstract-content">
-            shadowsocks是当前比较受欢迎的科学上网工具。
-服务端配置准备代理服务器首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。
-安装shadowsockslinux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。
-1234567# pip3 install shadowsocksWARN...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "shadowsocks">shadowsocks</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >
-            
-                <span>hexo特殊符号的转义问题</span>
-        </a>
-        <div class="abstract-content">
-            最近写ansible相关文章时，发现hexo与Jinja2的语法有冲突。
-123line: 93,location: &#x27;_posts/（二）ansible初体验.md [Line 93, Column 133]&#x27;,type: &#x27;unexpected token: &#125;&#125;&#x27;
+<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><ol>
+<li>​    定义脚本的执行shell，类似于bash等shell功能。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">！/usr/bin/expect</span></span><br></pre></td></tr></table></figure>
 
-它的模板语法 &#123;&#123;&#125;&#125...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "hexo">hexo</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >
-            
-                <span>（二）ansible初体验</span>
-        </a>
-        <div class="abstract-content">
-            上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。
-从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。
+<ol start="2">
+<li>​    设置超时时间，单位为秒，设置为-1意为永不超时。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set timeout 30</span><br></pre></td></tr></table></figure>
 
-Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >
-            
-                <span>（一）ansible入门</span>
-        </a>
-        <div class="abstract-content">
-            
-ansible是新出现的自动化运维工具，基于Python开发，集合了众多运维工具（puppet、cfengine、chef、func、fabric）的优点，实现了批量系统配置、批量程序部署、批量运行命令等功能。
-—— 百度百科
+<ol start="3">
+<li><pre><code> spawn
+</code></pre>
+</li>
+</ol>
+<p>spawn是进入expect环境后才能执行的命令，不能直接在默认的shell环境中进行执行，主要功能是传递交互指令。</p>
+<ol start="4">
+<li>​    expect</li>
+</ol>
+<p>同样是expect内部命令，判断输出结果中是否包含某个字符串，没有即立刻返回，否则就等待一段时间后退出，等待的时间由timeout指定。</p>
+<ol start="5">
+<li>​    send</li>
+</ol>
+<p>发送交互值，代替我们手动输入，命令字符串后面加上<code>\r</code>代表敲回车。</p>
+<ol start="6">
+<li>​    interact</li>
+</ol>
+<p>执行完后保持交互状态，把控制权交给控制台。</p>
+<ol start="7">
+<li>​    exp_continue</li>
+</ol>
+<p>继续执行接下来的交互操作。</p>
+<ol start="8">
+<li>​    $argv</li>
+</ol>
+<p>expect可以接收从bash传递的参数，可以使用<code>[lindex $argv n]</code>,n从0开始</p>
+<p><strong>示例</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat interact</span><br><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/expect</span></span><br><span class="line">set timeout 30</span><br><span class="line">set passwd &quot;123&quot;</span><br><span class="line">spawn ssh 192.168.100.11</span><br><span class="line">expect &#123;</span><br><span class="line">  &quot;(yes/no)&quot; &#123; send &quot;yes\r&quot;,exp_continue &#125;</span><br><span class="line">  &quot;password:&quot; &#123; send &quot;$passwd\r&quot; &#125;</span><br><span class="line">&#125;</span><br><span class="line">expect &quot;#&quot; &#123;send &quot;cat /etc/sysconfig/network-scripts/ifcfg-ens33\r&quot;&#125;</span><br><span class="line">interact</span><br></pre></td></tr></table></figure>
 
-简而言之，ansible融合了众多老牌运维工具的优点，通过一台ansible控制节点，就能实现批量配置、部署与运维多主机操作，进而减少重复性的工作，提高运维效率。...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
-            
-                <span>走近分布式一致性协议（下篇）</span>
-        </a>
-        <div class="abstract-content">
-            上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。
+<p><strong>输出</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# chmod +x interact</span><br><span class="line">[root@slions_pc1 ~]# ./interact</span><br><span class="line">spawn ssh 192.168.100.11</span><br><span class="line">root@192.168.100.11&#x27;s password:</span><br><span class="line">Last login: Mon Aug 30 19:34:19 2021 from 192.168.100.10</span><br><span class="line">[root@slions_pc2 ~]# cat /etc/sysconfig/network-scripts/ifcfg-ens33</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">PROXY_METHOD=none</span><br><span class="line">BROWSER_ONLY=no</span><br><span class="line">BOOTPROTO=none</span><br><span class="line">DEFROUTE=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">IPV6_ADDR_GEN_MODE=stable-privacy</span><br><span class="line">NAME=ens33</span><br><span class="line">UUID=285fd0e1-1041-4470-abc1-2c97ee6764cf</span><br><span class="line">DEVICE=ens33</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.100.11</span><br><span class="line">PREFIX=24</span><br><span class="line">GATEWAY=192.168.100.2</span><br><span class="line">DNS1=114.114.114.114</span><br><span class="line">[root@slions_pc2 ~]# exit</span><br><span class="line">登出</span><br><span class="line">Connection to 192.168.100.11 closed.</span><br><span class="line">[root@slions_pc1 ~]#</span><br></pre></td></tr></table></figure>
 
-Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。
-在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候，将...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
-    
-</div>
-            
-        </div>
+<h1 id="expect使用场景"><a href="#expect使用场景" class="headerlink" title="expect使用场景"></a>expect使用场景</h1><h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat expect_ssh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/expect</span></span><br><span class="line">set timeout -1</span><br><span class="line">set passwd [lindex $argv 0]</span><br><span class="line">set port [lindex $argv 1]</span><br><span class="line">set dest_ip [lindex $argv 2]</span><br><span class="line">set cmd [lindex $argv 3]</span><br><span class="line"></span><br><span class="line">if &#123;$argc &lt; 4&#125; &#123;</span><br><span class="line">    #do something</span><br><span class="line">    send_user &quot;usage: $argv0 &lt;remote_passwd&gt; &lt;remote_port&gt; &lt;remote_addr&gt; &lt;remote_cmd&gt; \n&quot;</span><br><span class="line">    exit</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spawn ssh -p $port $dest_ip $cmd</span><br><span class="line">expect &#123;</span><br><span class="line">  &quot;(yes/no)?&quot;</span><br><span class="line">  &#123;</span><br><span class="line">    send &quot;yes\r&quot;</span><br><span class="line">    expect &quot;password:&quot; &#123; send &quot;$passwd\r&quot; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  &quot;password:&quot;</span><br><span class="line">  &#123;</span><br><span class="line">    send &quot;$passwd\r&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">expect eof</span><br></pre></td></tr></table></figure>
+
+<p>验证</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# chmod +x expect_ssh</span><br><span class="line">[root@slions_pc1 ~]# ./expect_ssh 123 22 192.168.100.11 &#x27;lsblk&#x27;</span><br><span class="line">spawn ssh -p 22 192.168.100.11 lsblk</span><br><span class="line">root@192.168.100.11&#x27;s password:</span><br><span class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda               8:0    0   20G  0 disk</span><br><span class="line">├─sda1            8:1    0    1G  0 part /boot</span><br><span class="line">└─sda2            8:2    0   19G  0 part</span><br><span class="line">  ├─centos-root 253:0    0   18G  0 lvm  /</span><br><span class="line">  └─centos-swap 253:1    0 1020M  0 lvm  [SWAP]</span><br><span class="line">sr0              11:0    1   10G  0 rom</span><br></pre></td></tr></table></figure>
+
+
+
+<p>改用bash脚本中的写法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat expect.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">password=$1</span><br><span class="line">port=$2</span><br><span class="line">dest_ip=$3</span><br><span class="line">cmd=$4</span><br><span class="line">/usr/bin/expect &lt;&lt;EOF</span><br><span class="line">set timeout -1</span><br><span class="line">spawn ssh -p $port $dest_ip $cmd</span><br><span class="line">expect &#123;</span><br><span class="line">    &quot;(yes/no)&quot; &#123; send &quot;yes\r&quot;; exp_continue &#125;</span><br><span class="line">    &quot;password:&quot; &#123; send &quot;$password\r&quot; &#125;</span><br><span class="line">&#125;</span><br><span class="line">expect eof</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat expect_scp</span><br><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/expect</span></span><br><span class="line">set timeout -1</span><br><span class="line">set passwd [lindex $argv 0]</span><br><span class="line">set port [lindex $argv 1]</span><br><span class="line">set src_file [lindex $argv 2]</span><br><span class="line">set dest_file [lindex $argv 3]</span><br><span class="line"></span><br><span class="line">if &#123;$argc &lt; 4&#125; &#123;</span><br><span class="line">    #do something</span><br><span class="line">    send_user &quot;usage: $argv0 &lt;remote_passwd&gt; &lt;remote_port&gt; &lt;src_file&gt; &lt;dest_file&gt; \n&quot;</span><br><span class="line">    exit</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spawn scp -P $port $src_file $dest_file</span><br><span class="line">    expect &#123;</span><br><span class="line">        &quot;(yes/no)?&quot;</span><br><span class="line">        &#123;</span><br><span class="line">            send &quot;yes\r&quot;</span><br><span class="line">            expect &quot;*assword:&quot; &#123; send &quot;$passwd\r&quot;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        &quot;*assword:&quot;</span><br><span class="line">        &#123;</span><br><span class="line">            send &quot;$passwd\r&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">expect &quot;100%&quot;</span><br><span class="line">expect eof</span><br></pre></td></tr></table></figure>
+
+<p>验证</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# chmod +x expect_scp</span><br><span class="line">[root@slions_pc1 ~]# ./expect_scp 123 22 192.168.100.11:/etc/passwd /root/192.168.100.11.passwd_file</span><br><span class="line">spawn scp -P 22 192.168.100.11:/etc/passwd /root/192.168.100.11.passwd_file</span><br><span class="line">root@192.168.100.11&#x27;s password:</span><br><span class="line">passwd                                                                                                                                                 100% 1099   706.8KB/s   00:00</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ssh免密"><a href="#ssh免密" class="headerlink" title="ssh免密"></a>ssh免密</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat ssh.file</span><br><span class="line">192.168.100.10 123</span><br><span class="line">192.168.100.11 123</span><br><span class="line">[root@slions_pc1 ~]# cat sshcopy.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">sed -ri &#x27;35a\StrictHostKeyChecking no&#x27; /etc/ssh/ssh_config</span><br><span class="line">systemctl restart sshd</span><br><span class="line"></span><br><span class="line">if [ ! -f ~/.ssh/id_rsa ]</span><br><span class="line">then</span><br><span class="line">        ssh-keygen -P &quot;&quot; -t rsa -f ~/.ssh/id_rsa</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ ! -f ssh.file ]</span><br><span class="line">then</span><br><span class="line">        echo -e &quot;$&#123;RED_COL&#125;请确认你的ssh.file已经生成$&#123;RESET_COL&#125;&quot;</span><br><span class="line">        break</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">while read line</span><br><span class="line">do</span><br><span class="line">        &#123;</span><br><span class="line">        USER=`whoami`</span><br><span class="line">        IP=`echo $line |awk &#x27;&#123;print $1&#125;&#x27;`</span><br><span class="line">        PASSWORD=`echo $line |awk &#x27;&#123;print $2&#125;&#x27;`</span><br><span class="line">        /usr/bin/expect &lt;&lt;-EOF</span><br><span class="line">        set timeout -1</span><br><span class="line">        spawn ssh-copy-id $USER@$IP</span><br><span class="line">        expect &#123;</span><br><span class="line">                        &quot;&#123;yes/no&#125;&quot; &#123; send &quot;yes\r&quot;; exp_continue &#125;</span><br><span class="line">                        &quot;password:&quot; &#123; send &quot;$PASSWORD\r&quot; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        expect eof</span><br><span class="line">        EOF</span><br><span class="line">        &#125;&amp;</span><br><span class="line">done &lt; ssh.file</span><br><span class="line">wait</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
     </article>
+    <!-- license  -->
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
-            
-                <span>走近分布式一致性协议（上篇）</span>
-        </a>
-        <div class="abstract-content">
-            从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。
-我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。
-一致性的级别
-强一致性
-始...
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://slions.github.io">Jingyu Shi</a>
+            <p>原文链接：<a href="https://slions.github.io/2021/08/30/expect%E4%BD%BF%E7%94%A8/">https://slions.github.io/2021/08/30/expect%E4%BD%BF%E7%94%A8/</a>
+            <p>发表日期：<a href="https://slions.github.io/2021/08/30/expect%E4%BD%BF%E7%94%A8/">August 30th 2021, 3:54:09 pm</a>
+            <p>更新日期：<a href="https://slions.github.io/2021/08/30/expect%E4%BD%BF%E7%94%A8/">August 30th 2021, 8:18:27 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
-    
-</div>
-            
-        </div>
-    </article>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" title= "（五）ansible常用模块">
+                    <div class="prevTitle">（五）ansible常用模块</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/2021/08/page/2/">2</a><a class="page-number" href="/archives/2021/08/page/3/">3</a><a class="extend next" rel="next" href="/archives/2021/08/page/2/">NEXT &gt;</a>
-    </nav>
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1630310049000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -796,6 +677,24 @@ Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保�
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#expect%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.</span> <span class="toc-text">expect使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh"><span class="toc-number">3.1.</span> <span class="toc-text">ssh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scp"><span class="toc-number">3.2.</span> <span class="toc-text">scp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh%E5%85%8D%E5%AF%86"><span class="toc-number">3.3.</span> <span class="toc-text">ssh免密</span></a></li></ol></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1688,6 +1587,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

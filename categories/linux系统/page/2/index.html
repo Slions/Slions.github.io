@@ -386,6 +386,37 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >
+            
+                <span>linux添加新硬盘无法识别解决方法</span>
+        </a>
+        <div class="abstract-content">
+            我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。
+重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就可以了。
+1# for i in /sys/class/scsi_host/host*/scan;do echo &quot;- - ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >
             
                 <span>自己动手实现network namespace</span>
@@ -1047,9 +1078,26 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 39
+        Total : 40
         </div>
         <!-- search  -->
         
@@ -1062,6 +1110,11 @@
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >expect使用</a>
+        </li>
     
     
         <li class="archive-post-item">
