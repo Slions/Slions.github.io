@@ -386,6 +386,72 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >
+            
+                <span>linux添加新硬盘无法识别解决方法</span>
+        </a>
+        <div class="abstract-content">
+            我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。
+重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就可以了。
+1# for i in /sys/class/scsi_host/host*/scan;do echo &quot;- - ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >
+            
+                <span>手工安装heketi管理glusterfs</span>
+        </a>
+        <div class="abstract-content">
+            GlusterFS（gfs）由此名字也可看出是文件系统存储相关的软件，它是一个开源的分布式文件系统，具有强大的横向扩展能力。Heketi是一个GlusterFs管理软件，可以管理glusterFS集群的卷创建、删除等操作。Glusterfs作为kubernetes支持的多种卷类型之一，可以为上层应用提供多种挂载形式。
+heketi + glusterfs提供两种部署形式：
+
+容器化
+传统服务...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "heketi">heketi</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >
             
                 <span>自己动手实现network namespace</span>
@@ -628,68 +694,10 @@ docker架构在我的本地环境执行docker ...
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >
-            
-                <span>聊聊namespace</span>
-        </a>
-        <div class="abstract-content">
-            我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
-namespace是什么
-Namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。
- —...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/08/hello-world/" >
-            
-                <span>Hello World</span>
-        </a>
-        <div class="abstract-content">
-            好早之前就有弄个自己博客的想法，但由于种种原因没能实现（其实就是懒），最近几年也一直更新维护着公司产品的文档中心与问题库，今天看到了几位大牛的博客感触颇深，终于在今天花了一下午时间把博客和主题啥的敲定了。
-今后的日子里就是积累和产出的过程，自己也会把前几年记录的一些技术文档整理下不定时更新，也会发一些日常观察生活的图片文字。
-希望做个高产的博主了，先说到这儿吧，晚安。
-
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/08</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/page/3/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span>
+        <a class="extend prev" rel="prev" href="/archives/page/3/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/archives/page/5/">5</a><a class="extend next" rel="next" href="/archives/page/5/">NEXT &gt;</a>
     </nav>
     
 </main>
@@ -1338,9 +1346,43 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 40
+        Total : 42
         </div>
         <!-- search  -->
         
@@ -1353,6 +1395,16 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >镜像构建之Dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2021/08/31/%E7%BC%96%E5%86%99%E4%BC%98%E9%9B%85%E7%9A%84dockerfile/" >编写优雅的dockerfile</a>
+        </li>
     
     
         <li class="archive-post-item">

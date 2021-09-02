@@ -399,6 +399,71 @@ height:57vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
+            
+                <span>走近分布式一致性协议（下篇）</span>
+        </a>
+        <div class="abstract-content">
+            上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。
+
+Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。
+在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候，将...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
+            
+                <span>走近分布式一致性协议（上篇）</span>
+        </a>
+        <div class="abstract-content">
+            从互联网的发展可以看出由单机高耦合高资源逐步变成了现在的集群低耦合易扩展的架构，原先的做法都存在一台机器上，保证资源充足，网络稳定的情况下是最好的方案，但随着规模的不断扩大，网络的脆弱性，还有纵向扩展的局限性导致了分布式的出现。当分布式的概念出现后最重要的一点就是如何保证数据的一致性。
+我们身边有很多类似的场景，比如火车票的售票系统，比如银行的转账，网上购物等等。
+一致性的级别
+强一致性
+始...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >
             
                 <span>heketi启动失败问题排查</span>
@@ -684,73 +749,10 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >
-            
-                <span>ceph mimic对接k8s 1.17.0(ceph-csi)</span>
-        </a>
-        <div class="abstract-content">
-            最近测试ceph rbd在kubernetes的自动扩容问题，之前K8s v1.11.0时的策略是先找到目标卷，使用rbd resize命令对此卷扩容，找到挂载此卷的客户端宿主机，执行xfs_growfs等刷新文件系统的命令。查看网上资料k8s 在1.15版本后，ExpandInUsePersistentVolume功能被开启。意思大概就是不需要挂载到容器即可扩容PVC。按网上的手册设置相关...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ceph">ceph</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
-            
-                <span>创建开机自启程序（下篇）</span>
-        </a>
-        <div class="abstract-content">
-            上篇讲述了通过rc.local可以实现程序的开机自启，这篇说说centOS7以后的推荐方式`systemd service`。
-
-systemd servicesystemd Service是systemd提供的用于管理服务启动、停止和相关操作的功能，它极大的简化了服务管理的配置过程，用户只需要配置几项指令即可。
-systemd service是systemd所管理的其中一项内容。实际上，s...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
+        <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
     </nav>
     
 </main>
@@ -1510,9 +1512,43 @@ systemd service是systemd所管理的其中一项内容。实际上，s...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 40
+        Total : 42
         </div>
         <!-- search  -->
         
@@ -1525,6 +1561,16 @@ systemd service是systemd所管理的其中一项内容。实际上，s...
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >镜像构建之Dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2021/08/31/%E7%BC%96%E5%86%99%E4%BC%98%E9%9B%85%E7%9A%84dockerfile/" >编写优雅的dockerfile</a>
+        </li>
     
     
         <li class="archive-post-item">
