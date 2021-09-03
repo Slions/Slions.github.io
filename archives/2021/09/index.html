@@ -386,15 +386,13 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/02/%E7%BC%96%E5%86%99%E4%BC%98%E9%9B%85%E7%9A%84dockerfile/" >
+        <a class="abstract-title" href = "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >
             
-                <span>编写优雅的dockerfile</span>
+                <span>如何优雅的编写dockerfile</span>
         </a>
         <div class="abstract-content">
-            减少构建时间设计高效的构建顺序只拷贝需要的文件缓存层最小化减少网络传输时间减小镜像体积删除不必要的依赖删除包管理工具的缓存可维护性使用官方镜像使用可读性高的标签使用体积最小的基础镜像保持服务的默认端口
-在 Push 之前，现在本地构建运行一下，确保本地构建的镜像可以在任何地方正常运行。
-
-
+            写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品程度高”的dockerfile是需要设计的。
+操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对于系统的开销也就越大。dockerhub上有上万个镜像，我们可以随意的拿来作为基础镜像，与之伴随的就是潜在的安全隐患，某些特殊的场景下...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1148,7 +1146,7 @@ Dockerfile
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E7%BC%96%E5%86%99%E4%BC%98%E9%9B%85%E7%9A%84dockerfile/" >编写优雅的dockerfile</a>
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >如何优雅的编写dockerfile</a>
         </li>
     
     

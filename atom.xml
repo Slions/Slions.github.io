@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2021-09-02T15:50:43.133Z</updated>
+  <updated>2021-09-03T12:47:58.743Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -17,18 +17,19 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>编写优雅的dockerfile</title>
-    <link href="https://slions.github.io/2021/09/02/%E7%BC%96%E5%86%99%E4%BC%98%E9%9B%85%E7%9A%84dockerfile/"/>
-    <id>https://slions.github.io/2021/09/02/%E7%BC%96%E5%86%99%E4%BC%98%E9%9B%85%E7%9A%84dockerfile/</id>
+    <title>如何优雅的编写dockerfile</title>
+    <link href="https://slions.github.io/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/"/>
+    <id>https://slions.github.io/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/</id>
     <published>2021-09-02T15:55:40.000Z</published>
-    <updated>2021-09-02T15:50:43.133Z</updated>
+    <updated>2021-09-03T12:47:58.743Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="减少构建时间"><a href="#减少构建时间" class="headerlink" title="减少构建时间"></a>减少构建时间</h1><h2 id="设计高效的构建顺序"><a href="#设计高效的构建顺序" class="headerlink" title="设计高效的构建顺序"></a>设计高效的构建顺序</h2><h2 id="只拷贝需要的文件"><a href="#只拷贝需要的文件" class="headerlink" title="只拷贝需要的文件"></a>只拷贝需要的文件</h2><h2 id="缓存层最小化"><a href="#缓存层最小化" class="headerlink" title="缓存层最小化"></a>缓存层最小化</h2><h2 id="减少网络传输时间"><a href="#减少网络传输时间" class="headerlink" title="减少网络传输时间"></a>减少网络传输时间</h2><h1 id="减小镜像体积"><a href="#减小镜像体积" class="headerlink" title="减小镜像体积"></a>减小镜像体积</h1><h2 id="删除不必要的依赖"><a href="#删除不必要的依赖" class="headerlink" title="删除不必要的依赖"></a>删除不必要的依赖</h2><h2 id="删除包管理工具的缓存"><a href="#删除包管理工具的缓存" class="headerlink" title="删除包管理工具的缓存"></a>删除包管理工具的缓存</h2><h1 id="可维护性"><a href="#可维护性" class="headerlink" title="可维护性"></a>可维护性</h1><h2 id="使用官方镜像"><a href="#使用官方镜像" class="headerlink" title="使用官方镜像"></a>使用官方镜像</h2><h2 id="使用可读性高的标签"><a href="#使用可读性高的标签" class="headerlink" title="使用可读性高的标签"></a>使用可读性高的标签</h2><h2 id="使用体积最小的基础镜像"><a href="#使用体积最小的基础镜像" class="headerlink" title="使用体积最小的基础镜像"></a>使用体积最小的基础镜像</h2><h2 id="保持服务的默认端口"><a href="#保持服务的默认端口" class="headerlink" title="保持服务的默认端口"></a>保持服务的默认端口</h2><blockquote><p>在 Push 之前，现在本地构建运行一下，确保本地构建的镜像可以在任何地方正常运行。</p></blockquote>]]></content>
+    <content type="html"><![CDATA[<p>写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品程度高”的dockerfile是需要设计的。</p><p>操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对于系统的开销也就越大。dockerhub上有上万个镜像，我们可以随意的拿来作为基础镜像，与之伴随的就是潜在的安全隐患，某些特殊的场景下，比如金融、政府等领域，对于安全性要求特别高，这种随意的镜像制作手法是不被允许的。下文会讲讲如何优雅的构建镜像。</p><h1 id="减少构建时间"><a href="#减少构建时间" class="headerlink" title="减少构建时间"></a>减少构建时间</h1><p>一个开发周期包括构建 Docker 镜像，更改代码，然后重新构建 Docker 镜像。在构建镜像的过程中，如果能够充分利用docker的缓存机制，可以减少不必要的重复构建步骤。</p><h2 id="设计高效的构建顺序"><a href="#设计高效的构建顺序" class="headerlink" title="设计高效的构建顺序"></a>设计高效的构建顺序</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile1.jpg"></p><p>镜像的构建顺序很重要，当你向 Dockerfile 中添加文件，或者修改其中的某一行时，那一部分的缓存就会失效，该缓存的后续步骤都会中断，需要重新构建。所以优化缓存的最佳方法是把不需要经常更改的行放到最前面，更改最频繁的行放到最后面。</p><h2 id="只拷贝需要的文件"><a href="#只拷贝需要的文件" class="headerlink" title="只拷贝需要的文件"></a>只拷贝需要的文件</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile02.jpg"></p><p>当拷贝文件到镜像中时，尽量只拷贝需要的文件，如果被拷贝的文件内容发生了更改，缓存就会被破坏。在上面的示例中，镜像中只需要构建好的 jar 包，因此只需要拷贝这个文件就行了，这样即使其他不相关的文件发生了更改也不会影响缓存。</p><h2 id="缓存层最小化"><a href="#缓存层最小化" class="headerlink" title="缓存层最小化"></a>缓存层最小化</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile03.jpg"></p><p>每一个 <code>RUN</code> 指令都会被看作是可缓存的执行单元。太多的 RUN 指令会增加镜像的层数，增大镜像体积，而将所有的命令都放到同一个 RUN 指令中又会破坏缓存，从而延缓开发周期。当使用包管理器安装软件时，一般都会先更新软件索引信息，然后再安装软件。推荐将更新索引和安装软件放在同一个 RUN 指令中，这样可以形成一个可缓存的执行单元，否则你可能会安装旧的软件包。</p><h2 id="减少网络传输时间"><a href="#减少网络传输时间" class="headerlink" title="减少网络传输时间"></a>减少网络传输时间</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile04.jpg"></p><p>ADD命令可以下载外网URL地址的资源，但由于网络环境性能差异，或者根本就是无网环境，推荐提前将所需的资源包下载下来使用，减少网络对构建过程的影响。</p><h1 id="减小镜像体积"><a href="#减小镜像体积" class="headerlink" title="减小镜像体积"></a>减小镜像体积</h1><p>如果之前接触过k8s就知道，海量集群中有节点故障是常有的事儿，故障节点上的服务会漂移到其他正常节点，此时如果正常节点没有这些服务的镜像就需要从仓库中拉取，而镜像小也就意味着拉取时间短，恢复时间快，一个镜像时看不出来，如果是需同时下载多个镜像就会给系统造成不小的开销。</p><h2 id="删除不必要的依赖"><a href="#删除不必要的依赖" class="headerlink" title="删除不必要的依赖"></a>删除不必要的依赖</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile05.jpg"></p><p>删除不必要的依赖，没有硬性需求不安装调试工具。某些包管理工具（如 <code>yum</code>）除了安装用户指定的包之外，还会安装一些弱依赖包，这会增加镜像的体积。yum 可以通过添加参数 <code>--setopt=install_weak_deps=false</code> 来确保不会安装弱依赖的包，<code>--setopt=tsflags=nodocs</code>参数来取消文档包的安装。</p><p>包管理工具会维护自己的缓存，这些缓存会保留在镜像文件中，推荐的处理方法是在每一个 RUN 指令的末尾删除缓存。如果你在下一条指令中删除缓存，不会减小镜像的体积。</p><h1 id="可维护性"><a href="#可维护性" class="headerlink" title="可维护性"></a>可维护性</h1><h2 id="使用官方镜像"><a href="#使用官方镜像" class="headerlink" title="使用官方镜像"></a>使用官方镜像</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile06.png"></p><p><img src="https://slions.gitee.io/picbed/img/dockerfile07.png"></p><p>使用官方镜像可以节省大量的维护时间，因为官方镜像的所有安装步骤都使用了最佳实践。</p><h2 id="使用可读性高的标签"><a href="#使用可读性高的标签" class="headerlink" title="使用可读性高的标签"></a>使用可读性高的标签</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile08.jpg"></p><p>基础镜像尽量不要使用 <code>latest</code> 标签。虽然这很方便，但随着时间的推移，latest 镜像可能会发生重大变化。因此在 Dockerfile 中最好指定基础镜像的具体标签。当然，我们构建的镜像也同理。</p><h2 id="使用体积最小的基础镜像"><a href="#使用体积最小的基础镜像" class="headerlink" title="使用体积最小的基础镜像"></a>使用体积最小的基础镜像</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile09.png"></p><p>我们在dockerhub上可以看到一个镜像会有形形色色的标签。其中<code>slim</code> 风格的镜像是基于 Debian 发行版制作的，而 <code>alpine</code> 风格的镜像是基于体积更小的 Alpine Linux 发行版制作的。 以 openjdk 为例，<code>jre</code> 风格的镜像只包含 Java 运行时，不包含 <code>SDK</code>，这么做也可以大大减少镜像体积。</p><h2 id="保持服务的默认端口"><a href="#保持服务的默认端口" class="headerlink" title="保持服务的默认端口"></a>保持服务的默认端口</h2><p><img src="https://slions.gitee.io/picbed/img/dockerfile10.jpg"></p><p>构建镜像时需保证此服务的运行端口暴露出来。</p><p><strong>最后，在 Push 之前，切记先在本地运行一下构建好的镜像，确保服务无任何问题，以免为后期排错造成不必要的时间浪费。</strong></p>]]></content>
     
     
       
       
-    <summary type="html">&lt;h1 id=&quot;减少构建时间&quot;&gt;&lt;a href=&quot;#减少构建时间&quot; class=&quot;headerlink&quot; title=&quot;减少构建时间&quot;&gt;&lt;/a&gt;减少构建时间&lt;/h1&gt;&lt;h2 id=&quot;设计高效的构建顺序&quot;&gt;&lt;a href=&quot;#设计高效的构建顺序&quot; class=&quot;headerlink</summary>
+    <summary type="html">&lt;p&gt;写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品程度高”的dockerfile是需要设计的。&lt;/p&gt;
+&lt;p&gt;操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对</summary>
       
     
     
