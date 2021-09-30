@@ -20,22 +20,17 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。 从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。  Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控制端需">
-<meta property="og:type" content="article">
-<meta property="og:title" content="（二）ansible初体验">
-<meta property="og:url" content="https://slions.github.io/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://slions.github.io/categories/%E5%A5%BD%E6%96%87%E6%8E%A8%E8%8D%90/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。 从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。  Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控制端需">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-08-22T10:25:14.000Z">
-<meta property="article:modified_time" content="2021-08-22T14:51:09.140Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>（二）ansible初体验 · S_lion&#39;s Studio</title>
+    <title>S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -219,8 +214,6 @@
 </head>
 
     
-        <body class="post-body">
-    
     
 <header class="header">
 
@@ -243,17 +236,6 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
-    
-    
-    <div class="banner">
-    
-        <div class="blog-title header-element">
-            <a href="/" >S_lion&#39;s Studio</a>
-        </div>
-        <div class="post-title header-element">
-            <a href="#" class="post-name">（二）ansible初体验</a>
-        </div>
-    </div>
     
 </header>
     
@@ -278,74 +260,24 @@
 
 
 
-
-height:50vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-            （二）ansible初体验
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.2k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/08/22</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -446,183 +378,46 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <p>上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。</p>
-<p>从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。</p>
-<blockquote>
-<p>Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控制端需要启动sshd服务，但通常这两个条件在安装Linux系统时就已经具备了。所以使用Ansible的安装过程只有一个：在控制节点安装Ansible。</p>
-</blockquote>
-<h1 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h1><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>IP地址</th>
-<th>操作系统版本</th>
-<th>内核版本</th>
-<th>角色</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>slions_pc1</td>
-<td>192.168.100.10</td>
-<td>CentOS  7.6.1810</td>
-<td>3.10.0-957.el7.x86_64</td>
-<td>控制节点</td>
-</tr>
-<tr>
-<td>slions_pc2</td>
-<td>192.168.100.11</td>
-<td>CentOS  7.6.1810</td>
-<td>3.10.0-957.el7.x86_64</td>
-<td>被控节点</td>
-</tr>
-<tr>
-<td>slions_pc3</td>
-<td>192.168.100.12</td>
-<td>CentOS  7.6.1810</td>
-<td>3.10.0-957.el7.x86_64</td>
-<td>被控节点</td>
-</tr>
-</tbody></table>
-<p>所有的主机上都已启动sshd服务并保持默认配置（监听22端口）。</p>
-<p>为了后续控制目标节点方便些，事先在控制节点将所有节点的DNS解析配置好了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat /etc/hosts</span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.100.10 slions_pc1</span><br><span class="line">192.168.100.11 slions_pc2</span><br><span class="line">192.168.100.12 slions_pc3</span><br></pre></td></tr></table></figure>
+            <main class="main index-page">
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >
+            
+                <span>我是一个线程（转载）</span>
+        </a>
+        <div class="abstract-content">
+            
+本文转载自IBM前架构师刘欣
 
-<h1 id="安装ansible"><a href="#安装ansible" class="headerlink" title="安装ansible"></a>安装ansible</h1><p>安装ansible的方式有好多种，不同系统的安装方式可参考：<a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html">官方文档</a></p>
-<p>我这里就直接使用yum安装了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install epel-release.noarch -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install ansible -y</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>配置命令补全</strong></p>
-<p>从Ansible 2.9版本开始，它支持命令的选项补全功能，它依赖于python的argcomplete插件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yum  install python-argcomplete -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> activate-global-python-argcomplete</span></span><br></pre></td></tr></table></figure>
-
-<p>最后，退出当前Shell重新进入，或者简单的直接执行如下命令即可：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">exec</span> <span class="variable">$SHELL</span></span></span><br></pre></td></tr></table></figure>
-
-<p>然后就可以按tab一次或两次补全参数或提示参数。</p>
-<h1 id="配置主机互信"><a href="#配置主机互信" class="headerlink" title="配置主机互信"></a>配置主机互信</h1><p>Ansible默认是基于ssh连接的，所以要控制其它节点首先需要建立好ssh连接，而建立ssh连接要么需要提供密码，要么需要配置好认证方式。为了方便后文的测试，这里先配置好控制节点和其它被控节点之间的主机互信。</p>
-<p>为了避免配置主机互信过程中的交互式询问，这里使用ssh-keyscan工具添加主机认证信息以及sshpass工具(安装Ansible时会自动安装sshpass，也可以yum -y install sshpass安装)直接指定ssh连接密码。</p>
-<p>在控制节点生成密钥对。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa -f ~/.ssh/id_rsa -N <span class="string">&#x27;&#x27;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>将各节点的主机信息写入控制节点的~/.ssh/known_hosts文件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="keyword">for</span> host <span class="keyword">in</span> 192.168.100.&#123;11,12&#125; slions_pc&#123;2,3&#125;;<span class="keyword">do</span> ssh-keyscan -t rsa <span class="variable">$host</span> &gt;&gt; ~/.ssh/known_hosts 2&gt;/dev/null;<span class="keyword">done</span></span></span><br></pre></td></tr></table></figure>
-
-<p>将控制节点上的ssh公钥分发给各节点：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">  <span class="keyword">for</span> host <span class="keyword">in</span> 192.168.100.&#123;11,12&#125; slions_pc&#123;2,3&#125;;<span class="keyword">do</span> sshpass -p <span class="string">&#x27;123&#x27;</span> ssh-copy-id root@<span class="variable">$host</span> &amp;&gt;/dev/null;<span class="keyword">done</span></span></span><br></pre></td></tr></table></figure>
-
-<p>以上就完成了ssh主机互信。</p>
-<h1 id="ansible初体验"><a href="#ansible初体验" class="headerlink" title="ansible初体验"></a>ansible初体验</h1><h2 id="ansible语法"><a href="#ansible语法" class="headerlink" title="ansible语法"></a>ansible语法</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible &lt;host-pattern&gt; [-f forks] [-m module_name] [-a args]</span><br></pre></td></tr></table></figure>
-
-<p>其中：<br>host-pattern     # 被控节点，可以是all，或者配置文件中的主机组名<br>-f forks               # 指定并行处理的进程数<br>-m module        # 指定使用的模块，默认模块为command<br>-a args                # 指定模块的参数</p>
-<p>举个例子：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible localhost -m command -a &#x27;echo hello world!&#x27;</span><br><span class="line">localhost | CHANGED | rc=0 &gt;&gt;</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-
-<p>上面的命令是使控制节点自身输出hello world！</p>
-<h2 id="ansible模块"><a href="#ansible模块" class="headerlink" title="ansible模块"></a>ansible模块</h2><p>ansible有上千个模块，如何能快速找到想要的那个模块呢，当然百度是最快的了。ansible也提供了对应的命令来帮助我们快速寻找，可以使用<code>ansible-doc</code>。</p>
-<p>其中<code>ansible-doc -l |grep &#39;xxx&#39;</code>命令可以筛选模块，例如筛选具有复制功能的模块：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible-doc -l|grep &#x27;copy&#x27;</span><br><span class="line">vsphere_copy                                                  Copy a file to a VMware datastore</span><br><span class="line">win_copy                                                      Copies files to remote locations on windows hosts</span><br><span class="line">bigip_file_copy                                               Manage files in datastores on a BIG-IP</span><br><span class="line">ec2_ami_copy                                                  copies AMI between AWS regions, return new image id</span><br><span class="line">win_robocopy                                                  Synchronizes the contents of two directories using Robocopy</span><br><span class="line">copy                                                          Copy files to remote locations</span><br><span class="line">na_ontap_lun_copy                                             NetApp ONTAP copy LUNs</span><br><span class="line">icx_copy                                                      Transfer files from or to remote Ruckus ICX 7000 series switches</span><br><span class="line">unarchive                                                     Unpacks an archive after (optionally) copying it from the local machine</span><br><span class="line">ce_file_copy                                                  Copy a file to a remote cloudengine device over SCP on HUAWEI CloudEngine switches</span><br><span class="line">postgresql_copy                                               Copy data between a file/program and a PostgreSQL table</span><br><span class="line">ec2_snapshot_copy                                             copies an EC2 snapshot and returns the new Snapshot ID</span><br><span class="line">nxos_file_copy                                                Copy a file to a remote NXOS device</span><br><span class="line">netapp_e_volume_copy                                          NetApp E-Series create volume copy pairs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>根据描述，大概找出是否有想要的模块。</p>
-<p>找到模块后，想要看看它的功能描述以及用法，可以继续使用ansible-doc命令。</p>
-<p>详细的模块描述手册： <code>ansible-doc &lt;$module_name&gt;</code></p>
-<p>只包含模块参数用法的模块描述手册: <code>ansible-doc -s &lt;$module_name&gt;</code></p>
-<p>就如很多编程语言一样，最先开始的是学会输出<code>hello world</code>，最后通过一个<code>debug</code>模块来实现。</p>
-<p>查看debug模块的用法：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible-doc -s debug</span><br><span class="line">- name: Print statements during execution</span><br><span class="line">  debug:</span><br><span class="line">      msg:                   # The customized message that is printed. If omitted, prints a generic message.</span><br><span class="line">      var:                   # A variable name to debug. Mutually exclusive with the `msg&#x27; option. Be aware that this option already runs in Jinja2 context and has an implicit `&#123;&#123; &#125;&#125;&#x27;</span><br><span class="line">                               wrapping, so you should not be using Jinja2 delimiters unless you are looking for double interpolation.</span><br><span class="line">      verbosity:             # A number that controls when the debug is run, if you set to 3 it will only run debug when -vvv or above</span><br></pre></td></tr></table></figure>
-
-<p>常用的就2个参数，msg与var，这两个参数是互斥的，只能使用其中一个。msg可以输出字符串，也可以输出变量的值，var只能输出变量的值。</p>
-<p>例如：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible localhost -m debug -a &#x27;msg=&quot;hello world&quot;&#x27;</span><br><span class="line">localhost | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Ansible中也支持使用变量，这里仅演示最简单的设置变量和引用变量的方式。ansible命令的-e选项或–extra-vars选项可以设置变量。</p>
-<p>例如：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible localhost -m debug -e &#x27;str=&quot;hello world&quot;&#x27;  -a &#x27;var=str&#x27;</span><br><span class="line">localhost | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;str&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br><span class="line">[root@slions_pc1 ~]# ansible localhost -m debug -e &#x27;str=&quot;hello world&quot;&#x27;  -a &#x27;msg=&#123;&#123;str&#125;&#125;&#x27;</span><br><span class="line">localhost | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Ansible的字符串是可以不用引号去包围的，例如str=hello是允许的，但如果字符串中包含了特殊符号，则可能需要使用引号去包围，例如此处的示例出现了会产生歧义的空格。此外，要区分变量名和普通的字符串，需要在变量名上加一点标注：用 &#123;&#123; &#125;&#125;包围Ansible的变量，这其实是Jinja2模板的语法。其实不难理解，它的用法和Shell下引用变量使用$符号或${}是一样的，例如echo “hello ${var}”。</p>
-<h1 id="ansible配置文件"><a href="#ansible配置文件" class="headerlink" title="ansible配置文件"></a>ansible配置文件</h1><p>我们通过yum安装后的ansible会提供默认的ansible配置文件，位置在<code>/etc/ansible/ansible.cfg</code>。</p>
-<p>实际上，ansible支持4种方式指定配置文件，它们的解析顺序是：</p>
-<ul>
-<li><p><code>ANSIBLE_CFG</code>: 环境变量中指定的配置文件</p>
-</li>
-<li><p><code>ansible.cfg</code>: 当前目录下的ansible.cfg</p>
-</li>
-<li><p><code>~/ansible.cfg</code>: 家目录下的ansible.cfg</p>
-</li>
-<li><p><code>/etc/ansible/ansible.cfg</code>: 默认的全局配置文件</p>
-</li>
-</ul>
-<p>Ansible配置文件采用ini风格进行配置，每一项配置都使用key=value的方式进行配置。</p>
-<p>下面是截取了部分配置文件的配置信息，暂时没有必要都了解，用到哪里时百度即可。</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[defaults]</span></span><br><span class="line"><span class="attr">inventory</span> = /etc/ansible/hosts    <span class="comment">#这个参数表示资源清单inventory文件配置，资源清单就是一些ansible需要链接管理的主机列表。</span></span><br><span class="line"><span class="attr">forks</span> = <span class="number">5</span>   <span class="comment">#设置默认情况下Ansible最多能有多少个进程同时工作，默认设置最多5个进程并行处理。具体需要设置多少个，可以根据控制主机的性能和被管理节点的数量来确定。</span></span><br><span class="line"><span class="attr">sudo_user</span> = root  <span class="comment">#这个设置默认执行命令的用户，在playbook中重新设置这个参数。</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">22</span> <span class="comment">#这个是指定链接被管节点的管理端口，默认22。除非设置了特殊的SSH端口，不然这个参数一般是不需要修改的。</span></span><br><span class="line"><span class="attr">host_key_checking</span> = <span class="literal">false</span>  <span class="comment">#设置是否检查SSH主机的秘钥。可以设置为True或者False。</span></span><br><span class="line"><span class="attr">timeout</span> = <span class="number">60</span>  <span class="comment">#设置SSH链接的超时间隔，单位是秒。</span></span><br><span class="line"><span class="attr">log_path</span> = /var/log/ansible.log  <span class="comment">#系统默认是不记录日志的，如果想把Ansible系统的输出记录到日志文件中，需要设置log_path来指定一个存储Ansible日志的文件</span></span><br><span class="line"><span class="attr">poll_interval</span> = <span class="number">15</span> <span class="comment">#异步执行任务的时候多久检查一次任务装填</span></span><br><span class="line"><span class="attr">transport</span> = smart  <span class="comment">#选择远程的工具   默认情况下就是smart(智能)模式  自动选择连接方式</span></span><br><span class="line">module_set_locale  <span class="comment">#设置本地的环境变量  </span></span><br></pre></td></tr></table></figure>
+初生牛犊我是一个线程，我一出生就被编了个号：0x3704，然后被领到一个昏暗的屋子里，在这里我发现了很多和我一模一样的同伴。
+我身边的同伴0x6900 待的时间比较长，他带着沧桑的口气对我说：“我们线程的宿命就是处理包裹。把包裹处理完以后还得马上回到这里，否则可能永远回不来了。”
+我一脸懵懂，“包裹，什么包裹？”
+“不要着急，马上你就会明白了，我们这里是不养...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/19</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
     </article>
-    <!-- license  -->
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" title= "hexo特殊符号的转义问题">
-                    <div class="nextTitle">hexo特殊符号的转义问题</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" title= "（一）ansible入门">
-                    <div class="prevTitle">（一）ansible入门</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-<!-- City版安装代码已完成 -->
-    
-    
-    
-    <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
-    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
-    <script>
-        let idOption = '1629627914000'
-        
-        idOption = location.pathname
-        
-        const gitalk = new Gitalk({
-            clientID: '408256f64d15631774e7',
-            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
-            repo: 'Slions_blog_comment',
-            owner: 'Slions',
-            admin: "Slions",
-            id: md5(idOption),
-            distractionFreeMode: false,
-            createIssueManually: true,
-        })
-        console.log(gitalk)
-        gitalk.render('gitalk-container')
-    </script>
-    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
- 
-    <!-- utteranc评论 -->
-
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
-
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
-
             <!-- profile -->
             
         </div>
@@ -712,24 +507,6 @@ height:50vh;
 </footer>
     </div>
     <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ansible"><span class="toc-number">2.</span> <span class="toc-text">安装ansible</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E4%BA%92%E4%BF%A1"><span class="toc-number">3.</span> <span class="toc-text">配置主机互信</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ansible%E5%88%9D%E4%BD%93%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">ansible初体验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ansible%E8%AF%AD%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">ansible语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ansible%E6%A8%A1%E5%9D%97"><span class="toc-number">4.2.</span> <span class="toc-text">ansible模块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ansible%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">ansible配置文件</span></a></li></ol>
-    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1716,8 +1493,6 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

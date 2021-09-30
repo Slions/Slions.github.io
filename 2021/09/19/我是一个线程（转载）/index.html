@@ -20,22 +20,27 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。 从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。  Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控制端需">
+    <meta name="description" content="本文转载自IBM前架构师刘欣  初生牛犊我是一个线程，我一出生就被编了个号：0x3704，然后被领到一个昏暗的屋子里，在这里我发现了很多和我一模一样的同伴。 我身边的同伴0x6900 待的时间比较长，他带着沧桑的口气对我说：“我们线程的宿命就是处理包裹。把包裹处理完以后还得马上回到这里，否则可能永远回不来了。” 我一脸懵懂，“包裹，什么包裹？” “不要着急，马上你就会明白了，我们这里是不养闲人的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="（二）ansible初体验">
-<meta property="og:url" content="https://slions.github.io/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/index.html">
+<meta property="og:title" content="我是一个线程（转载）">
+<meta property="og:url" content="https://slions.github.io/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。 从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。  Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控制端需">
+<meta property="og:description" content="本文转载自IBM前架构师刘欣  初生牛犊我是一个线程，我一出生就被编了个号：0x3704，然后被领到一个昏暗的屋子里，在这里我发现了很多和我一模一样的同伴。 我身边的同伴0x6900 待的时间比较长，他带着沧桑的口气对我说：“我们线程的宿命就是处理包裹。把包裹处理完以后还得马上回到这里，否则可能永远回不来了。” 我一脸懵懂，“包裹，什么包裹？” “不要着急，马上你就会明白了，我们这里是不养闲人的">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-08-22T10:25:14.000Z">
-<meta property="article:modified_time" content="2021-08-22T14:51:09.140Z">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/p1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/p2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/p3.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/p4.png">
+<meta property="article:published_time" content="2021-09-19T08:14:03.000Z">
+<meta property="article:modified_time" content="2021-09-30T08:43:51.554Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="ansible">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/p1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>（二）ansible初体验 · S_lion&#39;s Studio</title>
+    <title>我是一个线程（转载） · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -251,7 +256,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">（二）ansible初体验</a>
+            <a href="#" class="post-name">我是一个线程（转载）</a>
         </div>
     </div>
     
@@ -294,7 +299,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            （二）ansible初体验
+            我是一个线程（转载）
             <!-- 404 -->
             
         </h1>
@@ -313,18 +318,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.2k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.7k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/08/22</span>
+                    <span class="post-intro-time">2021/09/19</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -448,114 +453,136 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。</p>
-<p>从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。</p>
-<blockquote>
-<p>Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控制端需要启动sshd服务，但通常这两个条件在安装Linux系统时就已经具备了。所以使用Ansible的安装过程只有一个：在控制节点安装Ansible。</p>
+        <blockquote>
+<p>本文转载自IBM前架构师刘欣</p>
 </blockquote>
-<h1 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h1><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>IP地址</th>
-<th>操作系统版本</th>
-<th>内核版本</th>
-<th>角色</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>slions_pc1</td>
-<td>192.168.100.10</td>
-<td>CentOS  7.6.1810</td>
-<td>3.10.0-957.el7.x86_64</td>
-<td>控制节点</td>
-</tr>
-<tr>
-<td>slions_pc2</td>
-<td>192.168.100.11</td>
-<td>CentOS  7.6.1810</td>
-<td>3.10.0-957.el7.x86_64</td>
-<td>被控节点</td>
-</tr>
-<tr>
-<td>slions_pc3</td>
-<td>192.168.100.12</td>
-<td>CentOS  7.6.1810</td>
-<td>3.10.0-957.el7.x86_64</td>
-<td>被控节点</td>
-</tr>
-</tbody></table>
-<p>所有的主机上都已启动sshd服务并保持默认配置（监听22端口）。</p>
-<p>为了后续控制目标节点方便些，事先在控制节点将所有节点的DNS解析配置好了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# cat /etc/hosts</span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.100.10 slions_pc1</span><br><span class="line">192.168.100.11 slions_pc2</span><br><span class="line">192.168.100.12 slions_pc3</span><br></pre></td></tr></table></figure>
+<h1 id="初生牛犊"><a href="#初生牛犊" class="headerlink" title="初生牛犊"></a>初生牛犊</h1><p>我是一个线程，我一出生就被编了个号：<code>0x3704</code>，然后被领到一个昏暗的屋子里，在这里我发现了很多和我一模一样的同伴。</p>
+<p>我身边的同伴<code>0x6900</code> 待的时间比较长，他带着沧桑的口气对我说：“我们线程的宿命就是处理包裹。把包裹处理完以后还得马上回到这里，否则可能永远回不来了。”</p>
+<p>我一脸懵懂，“包裹，什么包裹？”</p>
+<p>“不要着急，马上你就会明白了，我们这里是不养闲人的。”</p>
+<p>果然，没多久，屋子的门开了， 一个面貌凶恶的家伙吼道：“<code>0x3704</code>,出来！”</p>
+<p>我一出来就被塞了一个沉甸甸的包裹，上面还附带着一个写满了操作步骤的纸。 </p>
+<p>“快去，把这个包裹处理了。”</p>
+<p>“去哪儿处理？”</p>
+<p>“跟着指示走，先到就绪车间。”</p>
+<p>果然，地上有指示箭头，跟着它来到了一间明亮的大屋子，这里已经有不少线程了，大家都很紧张，好像时刻准备着往前冲。</p>
+<p>我刚一进来，就听见广播说：“<code>0x3704</code>，进入车间。”</p>
+<p>我赶紧往前走，身后有很多人议论。</p>
+<p>“他太幸运了，刚进入就绪状态就能运行。”</p>
+<p>“是不是有关系？”</p>
+<p>“不是，你看人家的优先级多高啊，唉！”</p>
+<p>前边就是车间，这里简直是太美了，怪不得老线程总是唠叨着说：“要是能一直待在这里就好了。”</p>
+<p>这里空间大，视野好，空气清新，鸟语花香，还有很多从来没见过的人，像服务员一样等着为我服务。</p>
+<p>他们也都有编号，更重要的是每个人还有个标签，上面写着：硬盘、数据库、内存、网卡……</p>
+<p>我现在理解不了，看看操作步骤吧。</p>
+<p><strong>第一步：从包裹中取出参数。</strong></p>
+<p>打开包裹，里边有个HttpRequest对象，可以取到userName、 password两个参数。</p>
+<p><strong>第二步：执行登录操作。</strong></p>
+<p>奥，原来是有人要登录啊，我把userName、password交给数据库服务员，他拿着数据，慢腾腾地走了。</p>
+<p>他怎么这么慢？不过我是不是正好可以在车间里多待一会儿？反正也没法执行第三步。</p>
+<p>就在这时，车间里的广播响了：“<code>0x3704</code>，我是CPU，记住你正在执行的步骤，然后马上带着包裹离开！”</p>
+<p>我慢腾腾地开始收拾。</p>
+<p>“快点，别的线程马上就要进来了。”</p>
+<p>离开这个车间，又来到一个大屋子，这里有很多线程在慢腾腾地喝茶，打牌。</p>
+<p>“哥们，你们没事干了？”</p>
+<p>“你新来的吧，你不知道我在等数据库服务员给我数据啊！据说他们比我们慢好几十万倍，在这里好好歇吧。”</p>
+<p>“啊？ 这么慢！我这里有人在登录系统，能等这么长时间吗？”</p>
+<p>“放心，你没听说过人间一天，CPU一年吗？我们这里是用纳秒、毫秒计时的，人间等待一秒，相当于我们好几天呢，来得及。”</p>
+<p>干脆睡一会吧。不知道过了多久，大喇叭又开始广播了：“<code>0x3704</code>，你的数据来了，快去执行！”</p>
+<p>我转身就往CPU车间跑，发现这里的门只出不进！</p>
+<p>后面传来阵阵哄笑声：“果然是新人，不知道还得去就绪车间等。”</p>
+<p>于是赶紧到就绪车间，这次没有那么好运了，等了好久才被再次叫进CPU车间。</p>
+<p>在等待的时候，我听见有人小声议论：</p>
+<p>“听说了吗，最近有个线程被kill掉了。”</p>
+<p>“为啥啊？”</p>
+<p>“这家伙赖在CPU车间不走，把CPU利用率一直搞成100%，后来就被kill掉了。”</p>
+<p>“Kill掉以后弄哪儿去了？”</p>
+<p>“可能被垃圾回收了吧。”</p>
+<p>我心里打了个寒噤，赶紧接着处理，剩下的动作快多了，第二步登录成功。</p>
+<p><strong>第三步：构建登录成功后的主页。</strong></p>
+<p>这一步有点费时，因为有很多HTML需要处理，不知道代码谁写的，处理起来很烦人。</p>
+<p>我正在紧张的制作HTML呢， CPU又开始叫了：</p>
+<p>“<code>0x3704</code>，我是CPU ，记住你正在执行的步骤，然后马上带着包裹离开！”</p>
+<p>“为啥啊？”</p>
+<p>“每个线程只能在CPU上运行一段时间，到了时间就得让别人用了，你去就绪车间待着，等着叫你吧。”</p>
+<p>就这样，我一直在“就绪——运行”这两个状态中不知道轮转了多少次， 终于按照步骤清单把工作做完了。</p>
+<p>最后顺利地把包含html的包裹发了回去。至于登录以后干什么事儿，我就不管了。马上就要回到我那昏暗的房间了，真有点舍不得这里。不过相对于有些线程，我还是幸运的，他们运行完以后就被彻底地销毁了，而我还活着！</p>
+<p>回到了小黑屋，老线程<code>0x6900</code>问：</p>
+<p>“怎么样？第一天有什么感觉？”</p>
+<p>“我们的世界规则很复杂，首先你不知道什么时候会被挑中执行；第二，在执行的过程中随时可能被打断，让出CPU车间；第三，一旦出现硬盘、数据库这样耗时的操作，也得让出CPU去等待；第四，就是数据来了，你也不一定马上执行，还得等着CPU挑选。”</p>
+<p>“小伙子理解的不错啊。”</p>
+<p>“我不明白为什么很多线程执行完任务就死了，为什么咱们还活着？”</p>
+<p>“你还不知道？长生不老是我们的特权！我们这里有个正式的名称，叫作<strong>线程池</strong>！”</p>
+<h1 id="渐入佳境"><a href="#渐入佳境" class="headerlink" title="渐入佳境"></a>渐入佳境</h1><p>平淡的日子就这么一天天地过去，作为一个线程，我每天的生活都是取包裹、处理包裹，然后回到我们昏暗的家：线程池。</p>
+<p>有一天我回来的时候，听到有个兄弟说，今天要好好休息下，明天就是最疯狂的一天。我看了一眼日历，明天是 11月11号。 </p>
+<p>果然，零点刚过，不知道那些人类怎么了，疯狂地投递包裹，为了应付蜂拥而至的海量包裹，线程池里没有一个人能闲下来，全部出去处理包裹，CPU车间利用率超高，硬盘在嗡嗡转，网卡疯狂的闪，即便如此，还是处理不完，堆积如山。</p>
+<p>我们也没有办法，实在是太多太多了，这些包裹中大部分都是浏览页面，下订单，买、买、买。</p>
+<p>不知道过了多久，包裹山终于慢慢地消失了。终于能够喘口气，我想我永远都不会忘记这一天。</p>
+<p>通过这个事件，我明白了我所处的世界：这是一个电子商务的网站！</p>
+<p>我每天的工作就是处理用户的登录，浏览，购物车，下单，付款。</p>
+<p>我问线程池的元老<code>0x6900</code>：“我们要工作到什么时候？”</p>
+<p>“要一直等到系统重启的那一刻。”<code>0x6900</code>说。</p>
+<p>“那你经历过系统重启吗？”</p>
+<p>“怎么可能？系统重启就是我们的死亡时刻，也就是世界末日，一旦重启，整个线程池全部销毁，时间和空间全部消失，一切从头再来。”</p>
+<p>“那什么时候会重启？”</p>
+<p>“这就不好说了，好好享受眼前的生活吧……”</p>
+<p>其实生活还是丰富多彩的，我最喜欢的包裹是上传图片，由于网络慢，所以能在就绪车间、CPU车间待很长很长时间，可以认识很多好玩的线程。</p>
+<p>比如说上次认识了memecached 线程，他对我说在他的帮助下缓存了很多的用户数据，还是分布式的！很多机器上都有！</p>
+<p>我问他：“怪不得后来的登录操作快了那么多，原来是不再从数据库取数据了你那里就有啊，哎对了你是分布式的你去过别的机器没有？”</p>
+<p>他说：“怎么可能！我每次也只能通过网络往那个机器发送一个GET、PUT命令才存取数据而已，别的一概不知。”</p>
+<p>再比如说上次在等待的时候遇到了数据库连接的线程，我才知道他那里也是一个连接池，和我们的线程池几乎一模一样。</p>
+<p>他告诉我：“有些包裹太变态了，竟然查看一年的订单数据，简直把我累死了。”</p>
+<p>我说：“拉倒吧你，你那是纯数据，你把数据传给我以后，我还得组装成HTML，工作量不知道比你大多少倍。”</p>
+<p>他建议我：“你一定要和memecached搞好关系，直接从他那儿拿数据，尽量少直接调用数据库，这样我们JDBC connection也能活得轻松点。”</p>
+<p>我欣然接纳：“好啊好啊，关键是你得提前把数据搞到缓存啊，要不然我先问一遍缓存，没有数据，我这不还得找你吗？”</p>
+<p>生活就是这样，如果你自己不找点乐子，还有什么意思？</p>
+<h1 id="虎口脱险"><a href="#虎口脱险" class="headerlink" title="虎口脱险"></a>虎口脱险</h1><p>前几天我遇到一个可怕的事情，差一点死在外边，回不了线程池了。其实这次遇险我应该能够预想得到才对，真是太大意了。</p>
+<p>那天我处理了一些从http发来的存款和取款的包裹，老线程<code>0x6900</code>特意嘱咐我：“处理这些包裹的时候一定要特别小心，你必须先获得一把锁，在对账户存款或取款的时候一定要把账户锁住，要不然别的线程就会在你等待的时候趁虚而入，搞破坏，我年轻那会儿很毛糙，就捅了篓子。”</p>
+<p>为了“恐吓”我， 好心的<code>0x6900</code>还给了我两个表格：</p>
+<p><strong>(1)没有加锁的情况</strong></p>
+<p><img src="https://slions.gitee.io/picbed/img/p1.png"></p>
+<p><strong>(2)加锁的情况</strong></p>
+<p><img src="https://slions.gitee.io/picbed/img/p2.png"></p>
+<p>我看得胆颤心惊，原来不加锁会带来这么严重的事故。从此以后看到存款、取款的包裹就倍加小心，还好没有出过事故。</p>
+<p>今天我收到的一个包裹是转账，从某著名演员的账户给某著名导演的账户转钱，具体是谁我就不透漏了，数额可真是不小。</p>
+<p>我按照老线程的吩咐，肯定要加锁啊，先对著名演员的账户加锁，再对著名导演的账户加锁。</p>
+<p>可我万万没想到的是，还有一个线程，对，就是<code>0x7954</code>, 竟然同时在从这个导演的账户往这个演员的账户转账。 </p>
+<p>于是乎，就出现了这么个情况：</p>
+<p><img src="https://slions.gitee.io/picbed/img/p3.png"></p>
+<p>刚开始我还不知道什么情况，一直坐在等待车间傻等，可是等的时间太长了，长达几十秒！我可从来没有经历过这样的事件。</p>
+<p>这时候我就看到了线程<code>0x7954</code> , 他悠闲地坐在那里喝咖啡，我和他聊了起来：</p>
+<p>“哥们，我看你已经喝了8杯咖啡了，怎么还不去干活？”</p>
+<p>“你不喝了9杯茶了吗？”<code>0x7954</code>回敬道。</p>
+<p>“我在等一个锁，不知道哪个孙子一直不释放！”</p>
+<p>“我也在等锁啊，我要是知道哪个孙子不释放锁我非揍死他不可！”<code>0x7954</code>毫不示弱。</p>
+<p>我偷偷地看了一眼，这家伙怀里不就抱着我正等的某导演的锁吗？</p>
+<p>很明显，<code>0x7954</code>也发现了我正抱着他正在等待的锁。</p>
+<p>很快我们两个就吵了起来，互不相让：</p>
+<p>  “把你的锁先给我，让我先做完！”</p>
+<p>“不行，从来都是做完工作才释放锁，现在绝对不能给你！”</p>
+<p>从争吵到打起来，就那么几秒钟的事儿。更重要的是，我们俩不仅仅持有这个著名导演和演员的锁，还有很多其他的锁，导致等待的线程越来越多，围观的人们把屋子都挤满了。最后事情真的闹大了，我从来没见过的终极大boss“操作系统”也来了。大Boss毕竟见多识广，他看了一眼，哼了一声，很不屑地说：</p>
+<p>“又出现死锁了。”</p>
+<p>“你们俩要Kill掉一个，来吧，过来抽签。”</p>
+<p>这一下子把我给吓尿了，这么严重啊！我战战兢兢地抽了签，打开一看，是个“活”字。唉，小命终于保住了。</p>
+<p>可怜的<code>0x7954</code>被迫交出了所有的资源以后，很不幸地被kill掉，消失了。我拿到了导演的锁，可以开始干活了。大Boss“操作系统”如一阵风似的消失了，身后只传来他的声音：</p>
+<p>“记住，我们这里导演&gt;演员，无论任何情况都要先获得导演的锁。”</p>
+<p>由于这里不仅仅只有导演和演员，还有很多其他人，大Boss留下了一个表格， 里边是个算法，用来计算资源的大小，计算出来以后，永远按照从大到小的方式来获得锁：</p>
+<p><img src="https://slions.gitee.io/picbed/img/p4.png"></p>
+<p>我回到线程池，大家都知道了我的历险，围着我问个不停。</p>
+<p>凶神恶煞的线程调度员把大Boss的算法贴到了墙上。</p>
+<p>每天早上，我们都得像无节操的房屋中介、美容美发店的服务员一样，站在门口，像被耍猴一样大声背诵：</p>
+<p>“<strong>多个资源加锁要牢记，一定要按Boss的算法比大小，然后从最大的开始加锁。</strong>”</p>
+<h1 id="江湖再见"><a href="#江湖再见" class="headerlink" title="江湖再见"></a>江湖再见</h1><p>又过了很多天，我和其他线程们发现了一个奇怪的事情：包裹的处理越来越简单，不管任何包裹，不管是登录、浏览、存钱……处理的步骤都是一样的, 返回一个固定的html页面。</p>
+<p>有一次我偷偷地看了一眼，上面写着：“本系统将于今晚 00:00 至4:00 进行维护升级， 给您带来的不便我们深感抱歉！”</p>
+<p>我去告诉了老线程<code>0x6904</code>,他叹了一口气说：</p>
+<p>“唉，我们的生命也到头了，看来马上就要重启系统，我们就要消失了，再见吧兄弟。”</p>
+<p>系统重启的那一刻终于到来了。我看到屋子里的东西一个个的不见了，等待车间、就绪车间，甚至CPU车间都慢慢地消失了。我身边的线程兄弟也越来越少，最后只剩我自己了。</p>
+<p>我在空旷的原野上大喊：“还有人吗？”</p>
+<p>无人应答。</p>
+<p>我们这一代线程池完成了使命……</p>
+<p>不过下一代线程池即将重生！</p>
+<h1 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-BMCUuIWYE3O_oC3ZNNJRg">https://mp.weixin.qq.com/s/-BMCUuIWYE3O_oC3ZNNJRg</a></p>
 
-<h1 id="安装ansible"><a href="#安装ansible" class="headerlink" title="安装ansible"></a>安装ansible</h1><p>安装ansible的方式有好多种，不同系统的安装方式可参考：<a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html">官方文档</a></p>
-<p>我这里就直接使用yum安装了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install epel-release.noarch -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install ansible -y</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>配置命令补全</strong></p>
-<p>从Ansible 2.9版本开始，它支持命令的选项补全功能，它依赖于python的argcomplete插件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yum  install python-argcomplete -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> activate-global-python-argcomplete</span></span><br></pre></td></tr></table></figure>
-
-<p>最后，退出当前Shell重新进入，或者简单的直接执行如下命令即可：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">exec</span> <span class="variable">$SHELL</span></span></span><br></pre></td></tr></table></figure>
-
-<p>然后就可以按tab一次或两次补全参数或提示参数。</p>
-<h1 id="配置主机互信"><a href="#配置主机互信" class="headerlink" title="配置主机互信"></a>配置主机互信</h1><p>Ansible默认是基于ssh连接的，所以要控制其它节点首先需要建立好ssh连接，而建立ssh连接要么需要提供密码，要么需要配置好认证方式。为了方便后文的测试，这里先配置好控制节点和其它被控节点之间的主机互信。</p>
-<p>为了避免配置主机互信过程中的交互式询问，这里使用ssh-keyscan工具添加主机认证信息以及sshpass工具(安装Ansible时会自动安装sshpass，也可以yum -y install sshpass安装)直接指定ssh连接密码。</p>
-<p>在控制节点生成密钥对。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa -f ~/.ssh/id_rsa -N <span class="string">&#x27;&#x27;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>将各节点的主机信息写入控制节点的~/.ssh/known_hosts文件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="keyword">for</span> host <span class="keyword">in</span> 192.168.100.&#123;11,12&#125; slions_pc&#123;2,3&#125;;<span class="keyword">do</span> ssh-keyscan -t rsa <span class="variable">$host</span> &gt;&gt; ~/.ssh/known_hosts 2&gt;/dev/null;<span class="keyword">done</span></span></span><br></pre></td></tr></table></figure>
-
-<p>将控制节点上的ssh公钥分发给各节点：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">  <span class="keyword">for</span> host <span class="keyword">in</span> 192.168.100.&#123;11,12&#125; slions_pc&#123;2,3&#125;;<span class="keyword">do</span> sshpass -p <span class="string">&#x27;123&#x27;</span> ssh-copy-id root@<span class="variable">$host</span> &amp;&gt;/dev/null;<span class="keyword">done</span></span></span><br></pre></td></tr></table></figure>
-
-<p>以上就完成了ssh主机互信。</p>
-<h1 id="ansible初体验"><a href="#ansible初体验" class="headerlink" title="ansible初体验"></a>ansible初体验</h1><h2 id="ansible语法"><a href="#ansible语法" class="headerlink" title="ansible语法"></a>ansible语法</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible &lt;host-pattern&gt; [-f forks] [-m module_name] [-a args]</span><br></pre></td></tr></table></figure>
-
-<p>其中：<br>host-pattern     # 被控节点，可以是all，或者配置文件中的主机组名<br>-f forks               # 指定并行处理的进程数<br>-m module        # 指定使用的模块，默认模块为command<br>-a args                # 指定模块的参数</p>
-<p>举个例子：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible localhost -m command -a &#x27;echo hello world!&#x27;</span><br><span class="line">localhost | CHANGED | rc=0 &gt;&gt;</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-
-<p>上面的命令是使控制节点自身输出hello world！</p>
-<h2 id="ansible模块"><a href="#ansible模块" class="headerlink" title="ansible模块"></a>ansible模块</h2><p>ansible有上千个模块，如何能快速找到想要的那个模块呢，当然百度是最快的了。ansible也提供了对应的命令来帮助我们快速寻找，可以使用<code>ansible-doc</code>。</p>
-<p>其中<code>ansible-doc -l |grep &#39;xxx&#39;</code>命令可以筛选模块，例如筛选具有复制功能的模块：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible-doc -l|grep &#x27;copy&#x27;</span><br><span class="line">vsphere_copy                                                  Copy a file to a VMware datastore</span><br><span class="line">win_copy                                                      Copies files to remote locations on windows hosts</span><br><span class="line">bigip_file_copy                                               Manage files in datastores on a BIG-IP</span><br><span class="line">ec2_ami_copy                                                  copies AMI between AWS regions, return new image id</span><br><span class="line">win_robocopy                                                  Synchronizes the contents of two directories using Robocopy</span><br><span class="line">copy                                                          Copy files to remote locations</span><br><span class="line">na_ontap_lun_copy                                             NetApp ONTAP copy LUNs</span><br><span class="line">icx_copy                                                      Transfer files from or to remote Ruckus ICX 7000 series switches</span><br><span class="line">unarchive                                                     Unpacks an archive after (optionally) copying it from the local machine</span><br><span class="line">ce_file_copy                                                  Copy a file to a remote cloudengine device over SCP on HUAWEI CloudEngine switches</span><br><span class="line">postgresql_copy                                               Copy data between a file/program and a PostgreSQL table</span><br><span class="line">ec2_snapshot_copy                                             copies an EC2 snapshot and returns the new Snapshot ID</span><br><span class="line">nxos_file_copy                                                Copy a file to a remote NXOS device</span><br><span class="line">netapp_e_volume_copy                                          NetApp E-Series create volume copy pairs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>根据描述，大概找出是否有想要的模块。</p>
-<p>找到模块后，想要看看它的功能描述以及用法，可以继续使用ansible-doc命令。</p>
-<p>详细的模块描述手册： <code>ansible-doc &lt;$module_name&gt;</code></p>
-<p>只包含模块参数用法的模块描述手册: <code>ansible-doc -s &lt;$module_name&gt;</code></p>
-<p>就如很多编程语言一样，最先开始的是学会输出<code>hello world</code>，最后通过一个<code>debug</code>模块来实现。</p>
-<p>查看debug模块的用法：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible-doc -s debug</span><br><span class="line">- name: Print statements during execution</span><br><span class="line">  debug:</span><br><span class="line">      msg:                   # The customized message that is printed. If omitted, prints a generic message.</span><br><span class="line">      var:                   # A variable name to debug. Mutually exclusive with the `msg&#x27; option. Be aware that this option already runs in Jinja2 context and has an implicit `&#123;&#123; &#125;&#125;&#x27;</span><br><span class="line">                               wrapping, so you should not be using Jinja2 delimiters unless you are looking for double interpolation.</span><br><span class="line">      verbosity:             # A number that controls when the debug is run, if you set to 3 it will only run debug when -vvv or above</span><br></pre></td></tr></table></figure>
-
-<p>常用的就2个参数，msg与var，这两个参数是互斥的，只能使用其中一个。msg可以输出字符串，也可以输出变量的值，var只能输出变量的值。</p>
-<p>例如：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible localhost -m debug -a &#x27;msg=&quot;hello world&quot;&#x27;</span><br><span class="line">localhost | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Ansible中也支持使用变量，这里仅演示最简单的设置变量和引用变量的方式。ansible命令的-e选项或–extra-vars选项可以设置变量。</p>
-<p>例如：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# ansible localhost -m debug -e &#x27;str=&quot;hello world&quot;&#x27;  -a &#x27;var=str&#x27;</span><br><span class="line">localhost | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;str&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br><span class="line">[root@slions_pc1 ~]# ansible localhost -m debug -e &#x27;str=&quot;hello world&quot;&#x27;  -a &#x27;msg=&#123;&#123;str&#125;&#125;&#x27;</span><br><span class="line">localhost | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;hello world&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Ansible的字符串是可以不用引号去包围的，例如str=hello是允许的，但如果字符串中包含了特殊符号，则可能需要使用引号去包围，例如此处的示例出现了会产生歧义的空格。此外，要区分变量名和普通的字符串，需要在变量名上加一点标注：用 &#123;&#123; &#125;&#125;包围Ansible的变量，这其实是Jinja2模板的语法。其实不难理解，它的用法和Shell下引用变量使用$符号或${}是一样的，例如echo “hello ${var}”。</p>
-<h1 id="ansible配置文件"><a href="#ansible配置文件" class="headerlink" title="ansible配置文件"></a>ansible配置文件</h1><p>我们通过yum安装后的ansible会提供默认的ansible配置文件，位置在<code>/etc/ansible/ansible.cfg</code>。</p>
-<p>实际上，ansible支持4种方式指定配置文件，它们的解析顺序是：</p>
-<ul>
-<li><p><code>ANSIBLE_CFG</code>: 环境变量中指定的配置文件</p>
-</li>
-<li><p><code>ansible.cfg</code>: 当前目录下的ansible.cfg</p>
-</li>
-<li><p><code>~/ansible.cfg</code>: 家目录下的ansible.cfg</p>
-</li>
-<li><p><code>/etc/ansible/ansible.cfg</code>: 默认的全局配置文件</p>
-</li>
-</ul>
-<p>Ansible配置文件采用ini风格进行配置，每一项配置都使用key=value的方式进行配置。</p>
-<p>下面是截取了部分配置文件的配置信息，暂时没有必要都了解，用到哪里时百度即可。</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[defaults]</span></span><br><span class="line"><span class="attr">inventory</span> = /etc/ansible/hosts    <span class="comment">#这个参数表示资源清单inventory文件配置，资源清单就是一些ansible需要链接管理的主机列表。</span></span><br><span class="line"><span class="attr">forks</span> = <span class="number">5</span>   <span class="comment">#设置默认情况下Ansible最多能有多少个进程同时工作，默认设置最多5个进程并行处理。具体需要设置多少个，可以根据控制主机的性能和被管理节点的数量来确定。</span></span><br><span class="line"><span class="attr">sudo_user</span> = root  <span class="comment">#这个设置默认执行命令的用户，在playbook中重新设置这个参数。</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">22</span> <span class="comment">#这个是指定链接被管节点的管理端口，默认22。除非设置了特殊的SSH端口，不然这个参数一般是不需要修改的。</span></span><br><span class="line"><span class="attr">host_key_checking</span> = <span class="literal">false</span>  <span class="comment">#设置是否检查SSH主机的秘钥。可以设置为True或者False。</span></span><br><span class="line"><span class="attr">timeout</span> = <span class="number">60</span>  <span class="comment">#设置SSH链接的超时间隔，单位是秒。</span></span><br><span class="line"><span class="attr">log_path</span> = /var/log/ansible.log  <span class="comment">#系统默认是不记录日志的，如果想把Ansible系统的输出记录到日志文件中，需要设置log_path来指定一个存储Ansible日志的文件</span></span><br><span class="line"><span class="attr">poll_interval</span> = <span class="number">15</span> <span class="comment">#异步执行任务的时候多久检查一次任务装填</span></span><br><span class="line"><span class="attr">transport</span> = smart  <span class="comment">#选择远程的工具   默认情况下就是smart(智能)模式  自动选择连接方式</span></span><br><span class="line">module_set_locale  <span class="comment">#设置本地的环境变量  </span></span><br></pre></td></tr></table></figure>
     </article>
     <!-- license  -->
     
@@ -563,17 +590,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" title= "hexo特殊符号的转义问题">
-                    <div class="nextTitle">hexo特殊符号的转义问题</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" title= "（一）ansible入门">
-                    <div class="prevTitle">（一）ansible入门</div>
+                <a href= "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title= "git原理及常用命令">
+                    <div class="prevTitle">git原理及常用命令</div>
                 </a>
             
         </li>
@@ -589,7 +611,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1629627914000'
+        let idOption = '1632039243000'
         
         idOption = location.pathname
         
@@ -728,7 +750,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ansible"><span class="toc-number">2.</span> <span class="toc-text">安装ansible</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E4%BA%92%E4%BF%A1"><span class="toc-number">3.</span> <span class="toc-text">配置主机互信</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ansible%E5%88%9D%E4%BD%93%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">ansible初体验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ansible%E8%AF%AD%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">ansible语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ansible%E6%A8%A1%E5%9D%97"><span class="toc-number">4.2.</span> <span class="toc-text">ansible模块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ansible%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">ansible配置文件</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E7%94%9F%E7%89%9B%E7%8A%8A"><span class="toc-number">1.</span> <span class="toc-text">初生牛犊</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B8%90%E5%85%A5%E4%BD%B3%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">渐入佳境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%8E%E5%8F%A3%E8%84%B1%E9%99%A9"><span class="toc-number">3.</span> <span class="toc-text">虎口脱险</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B1%9F%E6%B9%96%E5%86%8D%E8%A7%81"><span class="toc-number">4.</span> <span class="toc-text">江湖再见</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">原文链接</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
