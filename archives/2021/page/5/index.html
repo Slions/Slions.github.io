@@ -386,6 +386,194 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >
+            
+                <span>自己动手实现network namespace</span>
+        </a>
+        <div class="abstract-content">
+            之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实我们通过ip命令就可以模拟出网络命名空间。
+
+安装软件首先我们需要安装iprouter软件：
+12[root@slion...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/13</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >
+            
+                <span>cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</span>
+        </a>
+        <div class="abstract-content">
+            网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。
+简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，promethe...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "prometheus">prometheus</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >
+            
+                <span>理解存储驱动overlay2</span>
+        </a>
+        <div class="abstract-content">
+            容器中通过使用不同的rootfs来模拟了不同的操作系统及应用，不过，如果使用每个镜像都需要一个独立的根文件系统的话，那想必磁盘早已拥挤不堪了；且一个镜像可以同时运行多个容器，每个容器对文件的改动该怎么办？
+Linux提供了一种叫做联合文件系统的文件系统，它具备如下特性：
+
+联合挂载：将多个目录按层次组合，一并挂载到一个联合挂载点。
+写时复制：对联合挂载点的修改不会影响到底层的多个目录，而是使...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >
+            
+                <span>Centos镜像那么小能用么？</span>
+        </a>
+        <div class="abstract-content">
+            不知道大家在使用docker的过程中有没有过这种困惑，就是下载了个centos镜像，可以看到只有200多M,这和我们之前使用传统方式启一个centos系统动不动4、5个G简直有天壤之别，这么小能运行么，稳定么？
+1234567891011[root@slions_pc1 ~]# docker imagesREPOSITORY          TAG                 IMAG...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >
+            
+                <span>浅谈docker框架</span>
+        </a>
+        <div class="abstract-content">
+            如果你之前使用过docker应该发现其并不难，把所谓的三大核心“镜像”，“容器”，“仓库”掌握了就能满足日常工作中的大多数应用内容。但如果想要更深入些了解docker,就需要熟悉下docker的框架结构，正巧前段时间同组大佬通过docker源码来分享了一波学习心得，也使得我对docker的理解更深了些，下面来一起分析下docker的框架结构。
+docker架构在我的本地环境执行docker ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >
+            
+                <span>聊聊Cgroup</span>
+        </a>
+        <div class="abstract-content">
+            此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
+什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >
             
                 <span>大话docker</span>
@@ -1218,9 +1406,109 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 44
+        Total : 50
         </div>
         <!-- search  -->
         
@@ -1233,6 +1521,36 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >k8s-apiserver原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm证书过期时间</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1487,6 +1805,10 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
         <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
     
+        <span class="sidebar-tag-name" data-tags="kubernetes核心组件"><span class="iconfont-archer">&#xe606;</span>kubernetes核心组件</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes"><span class="iconfont-archer">&#xe606;</span>kubernetes</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1547,6 +1869,10 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
     
         <span class="sidebar-category-name" data-categories="好文推荐"><span class="iconfont-archer">&#xe60a;</span>好文推荐</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes笔记"><span class="iconfont-archer">&#xe60a;</span>kubernetes笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes"><span class="iconfont-archer">&#xe60a;</span>kubernetes</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

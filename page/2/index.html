@@ -399,6 +399,196 @@ height:57vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >
+            
+                <span>expect使用</span>
+        </a>
+        <div class="abstract-content">
+            使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。
+expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。
+安装1$ yum install -y expect
+
+
+
+使用方法
+​    定义脚本的执行shell，类似于bash...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >
+            
+                <span>（五）ansible常用模块</span>
+        </a>
+        <div class="abstract-content">
+            ansible基于模块工作，ansible 2.9.24版本已经有3387个模块了，当然这些模块不需要也没精力全懂，但了解些常用模块的使用方式对日常运维过程中大有脾益。
+123456789[root@slions_pc1 ansible]# ansible --versionansible 2.9.24  config file = /etc/ansible/ansible.cfg  con...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >
+            
+                <span>（四）剧本文件playbook</span>
+        </a>
+        <div class="abstract-content">
+            我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。
+ansible之所以能...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >
+            
+                <span>（三）主机清单inventory</span>
+        </a>
+        <div class="abstract-content">
+            上一章在讲ansible基本用法时的几个例子中host都是localhost,是因为在没有对ansible进行任何配置时，ansible只能通过localhost来控制本机。
+inventory⽤于定义ansible要管理的主机列表，可以定义单个主机和主机组。/etc/ansible/hosts就是默认的全局inventory，当然我们可以在配置文件中修改此配置项，但通常不会去修改这个配置项...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >
+            
+                <span>实现科学上网</span>
+        </a>
+        <div class="abstract-content">
+            shadowsocks是当前比较受欢迎的科学上网工具。
+服务端配置准备代理服务器首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。
+安装shadowsockslinux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。
+1234567# pip3 install shadowsocksWARN...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "shadowsocks">shadowsocks</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >
+            
+                <span>hexo特殊符号的转义问题</span>
+        </a>
+        <div class="abstract-content">
+            最近写ansible相关文章时，发现hexo与Jinja2的语法有冲突。
+123line: 93,location: &#x27;_posts/（二）ansible初体验.md [Line 93, Column 133]&#x27;,type: &#x27;unexpected token: &#125;&#125;&#x27;
+
+它的模板语法 &#123;&#123;&#125;&#125...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "hexo">hexo</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >
             
                 <span>（二）ansible初体验</span>
@@ -517,234 +707,6 @@ Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保�
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >
-            
-                <span>heketi启动失败问题排查</span>
-        </a>
-        <div class="abstract-content">
-            问题现象日常巡检时发现heketi服务异常，启动失败。查看heketi log报错为invalid page type: 19:10
-环境描述
-
-
-
-
-
-
-
-内核版本
-3.10.0-862.el7.x86_64
-
-
-系统版本
-CentOS Linux release 7.5.1804
-
-
-kubernetes 版本
-1.17.0
-
-
-glusterfs版本
-7.1
-
-
-heketi版本
-v9...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "heketi">heketi</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >
-            
-                <span>gluster排故纪实</span>
-        </a>
-        <div class="abstract-content">
-            setup-openshift-heketi-storage无空间glusterfs 4.1.7 heketi v9.0.0 部署
-问题描述
-运行setup-openshift-heketi-storage子命令时heketi-cli报告“无空间”错误：
-123$ heketi-cli setup-openshift-heketi-storageError: Failed to alloca...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >
-            
-                <span>修改centos7主机名</span>
-        </a>
-        <div class="abstract-content">
-            这篇讲解下如何修改Centos7的主机名。
-Centos7中主机名分为了3类：
-
-static类
-就是我们常说的主机名。由/etc/hostname文件决定。
-
-transient类
-我们常说的临时主机名。默认在系统启动的时候会根据/etc/hostname文件中的静态主机名进行初始化。
-
-pretty类
-它可以提供非标准的主机名。它可以包含特殊符号，例如空格。
-
-
-/etc/hostnam...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/07</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >
-            
-                <span>linux误删文件恢复思路</span>
-        </a>
-        <div class="abstract-content">
-            使用linux时对于执行删除操作要慎之又慎，特别是重要的数据最好提前备份。当然，如果真的删除了一个文件时，我们也要冷静思考，想想如何通过其他手段弥补或减小损失。
-在解决问题前，我们先了解下涉及到的基本概念：
-
-我们看到的文件实际上是一个指向inode的链接, inode链接包含了文件的所有属性, 比如权限和所有者, 数据块地址(文件存储在磁盘的这些数据块中)。当你删除(rm)一个文件, 实际...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/07</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/" >
-            
-                <span>逻辑卷管理LVM</span>
-        </a>
-        <div class="abstract-content">
-            总所周知不论是机械硬盘还是固态磁盘大小都是固定的，当磁盘空间满了后只能通过删除无用数据来保持磁盘的可用性，这篇介绍的LVM(Logical Volume Manager)是建立在磁盘和分区之上的一个逻辑层，用来提高磁盘分区管理的灵活性，可以随时随地的扩缩容分区大小。
-LVM术语
-Physical Volume(PV)
-实际分区需要调整 System ID 成为 LVM 表示(8e) ，然后经...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/06</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >
-            
-                <span>Virtualbox虚机使用介绍</span>
-        </a>
-        <div class="abstract-content">
-             VMware workstation是最常见也是最常用的虚拟机工具，但是很多公司不会购买其商用授权，VirtualBox 也是一款虚拟化产品，重要的是其开源免费，好早之前在本地安装使用了下，感觉与VMware workstation比还是不太习惯，包括虚拟机的安装和设置也要重新习惯，本文主要讲下安装好软件后如何完成基础设置与网络配置，安装部分比较简单请自行解决。
-新建虚机
-进入virtua...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "虚拟机相关">虚拟机相关</a>
     
 </div>
             
@@ -1582,9 +1544,109 @@ Physical Volume(PV)
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 44
+        Total : 50
         </div>
         <!-- search  -->
         
@@ -1597,6 +1659,36 @@ Physical Volume(PV)
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >k8s-apiserver原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm证书过期时间</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1851,6 +1943,10 @@ Physical Volume(PV)
     
         <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
     
+        <span class="sidebar-tag-name" data-tags="kubernetes核心组件"><span class="iconfont-archer">&#xe606;</span>kubernetes核心组件</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes"><span class="iconfont-archer">&#xe606;</span>kubernetes</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1911,6 +2007,10 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
     
         <span class="sidebar-category-name" data-categories="好文推荐"><span class="iconfont-archer">&#xe60a;</span>好文推荐</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes笔记"><span class="iconfont-archer">&#xe60a;</span>kubernetes笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes"><span class="iconfont-archer">&#xe60a;</span>kubernetes</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
