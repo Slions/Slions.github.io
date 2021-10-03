@@ -391,7 +391,9 @@
                 <span>kube-proxy原理</span>
         </a>
         <div class="abstract-content">
-            
+            kube-proxy的作用kube-proxy是Kubernetes的核心组件，部署在每个Node节点上，它是实现Kubernetes Service的通信与负载均衡机制的重要组件; kube-proxy负责为Pod创建代理服务，从apiserver获取所有server信息，并根据server信息创建代理服务，实现server到Pod的请求路由和转发，从而实现K8s层级的虚拟转发网络。
+
+在...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -399,6 +401,12 @@
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
             </div>
             <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
             
         </div>
     </article>
@@ -409,42 +417,27 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >
-            
-                <span>k8s-etcd理解</span>
-        </a>
-        <div class="abstract-content">
-            
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >
+        <a class="abstract-title" href = "/2021/10/02/k8s-scheduler%E5%8E%9F%E7%90%86/" >
             
                 <span>k8s-scheduler原理</span>
         </a>
         <div class="abstract-content">
-            
+            scheduler作用负责整个集群资源的调度功能，根据特定的调度算法和策略，将 Pod 调度到最优的工作节点上面去，从而更加合理、更加充分的利用集群的资源。
+
+工作机制根据特定的调度算法和调度策略将 Pod 调度到合适的 Node 节点上去，是一个独立的二进制程序，启动之后会一直监听 API Server，获取到 PodSpec.NodeName 为空的 Pod，对每个 Pod 都会创建一个...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/02</span>
             </div>
             <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
             
         </div>
     </article>
@@ -455,19 +448,63 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >
+        <a class="abstract-title" href = "/2021/10/01/k8s-etcd%E7%90%86%E8%A7%A3/" >
             
-                <span>k8s-controller-manager原理</span>
+                <span>k8s-etcd理解</span>
         </a>
         <div class="abstract-content">
-            
+            etcd作用是用来存储所有 Kubernetes 的集群状态的，它除了具备状态存储的功能，还有事件监听和订阅、Leader选举的功能。
+存储k8s集群状态整个kubernetes系统需要用到etcd用来协同和存储配置的有：
+
+网络插件flannel、calico等网络插件也需要用到etcd存储网络的配置信息
+kubernetes本身，包括各种对象的状态和元信息配置
+
+
+很多网上资料讲flan...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/01</span>
             </div>
             <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/09/30/k8s-controller-manager%E5%8E%9F%E7%90%86/" >
+            
+                <span>k8s-controller-manager原理</span>
+        </a>
+        <div class="abstract-content">
+            controller-manager作用Controller Manager作为集群内部的管理控制中心，负责集群内的Node、Pod副本、服务端点（Endpoint）、命名空间（Namespace）、服务账号（ServiceAccount）、资源定额（ResourceQuota）的管理。
+
+逻辑上，每个控制器是一个单独的协程。用于监视 apiserver 暴露的集群状态，并且不断地尝试把当前...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
             
         </div>
     </article>
@@ -483,7 +520,7 @@
                 <span>k8s-apiserver原理</span>
         </a>
         <div class="abstract-content">
-            apiserver作用对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了...
+            apiserver作用其对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1485,6 +1522,8 @@ Dockerfile
     
     
     
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 50
@@ -1503,22 +1542,22 @@ Dockerfile
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href= "/2021/10/02/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/01</span><a class="archive-post-title" href= "/2021/10/01/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href= "/2021/09/30/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
         </li>
     
     

@@ -20,12 +20,12 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="apiserver作用对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了以下的">
+    <meta name="description" content="apiserver作用其对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了以下">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s-apiserver原理">
 <meta property="og:url" content="https://slions.github.io/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="apiserver作用对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了以下的">
+<meta property="og:description" content="apiserver作用其对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了以下">
 <meta property="og:locale">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/api1.png">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/api2.png">
@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/api12.png">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/api13.png">
 <meta property="article:published_time" content="2021-09-26T03:38:54.000Z">
-<meta property="article:modified_time" content="2021-10-03T04:28:04.376Z">
+<meta property="article:modified_time" content="2021-10-03T08:59:24.421Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="kubernetes核心组件">
 <meta name="twitter:card" content="summary">
@@ -462,9 +462,9 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="apiserver作用"><a href="#apiserver作用" class="headerlink" title="apiserver作用"></a>apiserver作用</h1><p>对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了以下的功能：</p>
+        <h1 id="apiserver作用"><a href="#apiserver作用" class="headerlink" title="apiserver作用"></a>apiserver作用</h1><p>其对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供了以下的功能：</p>
 <ul>
-<li>提供了Kubemetes 各类资源对象的增、删、改、查及watch等的http rest接口。集是资源配额的入口。</li>
+<li>提供了Kubemetes 各类资源对象的增、删、改、查及watch等的http rest接口。是资源配额的入口。</li>
 <li>提供了完备的集群安全控制：API Server 提供的验证和授权保证了整个集群的安全。</li>
 <li>集群内部各个模块之间通信的枢纽：所有模块之间并不会互相调用，而是通过和 API Server 打交道来完成各自的工作。</li>
 </ul>
@@ -589,7 +589,7 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" title= "k8s-controller-manager原理">
+                <a href= "/2021/09/30/k8s-controller-manager%E5%8E%9F%E7%90%86/" title= "k8s-controller-manager原理">
                     <div class="nextTitle">k8s-controller-manager原理</div>
                 </a>
             
@@ -1479,6 +1479,8 @@ top:50vh;
     
     
     
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 50
@@ -1497,22 +1499,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href= "/2021/10/02/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/01</span><a class="archive-post-title" href= "/2021/10/01/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href= "/2021/09/30/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
         </li>
     
     
