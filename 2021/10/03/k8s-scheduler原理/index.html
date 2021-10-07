@@ -23,15 +23,15 @@
     <meta name="description" content="scheduler作用负责整个集群资源的调度功能，根据特定的调度算法和策略，将 Pod 调度到最优的工作节点上面去，从而更加合理、更加充分的利用集群的资源。  工作机制根据特定的调度算法和调度策略将 Pod 调度到合适的 Node 节点上去，是一个独立的二进制程序，启动之后会一直监听 API Server，获取到 PodSpec.NodeName 为空的 Pod，对每个 Pod 都会创建一个 bi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s-scheduler原理">
-<meta property="og:url" content="https://slions.github.io/2021/10/02/k8s-scheduler%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:url" content="https://slions.github.io/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="scheduler作用负责整个集群资源的调度功能，根据特定的调度算法和策略，将 Pod 调度到最优的工作节点上面去，从而更加合理、更加充分的利用集群的资源。  工作机制根据特定的调度算法和调度策略将 Pod 调度到合适的 Node 节点上去，是一个独立的二进制程序，启动之后会一直监听 API Server，获取到 PodSpec.NodeName 为空的 Pod，对每个 Pod 都会创建一个 bi">
 <meta property="og:locale">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/sche1.png">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/sche2.png">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/sche3.png">
-<meta property="article:published_time" content="2021-10-02T02:39:28.000Z">
-<meta property="article:modified_time" content="2021-10-03T09:27:38.865Z">
+<meta property="article:published_time" content="2021-10-03T02:39:28.000Z">
+<meta property="article:modified_time" content="2021-10-07T03:05:02.984Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="kubernetes核心组件">
 <meta name="twitter:card" content="summary">
@@ -328,7 +328,7 @@ height:50vh;
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/10/02</span>
+                    <span class="post-intro-time">2021/10/03</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -486,7 +486,7 @@ height:50vh;
 <p>如果开启了 TaintNodesByCondition(从 1.12 开始为 beta级别，默认开启) 特性，则 CheckNodeCondition、CheckNodeMemoryPressure、CheckNodeDiskPressure、CheckNodePIDPressure 预选策略则会被禁用，PodToleratesNodeNoExecuteTaints、CheckNodeUnschedulable 则会启用。</p>
 <h2 id="优选策略"><a href="#优选策略" class="headerlink" title="优选策略"></a>优选策略</h2><p><img src="https://slions.gitee.io/picbed/img/sche3.png"></p>
 <p>如果开启了 ResourceLimitsPriorityFunction(默认不开启) 特性，则 ResourceLimitsPriority 会被启用。</p>
-<h1 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h1><p>查看<a href="/2021/10/01/k8s-etcd%E7%90%86%E8%A7%A3/" title="etcd篇的leader选举">etcd篇的leader选举</a>，没有额外设置都是走的默认配置（endpoint）,可以在scheduler.conf中设置。</p>
+<h1 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h1><p>查看<a href="/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" title="etcd篇的leader选举">etcd篇的leader选举</a>，没有额外设置都是走的默认配置（endpoint）,可以在scheduler.conf中设置。</p>
 
     </article>
     <!-- license  -->
@@ -496,16 +496,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" title= "kube-proxy原理">
-                    <div class="nextTitle">kube-proxy原理</div>
+                <a href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" title= "k8s-etcd理解">
+                    <div class="nextTitle">k8s-etcd理解</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/10/01/k8s-etcd%E7%90%86%E8%A7%A3/" title= "k8s-etcd理解">
-                    <div class="prevTitle">k8s-etcd理解</div>
+                <a href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" title= "k8s-apiserver原理">
+                    <div class="prevTitle">k8s-apiserver原理</div>
                 </a>
             
         </li>
@@ -521,7 +521,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1633142368000'
+        let idOption = '1633228768000'
         
         idOption = location.pathname
         
@@ -1386,8 +1386,6 @@ top:50vh;
     
     
     
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 50
@@ -1406,22 +1404,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/02</span><a class="archive-post-title" href= "/2021/10/02/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/01</span><a class="archive-post-title" href= "/2021/10/01/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/30</span><a class="archive-post-title" href= "/2021/09/30/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
         </li>
     
     
