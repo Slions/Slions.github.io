@@ -386,6 +386,38 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
+            
+                <span>走近分布式一致性协议（下篇）</span>
+        </a>
+        <div class="abstract-content">
+            上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。
+
+Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。
+在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候，将...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
             
                 <span>走近分布式一致性协议（上篇）</span>
@@ -698,37 +730,6 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >
-            
-                <span>ceph mimic对接k8s 1.17.0(ceph-csi)</span>
-        </a>
-        <div class="abstract-content">
-            最近测试ceph rbd在kubernetes的自动扩容问题，之前K8s v1.11.0时的策略是先找到目标卷，使用rbd resize命令对此卷扩容，找到挂载此卷的客户端宿主机，执行xfs_growfs等刷新文件系统的命令。查看网上资料k8s 在1.15版本后，ExpandInUsePersistentVolume功能被开启。意思大概就是不需要挂载到容器即可扩容PVC。按网上的手册设置相关...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ceph">ceph</a>
     
 </div>
             
@@ -1572,9 +1573,26 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 51
+        Total : 52
         </div>
         <!-- search  -->
         
@@ -1587,6 +1605,11 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >harbor对接F5的鉴权失败问题</a>
+        </li>
     
     
         <li class="archive-post-item">

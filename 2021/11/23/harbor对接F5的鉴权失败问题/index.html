@@ -20,22 +20,25 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="这篇讲解下如何修改Centos7的主机名。 Centos7中主机名分为了3类：  static类 就是我们常说的主机名。由&#x2F;etc&#x2F;hostname文件决定。  transient类 我们常说的临时主机名。默认在系统启动的时候会根据&#x2F;etc&#x2F;hostname文件中的静态主机名进行初始化。  pretty类 它可以提供非标准的主机名。它可以包含特殊符号，例如空格。   &#x2F;etc&#x2F;hostname文件">
+    <meta name="description" content="之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。 问题现象使用docker login harbor时，有时成功，有时失败： 123456# docker login -u user -p passwd http:&#x2F;&#x2F;xxx.xxx.xxx.xxx:9980Er">
 <meta property="og:type" content="article">
-<meta property="og:title" content="修改centos7主机名">
-<meta property="og:url" content="https://slions.github.io/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/index.html">
+<meta property="og:title" content="harbor对接F5的鉴权失败问题">
+<meta property="og:url" content="https://slions.github.io/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="这篇讲解下如何修改Centos7的主机名。 Centos7中主机名分为了3类：  static类 就是我们常说的主机名。由&#x2F;etc&#x2F;hostname文件决定。  transient类 我们常说的临时主机名。默认在系统启动的时候会根据&#x2F;etc&#x2F;hostname文件中的静态主机名进行初始化。  pretty类 它可以提供非标准的主机名。它可以包含特殊符号，例如空格。   &#x2F;etc&#x2F;hostname文件">
+<meta property="og:description" content="之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。 问题现象使用docker login harbor时，有时成功，有时失败： 123456# docker login -u user -p passwd http:&#x2F;&#x2F;xxx.xxx.xxx.xxx:9980Er">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-08-07T13:45:26.000Z">
-<meta property="article:modified_time" content="2021-08-12T11:47:14.611Z">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/hf1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/hf2.png">
+<meta property="article:published_time" content="2021-11-23T02:13:53.000Z">
+<meta property="article:modified_time" content="2021-11-23T03:32:41.203Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="harbor">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/hf1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>修改centos7主机名 · S_lion&#39;s Studio</title>
+    <title>harbor对接F5的鉴权失败问题 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -251,7 +254,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">修改centos7主机名</a>
+            <a href="#" class="post-name">harbor对接F5的鉴权失败问题</a>
         </div>
     </div>
     
@@ -294,7 +297,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            修改centos7主机名
+            harbor对接F5的鉴权失败问题
             <!-- 404 -->
             
         </h1>
@@ -313,18 +316,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">783</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">647</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/08/07</span>
+                    <span class="post-intro-time">2021/11/23</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -448,40 +451,24 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>这篇讲解下如何修改Centos7的主机名。</p>
-<p>Centos7中主机名分为了3类：</p>
-<ol>
-<li><p>static类</p>
-<p>就是我们常说的主机名。由<code>/etc/hostname</code>文件决定。</p>
-</li>
-<li><p>transient类</p>
-<p>我们常说的临时主机名。默认在系统启动的时候会根据<code>/etc/hostname</code>文件中的静态主机名进行初始化。</p>
-</li>
-<li><p>pretty类</p>
-<p>它可以提供非标准的主机名。它可以包含特殊符号，例如空格。</p>
-</li>
-</ol>
-<p><code>/etc/hostname</code>文件没有主机名的时候，在系统启动的时候，内核会将transient初始化为<code>localhost.localdomain</code>。</p>
-<h1 id="主机名修改方式"><a href="#主机名修改方式" class="headerlink" title="主机名修改方式"></a>主机名修改方式</h1><h2 id="hostname"><a href="#hostname" class="headerlink" title="hostname"></a>hostname</h2><p>使用<code>hostname</code>命令修改主机名，它修改是transient主机名，即临时生效的主机名。</p>
-<h2 id="etc-hostname"><a href="#etc-hostname" class="headerlink" title="/etc/hostname"></a>/etc/hostname</h2><p>直接修改/etc/hostname文件，它瞬时生效+永久生效。</p>
-<h2 id="nmtui"><a href="#nmtui" class="headerlink" title="nmtui"></a>nmtui</h2><p>通过<code>nmtui</code>命令在图形化界面修改主机名。会直接修改/etc/hostname文件，他会瞬时生效+永久生效的。</p>
-<h2 id="hostnamectl"><a href="#hostnamectl" class="headerlink" title="hostnamectl"></a>hostnamectl</h2><p>使用<code>hostnamectl</code>命令，它可以修改并查看static、transient或pretty三种主机名。当它修改了static主机名时，会直接写入*/etc/hostname*文件中，因此它也是瞬时生效+永久生效的。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hostnamectl --<span class="built_in">help</span></span></span><br><span class="line">hostnamectl [OPTIONS...] COMMAND ...</span><br><span class="line"></span><br><span class="line">Query or change system hostname.</span><br><span class="line"></span><br><span class="line">  -h --help              Show this help</span><br><span class="line">     --version           Show package version</span><br><span class="line">     --no-ask-password   Do not prompt for password</span><br><span class="line">  -H --host=[USER@]HOST  Operate on remote host</span><br><span class="line">  -M --machine=CONTAINER Operate on local container</span><br><span class="line">     --transient         Only set transient hostname</span><br><span class="line">     --static            Only set static hostname</span><br><span class="line">     --pretty            Only set pretty hostname</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  status                 Show current hostname settings</span><br><span class="line">  set-hostname NAME      Set system hostname</span><br><span class="line">  set-icon-name NAME     Set icon name for host</span><br><span class="line">  set-chassis NAME       Set chassis type for host</span><br><span class="line">  set-deployment NAME    Set deployment environment for host</span><br><span class="line">  set-location NAME      Set location for host</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <p>之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。</p>
+<h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>使用docker login harbor时，有时成功，有时失败：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker login -u user -p passwd http://xxx.xxx.xxx.xxx:9980</span></span><br><span class="line">Error response from daemon: login attempt to http://xxx.xxx.xxx.xxx:9980/v2/ failed with status: 401 Unauthorized</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker login -u user -p passwd http://xxx.xxx.xxx.xxx:9980</span></span><br><span class="line">Error response from daemon: login attempt to http://xxx.xxx.xxx.xxx:9980/v2/ failed with status: 401 Unauthorized</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker login -u user -p passwd http://xxx.xxx.xxx.xxx:9980</span></span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure>
 
-<h3 id="查看主机名"><a href="#查看主机名" class="headerlink" title="查看主机名"></a>查看主机名</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]#  hostnamectl</span><br><span class="line">   Static hostname: slions_pc1</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 72c6db2a36e54cc584626da0118ed9ca</span><br><span class="line">           Boot ID: 2cbdd44b889d40b29f932e9462e8ec15</span><br><span class="line">    Virtualization: vmware</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-957.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br></pre></td></tr></table></figure>
-
-<h3 id="同时修改3种主机名"><a href="#同时修改3种主机名" class="headerlink" title="同时修改3种主机名"></a>同时修改3种主机名</h3><p>当同时修改了pretty和(static | transient)中的一种时，将取pretty名的简化部分作为static主机名。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# hostnamectl set-hostname slions</span><br><span class="line">[root@slions_pc1 ~]# hostname</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 ~]# cat /etc/hostname</span><br><span class="line">slions</span><br><span class="line">[root@slions_pc1 ~]# hostnamectl status</span><br><span class="line">   Static hostname: slions</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 72c6db2a36e54cc584626da0118ed9ca</span><br><span class="line">           Boot ID: 2cbdd44b889d40b29f932e9462e8ec15</span><br><span class="line">    Virtualization: vmware</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-957.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br><span class="line">[root@slions_pc1 ~]# hostnamectl --pretty</span><br></pre></td></tr></table></figure>
-
-<p>可以从结果中看到，只改变了static和transient(内核动态维护的，一定会改变)，而pretty却没设置成功。这是因为这里给出的主机名”slions”是一个符合主机名标准的名称。如果指定一个非标准的主机名，例如包含特殊符号，那么也会设置pretty。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# hostnamectl set-hostname &quot;slions1 slions2&quot;</span><br><span class="line">[root@slions_pc1 ~]# hostnamectl status</span><br><span class="line">   Static hostname: slions1slions2</span><br><span class="line">   Pretty hostname: slions1 slions2</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 72c6db2a36e54cc584626da0118ed9ca</span><br><span class="line">           Boot ID: 2cbdd44b889d40b29f932e9462e8ec15</span><br><span class="line">    Virtualization: vmware</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-957.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br></pre></td></tr></table></figure>
-
-<p>pretty hostname已经改变，且static hostname是它的”简化版”。</p>
-<h3 id="修改某种类型的主机名"><a href="#修改某种类型的主机名" class="headerlink" title="修改某种类型的主机名"></a>修改某种类型的主机名</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname NAME --static</span><br><span class="line">hostnamectl set-hostname NAME --transient</span><br><span class="line">hostnamectl set-hostname NAME --pretty</span><br><span class="line"><span class="meta">#</span><span class="bash"> 还可以同时修改两种</span></span><br><span class="line">hostnamectl set-hostname NAME --static --transient</span><br><span class="line">hostnamectl set-hostname NAME --static --pretty</span><br><span class="line">hostnamectl set-hostname NAME --transient --pretty</span><br></pre></td></tr></table></figure>
-
-<h3 id="修改、查看远程主机的主机名"><a href="#修改、查看远程主机的主机名" class="headerlink" title="修改、查看远程主机的主机名"></a>修改、查看远程主机的主机名</h3><p>使用”-H”或”–host”选项。连接基于SSH。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl -H [USER@]HOST set-hostname NAME</span><br><span class="line">hostnamectl -H [USER@]HOST status</span><br></pre></td></tr></table></figure>
-
+<p>修改docker配置文件中镜像仓库地址为单独的harbor节点再次测试，没有任何问题。</p>
+<h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>接着将docker镜像仓库地址换回F5地址，打开两个终端分别监视两个Harbor节点上的registry的日志。</p>
+<p>经过几次测试，发现一个现象：当docker login成功时，都是一个节点上的日志出现更新；而当docker login fail时，会看到两个节点上的registry日志都有变化，这就有些出乎意料了。</p>
+<p><img src="https://slions.gitee.io/picbed/img/hf1.png"></p>
+<p>查阅harbor官方对docker login的<a target="_blank" rel="noopener" href="https://github.com/goharbor/harbor/wiki/Architecture-Overview-of-Harbor#the-process-of-docker-login">流程解析</a></p>
+<p><img src="https://slions.gitee.io/picbed/img/hf2.png"></p>
+<ul>
+<li>docker向registry发起请求，由于registry是基于token auth的，因此registry回复应答，告诉docker client去哪个URL去获取token；</li>
+<li>docker client根据应答中的URL向token service(ui)发起请求，通过user和passwd获取token；如果user和passwd在db中通过了验证，那么token service将用自己的私钥<code>(harbor/common/config/ui/private_key.pem)</code>生成一个token，返回给docker client端；</li>
+<li>docker client获得token后再向registry发起login请求，registry用自己的证书<code>(harbor/common/config/registry/root.crt)</code>对token进行校验。通过则返回成功，否则返回失败。</li>
+</ul>
+<p>从这个原理，可以知道问题就出在docker client多次向Harbor发起请求这个环节：对于每次请求，F5会将域名可能解析为不同IP，因此不同请求可能落到不同的镜像仓库节点上。这样当docker client拿着节点1上token service分配的token去到节点2的registry上鉴权时，就会出现鉴权失败的情况。</p>
+<h1 id="解决策略"><a href="#解决策略" class="headerlink" title="解决策略"></a>解决策略</h1><p>token service的私钥<code>(harbor/common/config/ui/private_key.pem)</code>和registry的证书<code>(harbor/common/config/registry/root.crt)</code>都是在prepare时生成的，两个节点都独立prepare过，因此两个node上的private_key.pem和root.crt是不同的。所以造成了鉴权失败的问题。统一两个节点的私钥和证书可以解决。</p>
+<p>将节点1上的private_key.pem和root.crt复制到节点2上，并重新创建node2上的harbor container。</p>
 
     </article>
     <!-- license  -->
@@ -490,17 +477,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" title= "gluster排故纪实">
-                    <div class="nextTitle">gluster排故纪实</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" title= "linux误删文件恢复思路">
-                    <div class="prevTitle">linux误删文件恢复思路</div>
+                <a href= "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" title= "普通用户安装mysql">
+                    <div class="prevTitle">普通用户安装mysql</div>
                 </a>
             
         </li>
@@ -516,7 +498,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1628343926000'
+        let idOption = '1637633633000'
         
         idOption = location.pathname
         
@@ -655,7 +637,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%90%8D%E4%BF%AE%E6%94%B9%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">主机名修改方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hostname"><span class="toc-number">1.1.</span> <span class="toc-text">hostname</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#etc-hostname"><span class="toc-number">1.2.</span> <span class="toc-text">&#x2F;etc&#x2F;hostname</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nmtui"><span class="toc-number">1.3.</span> <span class="toc-text">nmtui</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hostnamectl"><span class="toc-number">1.4.</span> <span class="toc-text">hostnamectl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.1.</span> <span class="toc-text">查看主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E4%BF%AE%E6%94%B93%E7%A7%8D%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.2.</span> <span class="toc-text">同时修改3种主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%9F%90%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.3.</span> <span class="toc-text">修改某种类型的主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E3%80%81%E6%9F%A5%E7%9C%8B%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E7%9A%84%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.4.4.</span> <span class="toc-text">修改、查看远程主机的主机名</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%8E%B0%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">问题现象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E7%AD%96%E7%95%A5"><span class="toc-number">3.</span> <span class="toc-text">解决策略</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">

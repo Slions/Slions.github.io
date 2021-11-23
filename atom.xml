@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2021-10-31T08:11:55.545Z</updated>
+  <updated>2021-11-23T03:32:41.203Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>harbor对接F5的鉴权失败问题</title>
+    <link href="https://slions.github.io/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"/>
+    <id>https://slions.github.io/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</id>
+    <published>2021-11-23T02:13:53.000Z</published>
+    <updated>2021-11-23T03:32:41.203Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。</p><h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>使用docker login harbor时，有时成功，有时失败：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker login -u user -p passwd http://xxx.xxx.xxx.xxx:9980</span></span><br><span class="line">Error response from daemon: login attempt to http://xxx.xxx.xxx.xxx:9980/v2/ failed with status: 401 Unauthorized</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker login -u user -p passwd http://xxx.xxx.xxx.xxx:9980</span></span><br><span class="line">Error response from daemon: login attempt to http://xxx.xxx.xxx.xxx:9980/v2/ failed with status: 401 Unauthorized</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker login -u user -p passwd http://xxx.xxx.xxx.xxx:9980</span></span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure><p>修改docker配置文件中镜像仓库地址为单独的harbor节点再次测试，没有任何问题。</p><h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>接着将docker镜像仓库地址换回F5地址，打开两个终端分别监视两个Harbor节点上的registry的日志。</p><p>经过几次测试，发现一个现象：当docker login成功时，都是一个节点上的日志出现更新；而当docker login fail时，会看到两个节点上的registry日志都有变化，这就有些出乎意料了。</p><p><img src="https://slions.gitee.io/picbed/img/hf1.png"></p><p>查阅harbor官方对docker login的<a href="https://github.com/goharbor/harbor/wiki/Architecture-Overview-of-Harbor#the-process-of-docker-login">流程解析</a></p><p><img src="https://slions.gitee.io/picbed/img/hf2.png"></p><ul><li>docker向registry发起请求，由于registry是基于token auth的，因此registry回复应答，告诉docker client去哪个URL去获取token；</li><li>docker client根据应答中的URL向token service(ui)发起请求，通过user和passwd获取token；如果user和passwd在db中通过了验证，那么token service将用自己的私钥<code>(harbor/common/config/ui/private_key.pem)</code>生成一个token，返回给docker client端；</li><li>docker client获得token后再向registry发起login请求，registry用自己的证书<code>(harbor/common/config/registry/root.crt)</code>对token进行校验。通过则返回成功，否则返回失败。</li></ul><p>从这个原理，可以知道问题就出在docker client多次向Harbor发起请求这个环节：对于每次请求，F5会将域名可能解析为不同IP，因此不同请求可能落到不同的镜像仓库节点上。这样当docker client拿着节点1上token service分配的token去到节点2的registry上鉴权时，就会出现鉴权失败的情况。</p><h1 id="解决策略"><a href="#解决策略" class="headerlink" title="解决策略"></a>解决策略</h1><p>token service的私钥<code>(harbor/common/config/ui/private_key.pem)</code>和registry的证书<code>(harbor/common/config/registry/root.crt)</code>都是在prepare时生成的，两个节点都独立prepare过，因此两个node上的private_key.pem和root.crt是不同的。所以造成了鉴权失败的问题。统一两个节点的私钥和证书可以解决。</p><p>将节点1上的private_key.pem和root.crt复制到节点2上，并重新创建node2上的harbor container。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。&lt;/p&gt;
+&lt;h1 id=&quot;问题现象&quot;&gt;&lt;a href=&quot;#问题现象&quot; class=&quot;he</summary>
+      
+    
+    
+    
+    <category term="镜像仓库" scheme="https://slions.github.io/categories/%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93/"/>
+    
+    
+    <category term="harbor" scheme="https://slions.github.io/tags/harbor/"/>
+    
+  </entry>
   
   <entry>
     <title>普通用户安装mysql</title>
@@ -486,30 +511,6 @@
     
     
     <category term="ansible" scheme="https://slions.github.io/tags/ansible/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走近分布式一致性协议（下篇）</title>
-    <link href="https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/"/>
-    <id>https://slions.github.io/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/</id>
-    <published>2021-08-14T07:42:00.000Z</published>
-    <updated>2021-08-15T13:10:39.350Z</updated>
-    
-    <content type="html"><![CDATA[<a href="/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" title="上篇">上篇</a>简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。<h2 id="Raft协议"><a href="#Raft协议" class="headerlink" title="Raft协议"></a>Raft协议</h2><p>类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。</p><p>在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候，将日志命令提交执行。当leader故障时，会选举产生一个新的leader。在强leader的帮助下，Raft将一致性问题分解为了三个子问题：</p><ol><li>leader选举：当已有的leader故障时必须选出一个新的leader。</li><li>日志复制：leader接受来自客户端的命令，记录为日志，并复制给集群中的其他服务器，并强制其他节点的日志与leader保持一致。</li><li>安全措施：通过一些措施确保系统的安全性，如确保所有状态机按照相同顺序执行相同命令的措施。</li></ol><h3 id="Raft基本流程"><a href="#Raft基本流程" class="headerlink" title="Raft基本流程"></a>Raft基本流程</h3><p>一个Raft集群拥有多个奇数台服务器，我们一般是三台，这样可以容忍一台服务器出现故障。服务器可能会处于如下三种角色：领导者（leader）、候选人（candidate）、跟随者（follower），正常运行的情况下，会有一个leader，其他全为follower，<strong>follower只会响应leader和candidate的请求，而客户端的请求则全部由leader处理</strong>，即使有客户端请求了一个follower也会将请求重定向到leader。candidate代表候选人，出现在选举leader阶段，选举成功后candidate将会成为新的leader。可能出现的状态转换关系如下图：</p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft7.png"></p><p>从图中可以看出，集群刚启动时，所有节点都是follower，之后在time out信号的驱使下，follower会转变成candidate去拉取选票，获得大多数选票后就会成为leader，这时候如果其他候选人发现了新的leader已经诞生，就会自动转变为follower；而如果另一个time out信号发出时，还没有选举出leader，将会重新开始一次新的选举。可见，time out信号是促使角色转换得关键因素，类似于操作系统中得中断信号。</p><p><strong>term</strong></p><p>在Raft协议中，将时间分成了一些任意长度的时间片，称为term，term使用连续递增的编号的进行识别。</p><p>每一个term都从新的选举开始，candidate们会努力争取称为leader。一旦获胜，它就会在剩余的term时间内保持leader状态。</p><p>term也起到了系统中逻辑时钟的作用，每一个server都存储了当前term编号，在server之间进行交流的时候就会带有该编号，如果一个server的编号小于另一个的，那么它会将自己的编号更新为较大的那一个；如果leader或者candidate发现自己的编号不是最新的了，就会自动转变为follower；如果接收到的请求的term编号小于自己的当前term将会拒绝执行。</p><p><strong>rpc</strong></p><p>server之间的交流是通过RPC进行的。只需要实现两种RPC就能构建一个基本的Raft集群：</p><ul><li>RequestVote RPC：它由选举过程中的candidate发起，用于拉取选票</li><li>AppendEntries RPC：它由leader发起，用于复制日志或者发送心跳信号。</li></ul><p>每个Raft节点将会根据自己节点的状态数据来对这两种RPC请求进行处理，我们先看一下每个Raft节点保存那些状态数据:</p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft01.png"></p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft02.png"></p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft03.png"></p><h3 id="Leader选举"><a href="#Leader选举" class="headerlink" title="Leader选举"></a>Leader选举</h3><p>Raft通过<strong>心跳机制</strong>发起leader选举。节点都是从follower状态开始的，如果收到了来自leader或candidate的RPC，那它就保持follower状态，避免争抢成为candidate。Leader会发送空的AppendEntries RPC作为心跳信号来确立自己的地位，（心跳间隔时间）如果follower一段时间(选举超时时间)没有收到心跳，它就会认为leader已经挂了，发起新的一轮选举。</p><p>选举发起后，一个follower会增加自己的当前term编号并转变为candidate。它会首先投自己一票，然后向其他所有节点并行发起RequestVote RPC，之后candidate状态将可能发生如下三种变化:</p><ul><li>赢得选举称为leader: 如果它在一个term内收到了大多数的选票，将会在接下的剩余term时间内称为leader，然后就可以通过发送心跳确立自己的地位。(每一个server在一个term内只能投一张选票，并且按照先到先得的原则投出)</li><li>其他server称为leader：在等待投票时，可能会收到其他server发出AppendEntries RPC心跳信号，说明其他leader已经产生了。这时通过比较自己的term编号和RPC过来的term编号，如果比对方大，说明leader的term过期了，就会拒绝该RPC，并继续保持候选人身份; 如果对方编号不比自己小,则承认对方的地位,转为follower。</li><li>选票被瓜分,选举失败：如果没有candidate获取大多数选票, 则没有leader产生, candidate们等待超时后发起另一轮选举。为了防止下一次选票还被瓜分,必须采取一些额外的措施, <strong>raft采用随机election timeout的机制防止选票被持续瓜分</strong>。通过将timeout随机设为一段区间上的某个值, 因此很大概率会有某个candidate率先超时然后赢得大部分选票.（随机重试机制）</li></ul><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft05.png"></p><h3 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h3><p>一旦leader被选举成功，就可以对客户端提供服务了。客户端提交每一条命令都会被按<strong>顺序</strong>记录到leader的日志中，每一条命令都包含term编号和顺序索引，然后向其他节点并行发送<strong>AppendEntries RPC</strong>用以复制命令(如果命令丢失会<strong>不断重发</strong>)，当复制成功也就是大多数节点成功复制后，leader就会提交命令，即执行该命令并且将执行结果返回客户端，raft保证已经提交的命令最终也会被其他节点成功执行。leader会保存有当前已经提交的<strong>最高日志编号</strong>。顺序性确保了相同日志索引处的命令是相同的，而且之前的命令也是相同的。当发送AppendEntries RPC时，会<strong>包含leader上一条刚处理过的命令</strong>，接收节点如果发现上一条命令不匹配，就会拒绝执行。</p><h3 id="安全措施"><a href="#安全措施" class="headerlink" title="安全措施"></a>安全措施</h3><ul><li><p>日志复制原则</p><p>在Raft中，leader通过<strong>强制follower复制自己的日志</strong>来解决日志不一致的情形，那么冲突的日志将会被重写。为了让日志一致，先找到最新的一致的那条日志，然后把follower之后的日志全部删除，leader再把自己在那之后的日志一股脑推送给follower，这样就实现了一致。而寻找该条日志，可以通过AppendEntries RPC，该RPC中包含着<strong>下一次要执行的命令索引</strong>（nextIndex），如果能和follower的当前索引对上，那就执行，否则拒绝，然后leader将会逐次递减索引，直到找到相同的那条日志。</p></li><li><p>选举约束</p><p>比如某个follower在leader提交时宕机了，也就是少了几条命令，然后它又经过选举成了新的leader，这样它就会强制其他follower跟自己一样，使得其他节点上刚刚提交的命令被删除，导致客户端提交的一些命令被丢失了，raft的解决办法：Raft通过投票过程<strong>确保只有拥有全部已提交日志的candidate能成为leader</strong>。由于candidate为了拉选票需要通过RequestVote RPC联系其他节点，而之前提交的命令至少会存在于其中某一个节点上,因此只要candidate的日志至少和其他大部分节点的一样新就可以了, follower如果收到了不如自己新的candidate的RPC,就会将其丢弃。</p></li><li><p>如果命令已经被复制到了大部分节点上,但是还没来的及提交就崩溃了,这样后来的leader应该完成之前term未完成的提交. Raft通过让leader统计当前term内还未提交的命令已经被复制的数量是否<strong>半数以上</strong>, 然后进行提交。</p></li></ul><h3 id="日志压缩"><a href="#日志压缩" class="headerlink" title="日志压缩"></a>日志压缩</h3><p>随着日志大小的增长，会占用更多的内存空间，处理起来也会耗费更多的时间，对系统的可用性造成影响，因此必须想办法压缩日志大小。Snapshotting是最简单的压缩方法，系统的全部状态会写入一个snapshot保存起来，然后丢弃截止到snapshot时间点之前的所有日志。Raft中的snapshot内容如下图所示：</p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft06.png"></p><p>每一个server都有自己的snapshot，它只保存当前状态，如上图中的当前状态为x=0,y=9，而last included index和last included term代表snapshot之前最新的命令，用于AppendEntries的状态检查。</p><p>虽然每一个server都保存有自己的snapshot，但是当follower严重落后于leader时，leader需要把自己的snapshot发送给follower加快同步，此时用到了一个新的RPC：<strong>InstallSnapshot RPC</strong>。follower收到snapshot时，需要决定如何处理自己的日志，如果收到的snapshot包含有更新的信息，它将<strong>丢弃自己已有的日志，按snapshot更新自己的状态</strong>，RPC的定义如下：</p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft07.png"></p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/raft08.png"></p><h1 id="复制状态机模型"><a href="#复制状态机模型" class="headerlink" title="复制状态机模型"></a>复制状态机模型</h1><p>当同一份数据存在多个副本的时候，怎么管理他们就成了重点。</p><p>复制状态机（Repilcated State Machine，RSM）的基本思想是一个分布式的复制状态机系统由多个复制单元组成，每个复制单元均是一个状态机，它的状态保存在一组状态变量中，状态机的状态能够并且只能通过外部命令来改变。（比paxos提出的时间都早，可以算是一致性协议的方法论了）</p><p>“一组状态变量”通常是基于操作日志来实现的，每一个复制单元存储一个包含一系列指令的日志，并且严格按照顺序逐条执行日志上的指令。</p><p><img src="https://gitee.com/Slions/picbed/raw/master/img/rsm01.png"></p><p>上图是一个复制状态机的实现，每个RSM都有一个replicated log，存储的是来自客户端的commands。每个RSM中replicate log中commads的顺序都是相同的，状态机按顺序处理replicate log中的command,并将处理的结果返回给客户端。由于状态机具有确定性，因此每个状态机的输出和状态都是相同的。</p><p>一致性模块（Consensus Module）用于保证每个server上Log的一致性！</p><blockquote><p>如果不做任何保障，直接将commad暴力写入，一旦服务器宕机或者出现什么其他故障，就会导致这个Log丢失，并且无法恢复。而出现故障的可能性是很高的，这就导致系统不可用。</p></blockquote><p>复制状态机它有一个很重要的性质——<strong>确定性</strong></p><blockquote><p>如果两个相同的、确定性的状态从同一状态开始，并且以相同的顺序获得相同的输入，那么这两个状态机将会生成相同的输出，并且结束在相同的状态</p></blockquote><p>GFS、HDFS、zookeeper和etcd等分布式系统都是基于复制状态机模型实现的。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;a href=&quot;/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%E</summary>
-      
-    
-    
-    
-    <category term="分布式一致性协议" scheme="https://slions.github.io/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE/"/>
-    
-    
-    <category term="Distributed protocol" scheme="https://slions.github.io/tags/Distributed-protocol/"/>
     
   </entry>
   

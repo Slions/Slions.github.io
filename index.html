@@ -399,6 +399,37 @@ height:57vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >
+            
+                <span>harbor对接F5的鉴权失败问题</span>
+        </a>
+        <div class="abstract-content">
+            之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。
+问题现象使用docker login harbor时，有时成功，有时失败：
+123456# docker login -u user -p passwd http://xxx.xxx.xxx.xxx:998...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >
             
                 <span>普通用户安装mysql</span>
@@ -686,36 +717,6 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "git">git</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >
-            
-                <span>如何优雅的编写dockerfile</span>
-        </a>
-        <div class="abstract-content">
-            写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品化程度高”的dockerfile是需要设计的。
-操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对于系统的开销也就越大。dockerhub上有上万个镜像，我们可以随意的拿来作为基础镜像，与之伴随的就是潜在的安全隐患，某些特殊的场景...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
     
 </div>
             
@@ -1670,9 +1671,26 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 51
+        Total : 52
         </div>
         <!-- search  -->
         
@@ -1685,6 +1703,11 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >harbor对接F5的鉴权失败问题</a>
+        </li>
     
     
         <li class="archive-post-item">
