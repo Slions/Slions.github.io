@@ -399,6 +399,71 @@ height:57vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >
+            
+                <span>（二）ansible初体验</span>
+        </a>
+        <div class="abstract-content">
+            上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。
+从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。
+
+Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >
+            
+                <span>（一）ansible入门</span>
+        </a>
+        <div class="abstract-content">
+            
+ansible是新出现的自动化运维工具，基于Python开发，集合了众多运维工具（puppet、cfengine、chef、func、fabric）的优点，实现了批量系统配置、批量程序部署、批量运行命令等功能。
+—— 百度百科
+
+简而言之，ansible融合了众多老牌运维工具的优点，通过一台ansible控制节点，就能实现批量配置、部署与运维多主机操作，进而减少重复性的工作，提高运维效率。...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
             
                 <span>走近分布式一致性协议（下篇）</span>
@@ -680,69 +745,6 @@ Physical Volume(PV)
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "虚拟机相关">虚拟机相关</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >
-            
-                <span>df与du结果不一致问题</span>
-        </a>
-        <div class="abstract-content">
-            df与du命令都是运维人员常用的检测存储空间大小的命令，平时我们并不太关注这两个命令的差别，但是经常会遇到这样一种场景，使用df查看到空间使用率已经非常高了，但使用du命令排查时发现不存在占用空间大的文件， 两者间的结果不一致。
-du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后累加，du能看到的文件只是一些当前存在的，没有被删除的。他计算的大小就是当前他认为存在的...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/03</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >
-            
-                <span>磁盘分区工具</span>
-        </a>
-        <div class="abstract-content">
-            在我们日常的运维工作中，磁盘分区是必备的一项技能，掌握了就可以更好的规划存储空间，提高资源的利用率。
-常见的磁盘分区工具有fdisk、parted、gdisk
-使用方式有些许的差异，除了都支持交互型操作外，parted天生支持非交互的能力，而fdisk与gdisk需要我们来换种思路实现非交互式。
-
-关于这些工具交互式的操作命令比较简单，可以直接通过man手册来巩固，以下主要介绍下如何实现非交...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
     
 </div>
             
@@ -1714,9 +1716,43 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 52
+        Total : 54
         </div>
         <!-- search  -->
         
@@ -1729,6 +1765,16 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >（六）限制执行任务主机</a>
+        </li>
     
     
         <li class="archive-post-item">
