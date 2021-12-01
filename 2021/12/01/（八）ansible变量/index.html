@@ -27,8 +27,8 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="列表、字典变量列表和字典是ansible中常见的变量类型。 1234567human:   name: slions  age: 29 files:  - &#x2F;tmp&#x2F;a.txt  - &#x2F;tmp&#x2F;b.txt  对于这类变量的访问，ansible中提供了两种方式： 123456---- hosts: localhost  gather_facts: false  tasks:    - debug:">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-12-01T08:29:33.000Z">
-<meta property="article:modified_time" content="2021-12-01T10:12:26.130Z">
+<meta property="article:published_time" content="2021-12-01T10:29:33.000Z">
+<meta property="article:modified_time" content="2021-12-01T10:39:50.348Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary">
@@ -522,7 +522,6 @@ height:50vh;
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">- ansible_forks</span><br><span class="line">表示最大的进程数。这也暗含了多少个节点作为一批。(如果忘记了一批是什么意思，可回介绍playbook的那一章末尾复习)</span><br><span class="line"></span><br><span class="line">- hostvars</span><br><span class="line">保存了inventory中所有主机和主机变量</span><br><span class="line"></span><br><span class="line">- inventory_hostname</span><br><span class="line">当前执行任务的节点在inventory中的主机名</span><br><span class="line"></span><br><span class="line">- inventory_hostname_short</span><br><span class="line">当前执行任务的节点在inventory中的短主机名</span><br><span class="line"></span><br><span class="line">- inventory_dir</span><br><span class="line">inventory文件所在的目录</span><br><span class="line"></span><br><span class="line">- inventory_file</span><br><span class="line">inventory文件名</span><br><span class="line"></span><br><span class="line">- group_names</span><br><span class="line">当前正在执行任务的节点所在主机组列表，注意是一个列表，因为一个节点可能存在于多个主机组</span><br><span class="line"></span><br><span class="line">- groups</span><br><span class="line">inventory中所有的主机组以及各组内的主机列表</span><br><span class="line"></span><br><span class="line">- ansible_play_batch</span><br><span class="line">当前play中可执行任务的主机列表。Ansible动态维护该变量，默认情况下执行任务失败或连接失败的节点会从此变量中移除</span><br><span class="line"></span><br><span class="line">- ansible_play_hosts</span><br><span class="line">等价于ansible_play_batch</span><br><span class="line"></span><br><span class="line">- play_hosts</span><br><span class="line">已废弃，等价于ansible_play_batch</span><br><span class="line"></span><br><span class="line">- playbook_dir</span><br><span class="line">playbook所在目录，该playbook是ansible-playbook命令所执行的playbook，而不是import_playbook导入的playbook</span><br><span class="line"></span><br><span class="line">- ansible_play_name</span><br><span class="line">当前正在执行的play的name。Ansible 2.8才添加的变量</span><br><span class="line"></span><br><span class="line">- ansible_play_hosts_all</span><br><span class="line">当前play所选中的所有节点，等价于ansible_play_batch + 失败的节点</span><br><span class="line"></span><br><span class="line">- ansible_play_role_names</span><br><span class="line">当前play中包含的Role列表。注意，因依赖关系而隐式导入的Role不在列表内</span><br><span class="line"></span><br><span class="line">- role_names</span><br><span class="line">已废弃，等价于ansible_play_role_names</span><br><span class="line"></span><br><span class="line">- ansible_role_names</span><br><span class="line">当前play中包含的Role列表，包括因依赖关系而隐式导入的Role</span><br><span class="line"></span><br><span class="line">- role_name</span><br><span class="line">当前正在执行的Role的名称</span><br><span class="line"></span><br><span class="line">- role_path</span><br><span class="line">当前正在执行的Role的路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-
     </article>
     <!-- license  -->
     
@@ -551,7 +550,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1638347373000'
+        let idOption = '1638354573000'
         
         idOption = location.pathname
         
@@ -1536,12 +1535,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >（八）ansible变量</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >（八）ansible变量</a>
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
         </li>
     
     
