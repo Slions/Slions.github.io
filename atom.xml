@@ -115,6 +115,32 @@
   </entry>
   
   <entry>
+    <title>保留特殊字符</title>
+    <link href="https://slions.github.io/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/"/>
+    <id>https://slions.github.io/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/</id>
+    <published>2021-11-17T10:24:36.000Z</published>
+    <updated>2021-12-01T10:30:39.626Z</updated>
+    
+    <content type="html"><![CDATA[<p>由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。</p><p>如下示例：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions_pc1</span> <span class="string">ansible_poc</span>]<span class="comment"># cat test.yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&quot;测试特殊字符&quot;</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">pvar</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">pvar:</span> <span class="type">!myvar</span></span><br></pre></td></tr></table></figure><p>运行时会报语法错误</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible_poc]# ansible-playbook test.yml</span><br><span class="line">ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:</span><br><span class="line">JSON: No JSON object could be decoded</span><br><span class="line"></span><br><span class="line">Syntax Error while loading YAML.</span><br><span class="line">  could not determine a constructor for the tag &#x27;!myvar&#x27;</span><br><span class="line"></span><br><span class="line">The error appears to be in &#x27;/home/ansible_poc/six.yml&#x27;: line 9, column 15, but may</span><br><span class="line">be elsewhere in the file depending on the exact syntax problem.</span><br><span class="line"></span><br><span class="line">The offending line appears to be:</span><br><span class="line"></span><br><span class="line">      vars:</span><br><span class="line">        pvar: !myvar</span><br><span class="line">              ^ here</span><br></pre></td></tr></table></figure><p>想要在定义变量时、指定name属性值时或其它会渲染的地方使用这些Jinja2的特殊符号，需要加上<code>!unsafe</code>标记。这个标记会禁止渲染，保留原始的特殊符号。</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line">  <span class="attr">pvar:</span> <span class="type">!unsafe</span> <span class="string">&quot;!myvar&quot;</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。&lt;/p&gt;
+&lt;p&gt;如下示例：&lt;/p&gt;
+&lt;figure class=&quot;highlight yml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+      
+    
+    
+    
+    <category term="ansible回炉" scheme="https://slions.github.io/categories/ansible%E5%9B%9E%E7%82%89/"/>
+    
+    
+    <category term="ansible" scheme="https://slions.github.io/tags/ansible/"/>
+    
+  </entry>
+  
+  <entry>
     <title>普通用户安装mysql</title>
     <link href="https://slions.github.io/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/"/>
     <id>https://slions.github.io/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/</id>
@@ -483,31 +509,6 @@
     
     
     <category term="ansible" scheme="https://slions.github.io/tags/ansible/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>实现科学上网</title>
-    <link href="https://slions.github.io/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
-    <id>https://slions.github.io/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</id>
-    <published>2021-08-23T08:23:54.000Z</published>
-    <updated>2021-08-23T11:39:03.956Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://github.com/shadowsocks/">shadowsocks</a>是当前比较受欢迎的科学上网工具。</p><h1 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h1><h2 id="准备代理服务器"><a href="#准备代理服务器" class="headerlink" title="准备代理服务器"></a>准备代理服务器</h2><p>首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。</p><h2 id="安装shadowsocks"><a href="#安装shadowsocks" class="headerlink" title="安装shadowsocks"></a>安装shadowsocks</h2><p>linux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> pip3 install shadowsocks</span></span><br><span class="line">WARNING: Running pip install with root privileges is generally not a good idea. Try `pip3 install --user` instead.</span><br><span class="line">Collecting shadowsocks</span><br><span class="line">  Downloading http://mirrors.tencentyun.com/pypi/packages/02/1e/e3a5135255d06813aca6631da31768d44f63692480af3a1621818008eb4a/shadowsocks-2.8.2.tar.gz</span><br><span class="line">Installing collected packages: shadowsocks</span><br><span class="line">  Running setup.py install for shadowsocks ... done</span><br><span class="line">Successfully installed shadowsocks-2.8.2</span><br></pre></td></tr></table></figure><h2 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h2><p>编写shadowsocks配置文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat &gt;&gt;shadowsocks.json&lt;&lt;<span class="string">EOF</span></span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">    &quot;server_port&quot;: 7295,</span><br><span class="line">    &quot;password&quot;: &quot;a7295&quot;,</span><br><span class="line">    &quot;method&quot;: &quot;aes-256-cfb&quot;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure><table><thead><tr><th>参数</th><th>参数说明</th></tr></thead><tbody><tr><td>server</td><td>服务监听地址</td></tr><tr><td>server_port</td><td>服务监听端口</td></tr><tr><td>password</td><td>服务密码</td></tr><tr><td>method</td><td>加密方式，可选<code>aes-128-cfb, aes-192-cfb, aes-256-cfb, bf-cfb, cast5-cfb, des-cfb, rc4-md5, chacha20, salsa20, rc4, table</code></td></tr></tbody></table><p><code>server_port</code>、<code>password</code>、<code>method</code>在配置 shadowsocks 客户端时需要保持一致。</p><h2 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h2><p>shadowsocks是通过ssserver命令启动的，首先看下当前环境此命令的执行路径。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">which</span> ssserver</span></span><br><span class="line">/usr/local/bin/ssserver</span><br></pre></td></tr></table></figure><p>编写systemd service文件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat &gt;&gt; /etc/systemd/system/shadowsocks.service &lt;&lt;<span class="string">EOF</span></span></span><br><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line">ExecStart=/usr/local/bin/ssserver -c /root/shadowsocks.json</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure><p>设置开机自启。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> shadowsocks</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start shadowsocks</span></span><br></pre></td></tr></table></figure><p>至此shadowsocks服务端就配置好了，需要注意的是：客户端会通过shadowsocks服务器的7295端口来连接外网，请提前开通相应的网络策略。</p><p><img src="https://slions.gitee.io/picbed/img/vpn.png"></p><h1 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h1><p>windows版本的shadowsocks请自行下载，以下只说如何配置。</p><p>打开下载的Shadowsocks，将如下信息按照之前服务端的配置填写好，其中服务器的地址是你虚机的外网地址，代理端口 1~65535 只要不被占用就可以。填写完点击确定。</p><p><img src="https://slions.gitee.io/picbed/img/shadowsocks.png"></p><p>右键托盘图标-启动系统代理服务，然后可以在托盘菜单中的系统代理模式中选择pac模式(只会代理根目录中PAC.txt文件中包含的网站)和全局模式(代理所有网站)。</p><p>之后就可以科学上网了。</p><p><img src="https://slions.gitee.io/picbed/img/youtube.png"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/shadowsocks/&quot;&gt;shadowsocks&lt;/a&gt;是当前比较受欢迎的科学上网工具。&lt;/p&gt;
-&lt;h1 id=&quot;服务端配置&quot;&gt;&lt;a href=&quot;#服务端配置&quot; class=&quot;headerlink&quot; title=&quot;服</summary>
-      
-    
-    
-    
-    <category term="科学上网" scheme="https://slions.github.io/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
-    
-    
-    <category term="shadowsocks" scheme="https://slions.github.io/tags/shadowsocks/"/>
     
   </entry>
   

@@ -20,17 +20,22 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/tags/kubernetes-storage/index.html">
+    <meta name="description" content="由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。 如下示例： 12345678910[root@slions_pc1 ansible_poc]# cat test.yml---- hosts: localhost  gather_facts: false  tasks:    - name: &amp;q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="保留特殊字符">
+<meta property="og:url" content="https://slions.github.io/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。 如下示例： 12345678910[root@slions_pc1 ansible_poc]# cat test.yml---- hosts: localhost  gather_facts: false  tasks:    - name: &amp;q">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-11-17T10:24:36.000Z">
+<meta property="article:modified_time" content="2021-12-01T10:30:39.626Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>保留特殊字符 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +219,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +243,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">保留特殊字符</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +278,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            保留特殊字符
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">244</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/11/17</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,215 +446,90 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >
-            
-                <span>heketi启动失败问题排查</span>
-        </a>
-        <div class="abstract-content">
-            问题现象日常巡检时发现heketi服务异常，启动失败。查看heketi log报错为invalid page type: 19:10
-环境描述
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。</p>
+<p>如下示例：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions_pc1</span> <span class="string">ansible_poc</span>]<span class="comment"># cat test.yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&quot;测试特殊字符&quot;</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">pvar</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">pvar:</span> <span class="type">!myvar</span></span><br></pre></td></tr></table></figure>
+
+<p>运行时会报语法错误</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible_poc]# ansible-playbook test.yml</span><br><span class="line">ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:</span><br><span class="line">JSON: No JSON object could be decoded</span><br><span class="line"></span><br><span class="line">Syntax Error while loading YAML.</span><br><span class="line">  could not determine a constructor for the tag &#x27;!myvar&#x27;</span><br><span class="line"></span><br><span class="line">The error appears to be in &#x27;/home/ansible_poc/six.yml&#x27;: line 9, column 15, but may</span><br><span class="line">be elsewhere in the file depending on the exact syntax problem.</span><br><span class="line"></span><br><span class="line">The offending line appears to be:</span><br><span class="line"></span><br><span class="line">      vars:</span><br><span class="line">        pvar: !myvar</span><br><span class="line">              ^ here</span><br></pre></td></tr></table></figure>
+
+
+
+<p>想要在定义变量时、指定name属性值时或其它会渲染的地方使用这些Jinja2的特殊符号，需要加上<code>!unsafe</code>标记。这个标记会禁止渲染，保留原始的特殊符号。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line">  <span class="attr">pvar:</span> <span class="type">!unsafe</span> <span class="string">&quot;!myvar&quot;</span></span><br></pre></td></tr></table></figure>
 
 
 
 
-
-
-
-内核版本
-3.10.0-862.el7.x86_64
-
-
-系统版本
-CentOS Linux release 7.5.1804
-
-
-kubernetes 版本
-1.17.0
-
-
-glusterfs版本
-7.1
-
-
-heketi版本
-v9...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "heketi">heketi</a>
-    
-</div>
-            
-        </div>
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >
-            
-                <span>gluster排故纪实</span>
-        </a>
-        <div class="abstract-content">
-            setup-openshift-heketi-storage无空间glusterfs 4.1.7 heketi v9.0.0 部署
-问题描述
-运行setup-openshift-heketi-storage子命令时heketi-cli报告“无空间”错误：
-123$ heketi-cli setup-openshift-heketi-storageError: Failed to alloca...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >
-            
-                <span>ceph mimic对接k8s 1.17.0(ceph-csi)</span>
-        </a>
-        <div class="abstract-content">
-            最近测试ceph rbd在kubernetes的自动扩容问题，之前K8s v1.11.0时的策略是先找到目标卷，使用rbd resize命令对此卷扩容，找到挂载此卷的客户端宿主机，执行xfs_growfs等刷新文件系统的命令。查看网上资料k8s 在1.15版本后，ExpandInUsePersistentVolume功能被开启。意思大概就是不需要挂载到容器即可扩容PVC。按网上的手册设置相关...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ceph">ceph</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >
-            
-                <span>glusterfs可用性测试</span>
-        </a>
-        <div class="abstract-content">
-            环境描述
-
-
-主机名
-ip地址
-系统环境
-角色
-
-
-
-k8s-1
-IP:192.168.186.10
-cpu:x2  mem:2GB  disk:/dev/sdb 40GB
-K8s_master,Gluster_master,Heketi_master
-
-
-K8s-2
-IP:192.168.186.11
-cpu:x2  mem:2GB  disk:/dev/sdb 40GB
-K8s_node...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >
-            
-                <span>k8s-v1.11使用glusterfs</span>
-        </a>
-        <div class="abstract-content">
-            Glusterfs提供底层存储功能，heketi为glusterfs提供restful风格的api，Heketi要求在每个glusterfs节点上配备裸磁盘，目前heketi仅支持使用裸磁盘(未格式化)添加为device，不支持文件系统，因为Heketi要用来创建PV和VG方便管理glusterfs。
-集群托管于heketi后，不能使用命令管理存储卷，以免与Heketi数据库中存储的信息不一...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" title= "harbor对接F5的鉴权失败问题">
+                    <div class="nextTitle">harbor对接F5的鉴权失败问题</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" title= "普通用户安装mysql">
+                    <div class="prevTitle">普通用户安装mysql</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1637144676000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -676,6 +619,24 @@ K8s_node...
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1936,6 +1897,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
