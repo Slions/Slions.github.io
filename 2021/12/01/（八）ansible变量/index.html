@@ -20,17 +20,22 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2021/11/index.html">
+    <meta name="description" content="列表、字典变量列表和字典是ansible中常见的变量类型。 1234567human:   name: slions  age: 29 files:  - &#x2F;tmp&#x2F;a.txt  - &#x2F;tmp&#x2F;b.txt  对于这类变量的访问，ansible中提供了两种方式： 123456---- hosts: localhost  gather_facts: false  tasks:    - debug:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（八）ansible变量">
+<meta property="og:url" content="https://slions.github.io/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="列表、字典变量列表和字典是ansible中常见的变量类型。 1234567human:   name: slions  age: 29 files:  - &#x2F;tmp&#x2F;a.txt  - &#x2F;tmp&#x2F;b.txt  对于这类变量的访问，ansible中提供了两种方式： 123456---- hosts: localhost  gather_facts: false  tasks:    - debug:">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-12-01T08:29:33.000Z">
+<meta property="article:modified_time" content="2021-12-01T10:12:26.130Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>（八）ansible变量 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +219,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +243,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">（八）ansible变量</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +278,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            （八）ansible变量
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.7k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,73 +446,145 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >
-            
-                <span>（六）限制执行任务主机</span>
-        </a>
-        <div class="abstract-content">
-            默认情况下，所有被ansible或ansible-playbook选中的主机都会执行任务，有时在开发和测试阶段只想选择其中某些节点来执行，需要改动inventory文件或playbook的host不是很优雅，ansible 提供了--limit选项来筛选目标主机。
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="列表、字典变量"><a href="#列表、字典变量" class="headerlink" title="列表、字典变量"></a>列表、字典变量</h1><p>列表和字典是ansible中常见的变量类型。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">human:</span> </span><br><span class="line">  <span class="attr">name:</span> <span class="string">slions</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">29</span> </span><br><span class="line"></span><br><span class="line"><span class="attr">files:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">/tmp/a.txt</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">/tmp/b.txt</span></span><br></pre></td></tr></table></figure>
 
-使用 –limit选项，ansible或ansible-playbook也会解析inventory中定义的所有主机，在执行任务...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
+<p>对于这类变量的访问，ansible中提供了两种方式：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;name: <span class="template-variable">&#123;&#123;human.name&#125;&#125;</span>, age: <span class="template-variable">&#123;&#123;file[0]&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="extra-vars定义额外变量"><a href="#extra-vars定义额外变量" class="headerlink" title="extra-vars定义额外变量"></a>extra-vars定义额外变量</h1><p>ansible-playbook命令的<code>-e</code>选项或<code>--extra-vars</code>选项可定义变量或引入变量文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 定义单个变量</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -e <span class="string">&#x27;var1=&quot;value1&quot;&#x27;</span> xxx.yml</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 定义多个变量</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -e <span class="string">&#x27;var1=&quot;value1&quot; var2=&quot;value2&quot;&#x27;</span> xxx.yml</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 引入单个变量文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -e <span class="string">&#x27;@varfile1.yml&#x27;</span> xxx.yml</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 引入多个变量文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -e <span class="string">&#x27;@varfile1.yml&#x27;</span> -e <span class="string">&#x27;@varfile2.yml&#x27;</span> xxx.yml</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>因为是通过选项的方式来定义变量的，所以它所定义的变量是全局的，对所有play都有效。</p>
+<h1 id="inventory变量"><a href="#inventory变量" class="headerlink" title="inventory变量"></a>inventory变量</h1><p>在解析inventory时，会收集inventory相关的变量。</p>
+<p>inventory变量主要分为两种：</p>
+<ol>
+<li>连接目标节点时的行为控制变量，即决定如何连接目标节点</li>
+<li>主机变量</li>
+</ol>
+<p>行为控制变量(如ansible_port、ansible_host等)用于指定Ansible端连接目标节点时的连接参数，可设置的参数项比较多，可参见<a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#connecting-to-hosts-behavioral-inventory-parameters">官方手册</a></p>
+<p>inventory的主机变量有多种定义途径，例如直接在inventory文件中为某个主机定义变量，也可以在主机组中定义变量，主机组变量会在解析inventory的时候整理到主机变量中去。此外还可以将变量定义在host_vars/和group_vars/目录内，可参考<a href="/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" title="前文">前文</a>。</p>
+<h1 id="role变量"><a href="#role变量" class="headerlink" title="role变量"></a>role变量</h1><p>Role中主要有两个地方定义变量：</p>
+<ol>
+<li><code>roles/ROLE_NAME/defaults/main.yml</code></li>
+<li><code>roles/ROLE_NAME/vars/main.yml</code></li>
+</ol>
+<blockquote>
+<p>Role defaults变量的优先级非常低，几乎可以被其它任何同名变量覆盖。</p>
+</blockquote>
+<p>Role变量都是play级别的变量。换句话说，如果play中执行了Role之后还有tasks指令的任务，则tasks的任务中可以引用Role中的变量。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">roles:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">role:</span> <span class="string">test_role</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">var:</span> <span class="string">var_from_role</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="play变量"><a href="#play变量" class="headerlink" title="play变量"></a>play变量</h1><p>play级别可以通过<code>vars</code>、<code>vars_files</code>、<code>vars_prompt</code>指令来定义变量。因为它们属于play级别，所以只在当前play有效。另一方面，每个play都有选中的目标节点，所有选中的目标节点都能访问这些play变量。</p>
+<h2 id="vars"><a href="#vars" class="headerlink" title="vars"></a>vars</h2><p><code>vars</code>比较简单不多说了。</p>
+<h2 id="vars-files"><a href="#vars-files" class="headerlink" title="vars_files"></a>vars_files</h2><p><code>vars_files</code>是一个play级别的指令，可用于在解析playbook的阶段引入一个或多个保存了变量的外部文件。</p>
+<p>例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">play1</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars_files:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">varfile1.yml</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">varfile2.yml</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;var in varfile1: <span class="template-variable">&#123;&#123;var1&#125;&#125;</span>&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;var in varfile2: <span class="template-variable">&#123;&#123;var2&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>playbook文件通过<code>vars_files</code>引入了两个变量文件，变量文件的写法要求遵守YAML或JSON格式。下面是这两个文件的内容：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面是varfile1.yml文件的内容</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">var1:</span> <span class="string">&quot;value1&quot;</span></span><br><span class="line"><span class="attr">var11:</span> <span class="string">&quot;value11&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下面是varfile2.yml文件的内容</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">var2:</span> <span class="string">&quot;value2&quot;</span></span><br><span class="line"><span class="attr">var22:</span> <span class="string">&quot;value22&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要说明的是，vars_files指令是play级别的指令，且是在解析playbook的时候加载并解析的，所以所引入变量的变量是play范围内可用的，其它play不可使用这些变量。</p>
+<h2 id="vars-prompt"><a href="#vars-prompt" class="headerlink" title="vars_prompt"></a>vars_prompt</h2><p><code>vars_prompt</code>指令用于交互式提示用户输入数据，并将输入内容赋值给指定的变量。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars_prompt:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">username</span></span><br><span class="line">      <span class="attr">prompt:</span> <span class="string">&quot;请输入你的用户名&quot;</span></span><br><span class="line">      <span class="attr">private:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">default:</span> <span class="string">root</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">passwd</span></span><br><span class="line">      <span class="attr">prompt:</span> <span class="string">&quot;请输入你的登录密码&quot;</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">验证用户输入</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;用户名: <span class="template-variable">&#123;&#123;username&#125;&#125;</span>,密码: <span class="template-variable">&#123;&#123;passwd&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面定义了两个变量<code>username</code>和<code>passwd</code>，都会提示用户输入对应的值。<code>private: no</code>表示不要隐藏用户输入的字符(默认会隐藏)，<code>default</code>表示指定变量的默认值。</p>
+<h1 id="task变量"><a href="#task变量" class="headerlink" title="task变量"></a>task变量</h1><p>task变量有多种定义方式：</p>
+<ol>
+<li>register指令</li>
+<li>set_fact指令</li>
+<li>vars指令</li>
+<li>include_vars指令</li>
+</ol>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="comment"># var.yml变量文件中定义了变量a</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">include_vars:</span> </span><br><span class="line">        <span class="attr">file:</span> <span class="string">var.yml</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">shell:</span> <span class="string">echo</span> <span class="string">junmajinlong</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">res</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">set_fact:</span> <span class="string">name=&quot;&#123;&#123;res.stdout&#125;&#125;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;a: <span class="template-variable">&#123;&#123;a&#125;&#125;</span>, name: <span class="template-variable">&#123;&#123;name&#125;&#125;</span>, age: <span class="template-variable">&#123;&#123;age&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">18</span></span><br><span class="line">        <span class="attr">gender:</span> <span class="string">male</span></span><br></pre></td></tr></table></figure>
+
+<p>其中<code>include_vars</code>指令除了指明文件位置，还可从目录中导入多个文件，默认会递归到子目录中。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Include</span> <span class="string">all</span> <span class="string">files</span> <span class="string">in</span> <span class="string">vars/all</span></span><br><span class="line">  <span class="attr">include_vars:</span></span><br><span class="line">    <span class="attr">dir:</span> <span class="string">vars/all</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="block变量"><a href="#block变量" class="headerlink" title="block变量"></a>block变量</h1><p>ansible中使用block指令来组织了两个有关联性的任务，将它们作为了一个整体。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">sync</span> <span class="string">time</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">new</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span> <span class="string">and</span> <span class="string">sync</span> <span class="string">time</span></span><br><span class="line">      <span class="attr">block:</span> </span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span> <span class="string">ntpdate</span></span><br><span class="line">          <span class="attr">yum:</span> </span><br><span class="line">            <span class="attr">name:</span> <span class="string">ntpdate</span></span><br><span class="line">            <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line"></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ntpdate</span> <span class="string">to</span> <span class="string">sync</span> <span class="string">time</span></span><br><span class="line">          <span class="attr">shell:</span> <span class="string">|</span></span><br><span class="line"><span class="string">            ntpdate ntp1.aliyun.com</span></span><br><span class="line"><span class="string">            hwclock -w</span></span><br></pre></td></tr></table></figure>
+
+<p>block作为一个特殊的层次级别，它也支持定义变量，只不过这个block层次的变量只对当前block内的所有任务有效。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">block:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">           <span class="attr">var:</span> <span class="string">name</span></span><br><span class="line">      <span class="attr">vars:</span> </span><br><span class="line">        <span class="attr">name:</span> <span class="string">&quot;slions&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="facts变量"><a href="#facts变量" class="headerlink" title="facts变量"></a>facts变量</h1><p>Facts信息也算是变量，可参考<a href="/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" title="前文">前文</a></p>
+<h1 id="预定义特殊变量"><a href="#预定义特殊变量" class="headerlink" title="预定义特殊变量"></a>预定义特殊变量</h1><p>ansible自身维护了一些可以暴露给用户的预定义变量，官方称为魔法变量，下面是常见预定义变量的含义，完整的预定义特殊变量说明参考<a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html#special-variables">官方手册</a>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">- ansible_forks</span><br><span class="line">表示最大的进程数。这也暗含了多少个节点作为一批。(如果忘记了一批是什么意思，可回介绍playbook的那一章末尾复习)</span><br><span class="line"></span><br><span class="line">- hostvars</span><br><span class="line">保存了inventory中所有主机和主机变量</span><br><span class="line"></span><br><span class="line">- inventory_hostname</span><br><span class="line">当前执行任务的节点在inventory中的主机名</span><br><span class="line"></span><br><span class="line">- inventory_hostname_short</span><br><span class="line">当前执行任务的节点在inventory中的短主机名</span><br><span class="line"></span><br><span class="line">- inventory_dir</span><br><span class="line">inventory文件所在的目录</span><br><span class="line"></span><br><span class="line">- inventory_file</span><br><span class="line">inventory文件名</span><br><span class="line"></span><br><span class="line">- group_names</span><br><span class="line">当前正在执行任务的节点所在主机组列表，注意是一个列表，因为一个节点可能存在于多个主机组</span><br><span class="line"></span><br><span class="line">- groups</span><br><span class="line">inventory中所有的主机组以及各组内的主机列表</span><br><span class="line"></span><br><span class="line">- ansible_play_batch</span><br><span class="line">当前play中可执行任务的主机列表。Ansible动态维护该变量，默认情况下执行任务失败或连接失败的节点会从此变量中移除</span><br><span class="line"></span><br><span class="line">- ansible_play_hosts</span><br><span class="line">等价于ansible_play_batch</span><br><span class="line"></span><br><span class="line">- play_hosts</span><br><span class="line">已废弃，等价于ansible_play_batch</span><br><span class="line"></span><br><span class="line">- playbook_dir</span><br><span class="line">playbook所在目录，该playbook是ansible-playbook命令所执行的playbook，而不是import_playbook导入的playbook</span><br><span class="line"></span><br><span class="line">- ansible_play_name</span><br><span class="line">当前正在执行的play的name。Ansible 2.8才添加的变量</span><br><span class="line"></span><br><span class="line">- ansible_play_hosts_all</span><br><span class="line">当前play所选中的所有节点，等价于ansible_play_batch + 失败的节点</span><br><span class="line"></span><br><span class="line">- ansible_play_role_names</span><br><span class="line">当前play中包含的Role列表。注意，因依赖关系而隐式导入的Role不在列表内</span><br><span class="line"></span><br><span class="line">- role_names</span><br><span class="line">已废弃，等价于ansible_play_role_names</span><br><span class="line"></span><br><span class="line">- ansible_role_names</span><br><span class="line">当前play中包含的Role列表，包括因依赖关系而隐式导入的Role</span><br><span class="line"></span><br><span class="line">- role_name</span><br><span class="line">当前正在执行的Role的名称</span><br><span class="line"></span><br><span class="line">- role_path</span><br><span class="line">当前正在执行的Role的路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >
-            
-                <span>harbor对接F5的鉴权失败问题</span>
-        </a>
-        <div class="abstract-content">
-            之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。
-问题现象使用docker login harbor时，有时成功，有时失败：
-123456# docker login -u user -p passwd http://xxx.xxx.xxx.xxx:998...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" title= "（七）收集节点信息facts">
+                    <div class="prevTitle">（七）收集节点信息facts</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1638347373000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -534,6 +674,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E3%80%81%E5%AD%97%E5%85%B8%E5%8F%98%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">列表、字典变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#extra-vars%E5%AE%9A%E4%B9%89%E9%A2%9D%E5%A4%96%E5%8F%98%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">extra-vars定义额外变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#inventory%E5%8F%98%E9%87%8F"><span class="toc-number">3.</span> <span class="toc-text">inventory变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#role%E5%8F%98%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">role变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#play%E5%8F%98%E9%87%8F"><span class="toc-number">5.</span> <span class="toc-text">play变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vars"><span class="toc-number">5.1.</span> <span class="toc-text">vars</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vars-files"><span class="toc-number">5.2.</span> <span class="toc-text">vars_files</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vars-prompt"><span class="toc-number">5.3.</span> <span class="toc-text">vars_prompt</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#task%E5%8F%98%E9%87%8F"><span class="toc-number">6.</span> <span class="toc-text">task变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#block%E5%8F%98%E9%87%8F"><span class="toc-number">7.</span> <span class="toc-text">block变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#facts%E5%8F%98%E9%87%8F"><span class="toc-number">8.</span> <span class="toc-text">facts变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F"><span class="toc-number">9.</span> <span class="toc-text">预定义特殊变量</span></a></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -1772,6 +1930,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
