@@ -386,6 +386,39 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
+            
+                <span>linux用户与组管理（下篇）</span>
+        </a>
+        <div class="abstract-content">
+            用户和组管理命令useradd 和 adduseradduser是useradd的一个软链接。
+12[root@slions_pc1 ~]# ls -l /usr/sbin/adduserlrwxrwxrwx. 1 root root 7 5月  21 16:45 /usr/sbin/adduser -&gt; useradd
+
+useradd用法：
+12345678910111213141...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/31</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
             
                 <span>linux用户与组管理（上篇）</span>
@@ -680,39 +713,6 @@ heketi + glusterfs提供两种部署形式：
         <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "prometheus">prometheus</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >
-            
-                <span>理解存储驱动overlay2</span>
-        </a>
-        <div class="abstract-content">
-            容器中通过使用不同的rootfs来模拟了不同的操作系统及应用，不过，如果使用每个镜像都需要一个独立的根文件系统的话，那想必磁盘早已拥挤不堪了；且一个镜像可以同时运行多个容器，每个容器对文件的改动该怎么办？
-Linux提供了一种叫做联合文件系统的文件系统，它具备如下特性：
-
-联合挂载：将多个目录按层次组合，一并挂载到一个联合挂载点。
-写时复制：对联合挂载点的修改不会影响到底层的多个目录，而是使...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
     
 </div>
             
@@ -1658,9 +1658,26 @@ Linux提供了一种叫做联合文件系统的文件系统，它具备如下特
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 57
+        Total : 58
         </div>
         <!-- search  -->
         
@@ -1673,6 +1690,11 @@ Linux提供了一种叫做联合文件系统的文件系统，它具备如下特
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%EF%BC%89ansible%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" >（十）ansible异常处理</a>
+        </li>
     
     
         <li class="archive-post-item">
