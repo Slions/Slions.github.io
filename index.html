@@ -399,6 +399,38 @@ height:57vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >
+            
+                <span>（九）ansible流程控制</span>
+        </a>
+        <div class="abstract-content">
+            流程控制是每种编程语言控制逻辑走向和执行次序的重要部分，流程控制可以说是一门语言的“经脉”。
+条件判断ansible提供的条件判断只有when指令，因为可以写Jinja2条件判断表达式，所以判断方式比较灵活。
+同时满足多个条件常见的编程语言在多条件判断时要么使用逻辑与（and或&amp;&amp;）,要么使用逻辑或（or或||）。ansible同样支持这种写法。
+1when: age &gt...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >
             
                 <span>（八）ansible变量</span>
@@ -531,7 +563,7 @@ ansible中提供了两个模块（setup与gather_facts）来实现收集主机fa
         <div class="abstract-content">
             由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。
 如下示例：
-12345678910[root@slions_pc1 ansible_poc]# cat test.yml---- hosts: localhost  gather_facts: false  tasks:    - name:...
+123456789---- hosts: localhost  gather_facts: false  tasks:    - name: &quot;测试特殊字符&quot;      debug:        var: p...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -673,37 +705,6 @@ kubernetes本身，包括各种对象的状态和元信息配置
 
 
 很多网上资料讲flan...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >
-            
-                <span>k8s-scheduler原理</span>
-        </a>
-        <div class="abstract-content">
-            scheduler作用负责整个集群资源的调度功能，根据特定的调度算法和策略，将 Pod 调度到最优的工作节点上面去，从而更加合理、更加充分的利用集群的资源。
-
-工作机制根据特定的调度算法和调度策略将 Pod 调度到合适的 Node 节点上去，是一个独立的二进制程序，启动之后会一直监听 API Server，获取到 PodSpec.NodeName 为空的 Pod，对每个 Pod 都会创建一个...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1754,9 +1755,26 @@ kubernetes本身，包括各种对象的状态和元信息配置
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 57
         </div>
         <!-- search  -->
         
@@ -1769,6 +1787,11 @@ kubernetes本身，包括各种对象的状态和元信息配置
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
     
     
         <li class="archive-post-item">

@@ -455,7 +455,7 @@
         <div class="abstract-content">
             由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。
 如下示例：
-12345678910[root@slions_pc1 ansible_poc]# cat test.yml---- hosts: localhost  gather_facts: false  tasks:    - name:...
+123456789---- hosts: localhost  gather_facts: false  tasks:    - name: &quot;测试特殊字符&quot;      debug:        var: p...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1391,9 +1391,26 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 57
         </div>
         <!-- search  -->
         
@@ -1406,6 +1423,11 @@
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
     
     
         <li class="archive-post-item">

@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="流程控制是每种编程语言控制逻辑走向和执行次序的重要部分，流程控制可以说是一门语言的“经脉”。 条件判断ansible提供的条件判断只有when指令，因为可以写Jinja2条件判断表达式，所以判断方式比较灵活。 同时满足多个条件常见的编程语言在多条件判断时要么使用逻辑与（and或&amp;&amp;）,要么使用逻辑或（or或||）。ansible同样支持这种写法。 1when: age &gt; 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（九）ansible流程控制">
+<meta property="og:url" content="https://slions.github.io/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="流程控制是每种编程语言控制逻辑走向和执行次序的重要部分，流程控制可以说是一门语言的“经脉”。 条件判断ansible提供的条件判断只有when指令，因为可以写Jinja2条件判断表达式，所以判断方式比较灵活。 同时满足多个条件常见的编程语言在多条件判断时要么使用逻辑与（and或&amp;&amp;）,要么使用逻辑或（or或||）。ansible同样支持这种写法。 1when: age &gt; 1">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-12-01T12:27:28.000Z">
+<meta property="article:modified_time" content="2021-12-02T04:48:17.713Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="ansible">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>（九）ansible流程控制 · S_lion&#39;s Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/1.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">（九）ansible流程控制</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            （九）ansible流程控制
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.9k</span>阅读时长: <span class="post-count reading-time">14 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>流程控制是每种编程语言控制逻辑走向和执行次序的重要部分，流程控制可以说是一门语言的“经脉”。</p>
+<h1 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h1><p>ansible提供的条件判断只有when指令，因为可以写Jinja2条件判断表达式，所以判断方式比较灵活。</p>
+<h2 id="同时满足多个条件"><a href="#同时满足多个条件" class="headerlink" title="同时满足多个条件"></a>同时满足多个条件</h2><p>常见的编程语言在多条件判断时要么使用逻辑与（<code>and</code>或<code>&amp;&amp;</code>）,要么使用逻辑或（<code>or</code>或<code>||</code>）。ansible同样支持这种写法。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">when:</span> <span class="string">age</span> <span class="string">&gt;</span> <span class="number">18</span> <span class="string">and</span> <span class="string">age</span> <span class="string">&lt;</span> <span class="number">30</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以将这些条件以列表的方式提供。例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">item</span></span><br><span class="line">      <span class="attr">when:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">item</span> <span class="string">&gt;</span> <span class="number">3</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">item</span> <span class="string">&lt;</span> <span class="number">5</span></span><br><span class="line">      <span class="attr">loop:</span> [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="按条件导入文件"><a href="#按条件导入文件" class="headerlink" title="按条件导入文件"></a>按条件导入文件</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">yes</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">include_tasks:</span> <span class="string">RedHat.yml</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">ansible_os_family</span> <span class="string">==</span> <span class="string">&quot;RedHat&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">include_tasks:</span> <span class="string">Centos.yml</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">ansible_os_family</span> <span class="string">==</span> <span class="string">&quot;Centos&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>更加精炼的写法可以参考</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">yes</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">include_tasks:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;ansible_os_family&#125;&#125;</span>.yml&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="when和循环"><a href="#when和循环" class="headerlink" title="when和循环"></a>when和循环</h2><p>当when指令和循环指令一起使用时，when的判断操作在每轮循环内执行。详细内容下文中描述。</p>
+<h1 id="循环迭代"><a href="#循环迭代" class="headerlink" title="循环迭代"></a>循环迭代</h1><blockquote>
+<p>ansible 2.5之前的循环迭代都使用<code>with_xxx</code>来完成，比如<code>with_items</code>,后面加入了<code>loop</code>指令，<code>loop</code>指令与<code>with_list</code>指令等价。</p>
+<p><code>with_xxx</code>语法都使用对应的lookup插件来实现（比如<code>with_list</code>使用的是lookup的list插件），如果存在某lookup插件xxx，就可以使用<code>with_xxx</code>来迭代。</p>
+</blockquote>
+<h2 id="with-list"><a href="#with-list" class="headerlink" title="with_list"></a>with_list</h2><p>直接上例子：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">file:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">touch</span></span><br><span class="line">      <span class="attr">with_list:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">aaa</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">bbb</span></span><br></pre></td></tr></table></figure>
+
+<p>与上面<code>with_list</code>等价的loop语法：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">file:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">touch</span></span><br><span class="line">  <span class="attr">loop:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">aaa</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">bbb</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="with-items和with-flattened"><a href="#with-items和with-flattened" class="headerlink" title="with_items和with_flattened"></a>with_items和with_flattened</h2><p>with_list用于迭代简单列表，有时候列表中会嵌套列表。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">name:</span> [<span class="string">a</span>,[<span class="string">b1</span>,<span class="string">b2</span>],<span class="string">c</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">with_items:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;name&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，<code>with_items</code>只压平嵌套列表的第一层，不会递归压平第二层、第三层…</p>
+<p>与with_items等价的loop指令的写法为：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; nested_list | flatten(levels=1) &#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>筛选器函数flatten()默认会递归压平所有嵌套列表，如果只是压平第一层，需指定参数levels=1。</p>
+<p>此外，还存在lookup插件：items、flattened，前者只压第一层，后者递归压平所有嵌套层次。例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">name:</span> [<span class="string">a</span>,[<span class="string">b1</span>,<span class="string">b2</span>],<span class="string">c</span>,[<span class="string">d1</span>,<span class="string">d2</span>,[<span class="string">e1</span>,<span class="string">e2</span>,<span class="string">e3</span>]]]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">with_flattened:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;name&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="with-dict"><a href="#with-dict" class="headerlink" title="with_dict"></a>with_dict</h2><p><code>with_dict</code>用于迭代一个字典结构，迭代时可以使用<code>item.key</code>表示每个字典元素的key，<code>item.value</code>表示每个字典元素的value。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">users:</span></span><br><span class="line">      <span class="attr">slions:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">slions</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">29</span></span><br><span class="line">      <span class="attr">zhangsan:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">zhangsan</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">18</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;who: <span class="template-variable">&#123;&#123;item.key&#125;&#125;</span></span></span><br><span class="line"><span class="string">              name: <span class="template-variable">&#123;&#123;item.value.name&#125;&#125;</span></span></span><br><span class="line"><span class="string">              age: <span class="template-variable">&#123;&#123;item.value.age&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">with_dict:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;users&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>与<code>with_dict</code>等价的loop指令有两种写法：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;lookup(&#x27;dict&#x27;, users)&#125;&#125;</span>&quot;</span></span><br><span class="line"><span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;users | dict2items&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>另外，在Ansible 2.8中可以自定义<code>dict2items</code>筛选器函数得到的key和value的名称。例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">users:</span></span><br><span class="line">      <span class="attr">slions:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">slions</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">29</span></span><br><span class="line">      <span class="attr">zhangsan:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">zhangsan</span></span><br><span class="line">        <span class="attr">age:</span> <span class="number">18</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;who: <span class="template-variable">&#123;&#123;item.k&#125;&#125;</span></span></span><br><span class="line"><span class="string">              name: <span class="template-variable">&#123;&#123;item.v.name&#125;&#125;</span></span></span><br><span class="line"><span class="string">              age: <span class="template-variable">&#123;&#123;item.v.age&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;users|dict2items(key_name=&#x27;k&#x27;,value_name=&#x27;v&#x27;)&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="with-sequence"><a href="#with-sequence" class="headerlink" title="with_sequence"></a>with_sequence</h2><p>Ansible的lookup插件sequence也可以用来生成连续数(Jinja2的range也可以生成连续数)。其中：</p>
+<ul>
+<li>start参数指定序列的起始数，不指定该参数时默认从1开始</li>
+<li>end参数指定序列的终止数</li>
+<li>stride参数指定序列的步进值。不指定该参数时，步进为1</li>
+<li>format参数指定序列的输出格式，遵循printf风格</li>
+<li>count参数指定生成序列数的个数，不能和end参数共存</li>
+</ul>
+<p>此外，sequence插件的各个参数可以简写为如下格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[start-]end[/stride][:format]</span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;_<span class="template-variable">&#123;&#123;item&#125;&#125;</span>_&quot;</span></span><br><span class="line">      <span class="attr">with_sequence:</span> <span class="string">start=0</span> <span class="string">end=5</span> <span class="string">stride=2</span> <span class="string">format=a%02d</span></span><br></pre></td></tr></table></figure>
+
+<p>执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PLAY [localhost] *********************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [debug] *************************************************************************************************</span><br><span class="line">ok: [localhost] =&gt; (item=a00) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;_a00_&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [localhost] =&gt; (item=a02) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;_a02_&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [localhost] =&gt; (item=a04) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;_a04_&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ***************************************************************************************************</span><br><span class="line">localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</span><br></pre></td></tr></table></figure>
+
+<p>也可简写为：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">with_sequence:</span> <span class="number">0</span><span class="number">-5</span><span class="string">/2:a%02d</span></span><br></pre></td></tr></table></figure>
+
+<p>因为生成的每个序列数都会经过字符串格式化，所以得到的每个序列元素都是字符串。如果想要转换成数值，需使用Jinja2的Filter。例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;1 + item|int&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">with_sequence:</span> <span class="string">start=0</span> <span class="string">end=3</span></span><br></pre></td></tr></table></figure>
+
+<p>与with_sequence等价的loop写法为：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">    <span class="attr">msg:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; &#x27;a%02d&#x27; | format(item) &#125;&#125;</span>&quot;</span></span><br><span class="line">  <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; range(0, 5, 2)|list &#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Jinja2的range()也可以生成序列数。语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">range(start,end,step)</span><br></pre></td></tr></table></figure>
+
+<p>注意range()不包含结尾数end。</p>
+<h2 id="with-fileglob"><a href="#with-fileglob" class="headerlink" title="with_fileglob"></a>with_fileglob</h2><p><code>with_fileglob</code>用于迭代通配到的每个文件名。</p>
+<p>例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">no</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">copy:</span> </span><br><span class="line">        <span class="attr">src:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span> </span><br><span class="line">        <span class="attr">dest:</span> <span class="string">/tmp/</span></span><br><span class="line">      <span class="attr">with_fileglob:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">/etc/m*.conf</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">/etc/*.cnf</span></span><br></pre></td></tr></table></figure>
+
+<p>执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PLAY [localhost] *********************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [copy] **************************************************************************************************</span><br><span class="line">changed: [localhost] =&gt; (item=/etc/man_db.conf)</span><br><span class="line">changed: [localhost] =&gt; (item=/etc/mke2fs.conf)</span><br><span class="line">changed: [localhost] =&gt; (item=/etc/my.cnf)</span><br><span class="line"></span><br><span class="line">PLAY RECAP ***************************************************************************************************</span><br><span class="line">localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="with-lines"><a href="#with-lines" class="headerlink" title="with_lines"></a>with_lines</h2><p><code>with_lines</code>用于迭代命令输出结果的每一行。</p>
+<p>这功能也是非常实用的，如下示例：find找出一堆文件，然后进行操作(比如copy)。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">copy:</span> </span><br><span class="line">        <span class="attr">src:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span> </span><br><span class="line">        <span class="attr">dest:</span> <span class="string">/home/myscript/</span></span><br><span class="line">      <span class="attr">with_lines:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">find</span> <span class="string">~</span> <span class="string">-maxdepth</span> <span class="number">1</span> <span class="string">-type</span> <span class="string">f</span> <span class="string">-name</span> <span class="string">&quot;*.sh&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="循环和when"><a href="#循环和when" class="headerlink" title="循环和when"></a>循环和when</h2><p>当<code>with_xxx</code>或<code>loop</code>指令和<code>when</code>指令一起使用时，<code>when</code>将在循环的内部进行条件判断。也就是说，when决定每轮迭代时是否执行一个任务，而不是决定整个循环是否进行。</p>
+<h2 id="循环和register"><a href="#循环和register" class="headerlink" title="循环和register"></a>循环和register</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>, <span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">item</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; mylist &#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">res</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">var:</span> <span class="string">res</span></span><br></pre></td></tr></table></figure>
+
+<p>其中第二个debug任务的执行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ok: [localhost] =&gt; &#123;</span><br><span class="line">  &quot;res&quot;: &#123;</span><br><span class="line">    &quot;changed&quot;: false,</span><br><span class="line">    &quot;msg&quot;: &quot;All items completed&quot;,</span><br><span class="line">    &quot;results&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">        &quot;changed&quot;: false,</span><br><span class="line">        &quot;failed&quot;: false,</span><br><span class="line">        &quot;item&quot;: 11</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">        &quot;changed&quot;: false,</span><br><span class="line">        &quot;failed&quot;: false,</span><br><span class="line">        &quot;item&quot;: 22</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再来一个shell模块的示例：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">shell:</span> <span class="string">echo</span> &#123;&#123;<span class="string">item</span>&#125;&#125;</span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; mylist &#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">res</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">var:</span> <span class="string">res</span></span><br></pre></td></tr></table></figure>
+
+<p>其中第二个任务的执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">ok: [localhost] =&gt; &#123;</span><br><span class="line">  &quot;res&quot;: &#123;</span><br><span class="line">    &quot;changed&quot;: true,</span><br><span class="line">    &quot;msg&quot;: &quot;All items completed&quot;,</span><br><span class="line">    &quot;results&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">        &quot;changed&quot;: true,</span><br><span class="line">        &quot;cmd&quot;: &quot;echo 11&quot;,</span><br><span class="line">        &quot;delta&quot;: &quot;0:00:00.001643&quot;,</span><br><span class="line">        &quot;end&quot;: &quot;2021-12-02 11:40:05.012729&quot;,</span><br><span class="line">        &quot;failed&quot;: false,</span><br><span class="line">        &quot;invocation&quot;: &#123;</span><br><span class="line">          &quot;module_args&quot;: &#123;</span><br><span class="line">            ......</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;item&quot;: 11,</span><br><span class="line">        &quot;rc&quot;: 0,</span><br><span class="line">        &quot;start&quot;: &quot;2021-12-02 11:40:05.011086&quot;,</span><br><span class="line">        &quot;stderr&quot;: &quot;&quot;,</span><br><span class="line">        &quot;stderr_lines&quot;: [],</span><br><span class="line">        &quot;stdout&quot;: &quot;11&quot;,</span><br><span class="line">        &quot;stdout_lines&quot;: [</span><br><span class="line">          &quot;11&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">        ......</span><br><span class="line">        &quot;stdout&quot;: &quot;22&quot;,</span><br><span class="line">        &quot;stdout_lines&quot;: [</span><br><span class="line">          &quot;22&quot;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可见，当register和循环指令结合时，会将每轮迭代的模块执行结果以一个字典的方式追加在一个名为results的列表中。即：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&quot;res&quot;: &#123;</span><br><span class="line">  &quot;changed&quot;: true,</span><br><span class="line">  &quot;msg&quot;: &quot;All items completed&quot;,</span><br><span class="line">  &quot;results&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      ...第一轮迭代模块返回值...</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      ...第二轮迭代模块返回值...</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以，可使用<code>res.results</code>来访问每轮的迭代结果。例如，再次迭代遍历这些结果：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">shell:</span> <span class="string">echo</span> &#123;&#123;<span class="string">item</span>&#125;&#125;</span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; mylist &#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">res</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">var:</span> <span class="string">item.stdout</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;res.results&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="循环控制"><a href="#循环控制" class="headerlink" title="循环控制"></a>循环控制</h2><p>循环控制功能需要在使用循环的时候使用<code>loop_control</code>指令，该指令有一些参数，每种参数都是一个控制开关。</p>
+<h3 id="label参数"><a href="#label参数" class="headerlink" title="label参数"></a>label参数</h3><p>循环迭代时，每轮迭代过程中都会将当前的item输出(要么输出到屏幕，要么输出到日志)。如果所迭代的每项的内容(即每个item)很短，这倒无所谓，但如果item的内容很长，则可读性比较差。</p>
+<p>示例：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">shell:</span> <span class="string">echo</span> &#123;&#123;<span class="string">item</span>&#125;&#125;</span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; mylist &#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">res</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">var:</span> <span class="string">item.stdout</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;res.results&#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">TASK [debug] *****************************************************************************************************</span><br><span class="line">ok: [localhost] =&gt; (item=&#123;u&#x27;stderr_lines&#x27;: [], u&#x27;ansible_loop_var&#x27;: u&#x27;item&#x27;, u&#x27;end&#x27;: u&#x27;2021-12-02 11:57:33.161219&#x27;, u&#x27;stderr&#x27;: u&#x27;&#x27;, u&#x27;stdout&#x27;: u&#x27;11&#x27;, u&#x27;changed&#x27;: True, u&#x27;failed&#x27;: False, u&#x27;delta&#x27;: u&#x27;0:00:00.040706&#x27;, u&#x27;cmd&#x27;: u&#x27;echo 11&#x27;, u&#x27;item&#x27;: 11, u&#x27;rc&#x27;: 0, u&#x27;invocation&#x27;: &#123;u&#x27;module_args&#x27;: &#123;u&#x27;warn&#x27;: False, u&#x27;executable&#x27;: None, u&#x27;_uses_shell&#x27;: True, u&#x27;strip_empty_ends&#x27;: True, u&#x27;_raw_params&#x27;: u&#x27;echo 11&#x27;, u&#x27;removes&#x27;: None, u&#x27;argv&#x27;: None, u&#x27;creates&#x27;: None, u&#x27;chdir&#x27;: None, u&#x27;stdin_add_newline&#x27;: True, u&#x27;stdin&#x27;: None&#125;&#125;, u&#x27;stdout_lines&#x27;: [u&#x27;11&#x27;], u&#x27;start&#x27;: u&#x27;2021-12-02 11:57:33.120513&#x27;&#125;) =&gt; &#123;</span><br><span class="line">    &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">    &quot;item&quot;: &#123;</span><br><span class="line">        &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">        &quot;changed&quot;: true,</span><br><span class="line">        &quot;cmd&quot;: &quot;echo 11&quot;,</span><br><span class="line">        &quot;delta&quot;: &quot;0:00:00.040706&quot;,</span><br><span class="line">        &quot;end&quot;: &quot;2021-12-02 11:57:33.161219&quot;,</span><br><span class="line">        &quot;failed&quot;: false,</span><br><span class="line">        &quot;invocation&quot;: &#123;</span><br><span class="line">            &quot;module_args&quot;: &#123;</span><br><span class="line">                &quot;_raw_params&quot;: &quot;echo 11&quot;,</span><br><span class="line">                &quot;_uses_shell&quot;: true,</span><br><span class="line">                &quot;argv&quot;: null,</span><br><span class="line">                &quot;chdir&quot;: null,</span><br><span class="line">                &quot;creates&quot;: null,</span><br><span class="line">                &quot;executable&quot;: null,</span><br><span class="line">                &quot;removes&quot;: null,</span><br><span class="line">                &quot;stdin&quot;: null,</span><br><span class="line">                &quot;stdin_add_newline&quot;: true,</span><br><span class="line">                &quot;strip_empty_ends&quot;: true,</span><br><span class="line">                &quot;warn&quot;: false</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;item&quot;: 11,</span><br><span class="line">        &quot;rc&quot;: 0,</span><br><span class="line">        &quot;start&quot;: &quot;2021-12-02 11:57:33.120513&quot;,</span><br><span class="line">        &quot;stderr&quot;: &quot;&quot;,</span><br><span class="line">        &quot;stderr_lines&quot;: [],</span><br><span class="line">        &quot;stdout&quot;: &quot;11&quot;,</span><br><span class="line">        &quot;stdout_lines&quot;: [</span><br><span class="line">            &quot;11&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;item.stdout&quot;: &quot;11&quot;</span><br></pre></td></tr></table></figure>
+
+<p>使用label参数可以自定义迭代时显示的内容来替代默认显示的item。例如：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">shell:</span> <span class="string">echo</span> &#123;&#123;<span class="string">item</span>&#125;&#125;</span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; mylist &#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">res</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">item.stdout</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;res.results&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">loop_control:</span></span><br><span class="line">        <span class="attr">label:</span> <span class="string">&quot;this is test play&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">TASK [debug] *****************************************************************************************************</span><br><span class="line">ok: [localhost] =&gt; (item=this is test play) =&gt; &#123;</span><br><span class="line">    &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">    &quot;item&quot;: &#123;</span><br><span class="line">        &quot;ansible_loop_var&quot;: &quot;item&quot;,</span><br><span class="line">        &quot;changed&quot;: true,</span><br><span class="line">        &quot;cmd&quot;: &quot;echo 11&quot;,</span><br><span class="line">        &quot;delta&quot;: &quot;0:00:00.034184&quot;,</span><br><span class="line">        &quot;end&quot;: &quot;2021-12-02 12:21:47.385021&quot;,</span><br><span class="line">        &quot;failed&quot;: false,</span><br><span class="line">        &quot;invocation&quot;: &#123;</span><br><span class="line">            &quot;module_args&quot;: &#123;</span><br><span class="line">                &quot;_raw_params&quot;: &quot;echo 11&quot;,</span><br><span class="line">                &quot;_uses_shell&quot;: true,</span><br><span class="line">                &quot;argv&quot;: null,</span><br><span class="line">                &quot;chdir&quot;: null,</span><br><span class="line">                &quot;creates&quot;: null,</span><br><span class="line">                &quot;executable&quot;: null,</span><br><span class="line">                &quot;removes&quot;: null,</span><br><span class="line">                &quot;stdin&quot;: null,</span><br><span class="line">                &quot;stdin_add_newline&quot;: true,</span><br><span class="line">                &quot;strip_empty_ends&quot;: true,</span><br><span class="line">                &quot;warn&quot;: false</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;item&quot;: 11,</span><br><span class="line">        &quot;rc&quot;: 0,</span><br><span class="line">        &quot;start&quot;: &quot;2021-12-02 12:21:47.350837&quot;,</span><br><span class="line">        &quot;stderr&quot;: &quot;&quot;,</span><br><span class="line">        &quot;stderr_lines&quot;: [],</span><br><span class="line">        &quot;stdout&quot;: &quot;11&quot;,</span><br><span class="line">        &quot;stdout_lines&quot;: [</span><br><span class="line">            &quot;11&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;item.stdout&quot;: &quot;11&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="pause参数"><a href="#pause参数" class="headerlink" title="pause参数"></a>pause参数</h3><p><code>loop_control</code>的<code>pause</code>参数可以控制每轮迭代之间的时间间隔。</p>
+<p>以下示例表示第一轮迭代后，等待一秒，再进入第二轮迭代。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">var:</span> <span class="string">item</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;mylist&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">loop_control:</span></span><br><span class="line">        <span class="attr">pause:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="index-var参数"><a href="#index-var参数" class="headerlink" title="index_var参数"></a>index_var参数</h3><p><code>index_var</code>参数可以指定一个变量，这个变量可以记录每轮循环迭代过程中的索引位，也即表示当前是第几轮迭代。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;index: <span class="template-variable">&#123;&#123;idx&#125;&#125;</span>, value: <span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;mylist&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">loop_control:</span></span><br><span class="line">        <span class="attr">index_var:</span> <span class="string">idx</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ok: [localhost] =&gt; (item=11) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;index: 0, value: 11&quot;</span><br><span class="line">&#125;</span><br><span class="line">ok: [localhost] =&gt; (item=22) =&gt; &#123;</span><br><span class="line">    &quot;msg&quot;: &quot;index: 1, value: 22&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>index_var</code>，可以进行一些条件判断。比如只在第一轮循环时执行某任务：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">vars:</span> </span><br><span class="line">    <span class="attr">mylist:</span> [<span class="number">11</span>,<span class="number">22</span>]</span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">debug:</span> </span><br><span class="line">        <span class="attr">msg:</span> <span class="string">&quot;index: <span class="template-variable">&#123;&#123;idx&#125;&#125;</span>, value: <span class="template-variable">&#123;&#123;item&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">idx</span> <span class="string">==</span> <span class="number">0</span></span><br><span class="line">      <span class="attr">loop:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;mylist&#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">loop_control:</span></span><br><span class="line">        <span class="attr">index_var:</span> <span class="string">idx</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" title= "（八）ansible变量">
+                    <div class="prevTitle">（八）ansible变量</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1638361648000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="toc-number">1.</span> <span class="toc-text">条件判断</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E6%BB%A1%E8%B6%B3%E5%A4%9A%E4%B8%AA%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">同时满足多个条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%9D%A1%E4%BB%B6%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">按条件导入文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#when%E5%92%8C%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.3.</span> <span class="toc-text">when和循环</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E8%BF%AD%E4%BB%A3"><span class="toc-number">2.</span> <span class="toc-text">循环迭代</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#with-list"><span class="toc-number">2.1.</span> <span class="toc-text">with_list</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#with-items%E5%92%8Cwith-flattened"><span class="toc-number">2.2.</span> <span class="toc-text">with_items和with_flattened</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#with-dict"><span class="toc-number">2.3.</span> <span class="toc-text">with_dict</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#with-sequence"><span class="toc-number">2.4.</span> <span class="toc-text">with_sequence</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#with-fileglob"><span class="toc-number">2.5.</span> <span class="toc-text">with_fileglob</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#with-lines"><span class="toc-number">2.6.</span> <span class="toc-text">with_lines</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%92%8Cwhen"><span class="toc-number">2.7.</span> <span class="toc-text">循环和when</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%92%8Cregister"><span class="toc-number">2.8.</span> <span class="toc-text">循环和register</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6"><span class="toc-number">2.9.</span> <span class="toc-text">循环控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#label%E5%8F%82%E6%95%B0"><span class="toc-number">2.9.1.</span> <span class="toc-text">label参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pause%E5%8F%82%E6%95%B0"><span class="toc-number">2.9.2.</span> <span class="toc-text">pause参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#index-var%E5%8F%82%E6%95%B0"><span class="toc-number">2.9.3.</span> <span class="toc-text">index_var参数</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 57
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >（八）ansible变量</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >（六）限制执行任务主机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >harbor对接F5的鉴权失败问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" >保留特殊字符</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href= "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >普通用户安装mysql</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >k8s-apiserver原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm证书过期时间</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >我是一个线程（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" >git原理及常用命令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >如何优雅的编写dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >镜像构建之dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >expect使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >（五）ansible常用模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >（四）剧本文件playbook</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >（三）主机清单inventory</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >实现科学上网</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >hexo特殊符号的转义问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >（二）ansible初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >（一）ansible入门</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >heketi启动失败问题排查</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >gluster排故纪实</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >修改centos7主机名</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >linux误删文件恢复思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href= "/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/" >逻辑卷管理LVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href= "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >Virtualbox虚机使用介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href= "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >df与du结果不一致问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >磁盘分区工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >ceph mimic对接k8s 1.17.0(ceph-csi)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >创建开机自启程序（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >创建开机自启程序（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" >alias与rm的最佳实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >linux用户与组管理（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >linux用户与组管理（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >harbor集群系统负载升高原因分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="虚拟机相关"><span class="iconfont-archer">&#xe606;</span>虚拟机相关</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+        <span class="sidebar-tag-name" data-tags="harbor"><span class="iconfont-archer">&#xe606;</span>harbor</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="ceph"><span class="iconfont-archer">&#xe606;</span>ceph</span>
+    
+        <span class="sidebar-tag-name" data-tags="Distributed protocol"><span class="iconfont-archer">&#xe606;</span>Distributed protocol</span>
+    
+        <span class="sidebar-tag-name" data-tags="ansible"><span class="iconfont-archer">&#xe606;</span>ansible</span>
+    
+        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+    
+        <span class="sidebar-tag-name" data-tags="shadowsocks"><span class="iconfont-archer">&#xe606;</span>shadowsocks</span>
+    
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes核心组件"><span class="iconfont-archer">&#xe606;</span>kubernetes核心组件</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes"><span class="iconfont-archer">&#xe606;</span>kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mysql"><span class="iconfont-archer">&#xe606;</span>Mysql</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="存储类"><span class="iconfont-archer">&#xe60a;</span>存储类</span>
+    
+        <span class="sidebar-category-name" data-categories="linux系统"><span class="iconfont-archer">&#xe60a;</span>linux系统</span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟机"><span class="iconfont-archer">&#xe60a;</span>虚拟机</span>
+    
+        <span class="sidebar-category-name" data-categories="k8s存储"><span class="iconfont-archer">&#xe60a;</span>k8s存储</span>
+    
+        <span class="sidebar-category-name" data-categories="镜像仓库"><span class="iconfont-archer">&#xe60a;</span>镜像仓库</span>
+    
+        <span class="sidebar-category-name" data-categories="监控"><span class="iconfont-archer">&#xe60a;</span>监控</span>
+    
+        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
+    
+        <span class="sidebar-category-name" data-categories="hello-world"><span class="iconfont-archer">&#xe60a;</span>hello-world</span>
+    
+        <span class="sidebar-category-name" data-categories="分布式一致性协议"><span class="iconfont-archer">&#xe60a;</span>分布式一致性协议</span>
+    
+        <span class="sidebar-category-name" data-categories="ansible回炉"><span class="iconfont-archer">&#xe60a;</span>ansible回炉</span>
+    
+        <span class="sidebar-category-name" data-categories="hexo使用"><span class="iconfont-archer">&#xe60a;</span>hexo使用</span>
+    
+        <span class="sidebar-category-name" data-categories="科学上网"><span class="iconfont-archer">&#xe60a;</span>科学上网</span>
+    
+        <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
+    
+        <span class="sidebar-category-name" data-categories="好文推荐"><span class="iconfont-archer">&#xe60a;</span>好文推荐</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes笔记"><span class="iconfont-archer">&#xe60a;</span>kubernetes笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes"><span class="iconfont-archer">&#xe60a;</span>kubernetes</span>
+    
+        <span class="sidebar-category-name" data-categories="Mysql"><span class="iconfont-archer">&#xe60a;</span>Mysql</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

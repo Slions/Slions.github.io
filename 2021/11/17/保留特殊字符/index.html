@@ -20,15 +20,15 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。 如下示例： 12345678910[root@slions_pc1 ansible_poc]# cat test.yml---- hosts: localhost  gather_facts: false  tasks:    - name: &amp;q">
+    <meta name="description" content="由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。 如下示例： 123456789---- hosts: localhost  gather_facts: false  tasks:    - name: &quot;测试特殊字符&quot;      debug:        var: pvar">
 <meta property="og:type" content="article">
 <meta property="og:title" content="保留特殊字符">
 <meta property="og:url" content="https://slions.github.io/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。 如下示例： 12345678910[root@slions_pc1 ansible_poc]# cat test.yml---- hosts: localhost  gather_facts: false  tasks:    - name: &amp;q">
+<meta property="og:description" content="由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。 如下示例： 123456789---- hosts: localhost  gather_facts: false  tasks:    - name: &quot;测试特殊字符&quot;      debug:        var: pvar">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-11-17T10:24:36.000Z">
-<meta property="article:modified_time" content="2021-12-01T10:30:39.626Z">
+<meta property="article:modified_time" content="2021-12-01T12:26:51.840Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary">
@@ -319,7 +319,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">244</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">238</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -450,7 +450,7 @@ height:50vh;
     <article class="article-entry">
         <p>由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。</p>
 <p>如下示例：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions_pc1</span> <span class="string">ansible_poc</span>]<span class="comment"># cat test.yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&quot;测试特殊字符&quot;</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">pvar</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">pvar:</span> <span class="type">!myvar</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&quot;测试特殊字符&quot;</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">pvar</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">pvar:</span> <span class="type">!myvar</span></span><br></pre></td></tr></table></figure>
 
 <p>运行时会报语法错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible_poc]# ansible-playbook test.yml</span><br><span class="line">ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:</span><br><span class="line">JSON: No JSON object could be decoded</span><br><span class="line"></span><br><span class="line">Syntax Error while loading YAML.</span><br><span class="line">  could not determine a constructor for the tag &#x27;!myvar&#x27;</span><br><span class="line"></span><br><span class="line">The error appears to be in &#x27;/home/ansible_poc/six.yml&#x27;: line 9, column 15, but may</span><br><span class="line">be elsewhere in the file depending on the exact syntax problem.</span><br><span class="line"></span><br><span class="line">The offending line appears to be:</span><br><span class="line"></span><br><span class="line">      vars:</span><br><span class="line">        pvar: !myvar</span><br><span class="line">              ^ here</span><br></pre></td></tr></table></figure>
@@ -1463,9 +1463,26 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 57
         </div>
         <!-- search  -->
         
@@ -1478,6 +1495,11 @@ top:50vh;
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
     
     
         <li class="archive-post-item">
