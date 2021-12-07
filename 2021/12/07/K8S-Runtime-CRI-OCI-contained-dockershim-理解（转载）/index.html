@@ -20,17 +20,27 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2021/07/index.html">
+    <meta name="description" content="本文转载自CSDN “Frank范”  典型的K8S Runtime架构从最常见的Docker说起，kubelet和Docker的集成方案图如下：  当kubelet要创建一个容器时，需要以下几步：  Kubelet 通过 CRI 接口（gRPC）调用 dockershim，请求创建一个容器。CRI 即容器运行时接口（Container Runtime Interface），这一步中，Kubel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S Runtime CRI OCI contained dockershim 理解（转载）">
+<meta property="og:url" content="https://slions.github.io/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文转载自CSDN “Frank范”  典型的K8S Runtime架构从最常见的Docker说起，kubelet和Docker的集成方案图如下：  当kubelet要创建一个容器时，需要以下几步：  Kubelet 通过 CRI 接口（gRPC）调用 dockershim，请求创建一个容器。CRI 即容器运行时接口（Container Runtime Interface），这一步中，Kubel">
 <meta property="og:locale">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/cri1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/cri02.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/cri03.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/cri04.png">
+<meta property="article:published_time" content="2021-12-07T05:32:17.000Z">
+<meta property="article:modified_time" content="2021-12-07T06:01:42.358Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="kubernetes">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/cri1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>K8S Runtime CRI OCI contained dockershim 理解（转载） · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +224,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +248,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">K8S Runtime CRI OCI contained dockershim 理解（转载）</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +283,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            K8S Runtime CRI OCI contained dockershim 理解（转载）
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/07</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,354 +451,123 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
-            
-                <span>linux用户与组管理（下篇）</span>
-        </a>
-        <div class="abstract-content">
-            用户和组管理命令useradd 和 adduseradduser是useradd的一个软链接。
-12[root@slions_pc1 ~]# ls -l /usr/sbin/adduserlrwxrwxrwx. 1 root root 7 5月  21 16:45 /usr/sbin/adduser -&gt; useradd
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>本文转载自CSDN “Frank范”</p>
+</blockquote>
+<h1 id="典型的K8S-Runtime架构"><a href="#典型的K8S-Runtime架构" class="headerlink" title="典型的K8S Runtime架构"></a>典型的K8S Runtime架构</h1><p>从最常见的Docker说起，kubelet和Docker的集成方案图如下：</p>
+<p><img src="https://slions.gitee.io/picbed/img/cri1.png"></p>
+<p>当kubelet要创建一个容器时，需要以下几步：</p>
+<ol>
+<li>Kubelet 通过 CRI 接口（gRPC）调用 dockershim，请求创建一个容器。CRI 即容器运行时接口（Container Runtime Interface），这一步中，Kubelet 可以视作一个简单的 CRI Client，而 dockershim 就是接收请求的 Server。目前 dockershim 的代码其实是内嵌在 Kubelet 中的，所以接收调用的凑巧就是 Kubelet 进程；</li>
+<li>dockershim 收到请求后，转化成 Docker Daemon 能听懂的请求，发到 Docker Daemon 上请求创建一个容器。</li>
+<li>Docker Daemon 早在 1.12 版本中就已经将针对容器的操作移到另一个守护进程——containerd 中了，因此 Docker Daemon 仍然不能帮我们创建容器，而是要请求 containerd 创建一个容器；</li>
+<li>containerd 收到请求后，并不会自己直接去操作容器，而是创建一个叫做 containerd-shim 的进程，让 containerd-shim 去操作容器。这是因为容器进程需要一个父进程来做诸如收集状态，维持 stdin 等 fd 打开等工作。而假如这个父进程就是 containerd，那每次 containerd 挂掉或升级，整个宿主机上所有的容器都得退出了。而引入了 containerd-shim 就规避了这个问题（containerd 和 shim 并不是父子进程关系）；</li>
+<li>我们知道创建容器需要做一些设置 namespaces 和 cgroups，挂载 root filesystem 等等操作，而这些事该怎么做已经有了公开的规范了，那就是 OCI（Open Container Initiative，开放容器标准）。它的一个参考实现叫做 runC。于是，containerd-shim 在这一步需要调用 runC 这个命令行工具，来启动容器；</li>
+<li>runC 启动完容器后本身会直接退出，containerd-shim 则会成为容器进程的父进程，负责收集容器进程的状态，上报给 containerd，并在容器中 pid 为 1 的进程退出后接管容器中的子进程进行清理，确保不会出现僵尸进程。</li>
+</ol>
+<p>这个过程乍一看像是在搞我们：Docker Daemon 和 dockershim 看上去就是两个不干活躺在中间划水的啊，Kubelet 为啥不直接调用 containerd 呢？<br>当然可以，先看下现在的架构为什么如此繁杂。</p>
+<h1 id="容器历史小叙"><a href="#容器历史小叙" class="headerlink" title="容器历史小叙"></a>容器历史小叙</h1><p>早期的k8s runtime架构，远没这么复杂，kubelet创建容器，直接调用docker daemon，docker daemon自己调用libcontainer就把容器运行起来。</p>
+<p>但往往，事情不会如此简单，一系列政治斗争开始了，先是大佬们认为运行时标准不能被 Docker 一家公司控制，于是就撺掇着搞了开放容器标准 OCI。Docker 则把 libcontainer 封装了一下，变成 runC 捐献出来作为 OCI 的参考实现。</p>
+<p>再接下来就是 rkt(coreos推出的，类似docker) 想从 Docker 那边分一杯羹，希望 Kubernetes 原生支持 rkt 作为运行时，而且 PR 还真的合进去了。维护过一块业务同时接两个需求方的读者老爷应该都知道类似的事情有多坑，Kubernetes 中负责维护 kubelet 的小组 sig-node 也是被狠狠坑了一把。</p>
+<p>大家一看这么搞可不行，今天能有 rkt，明天就能有更多幺蛾子出来，这么搞下去我们小组也不用干活了，整天搞兼容性的 bug 就够呛。于是乎，Kubernetes 1.5 推出了 CRI 机制，即容器运行时接口（Container Runtime Interface），Kubernetes 告诉大家，你们想做 Runtime 可以啊，我们也资瓷欢迎，实现这个接口就成，成功反客为主。</p>
+<p>不过 CRI 本身只是 Kubernetes 推的一个标准，当时的 Kubernetes 尚未达到如今这般武林盟主的地位，容器运行时当然不能说我跟 Kubernetes 绑死了只提供 CRI 接口，于是就有了 shim（垫片）这个说法，一个 shim 的职责就是作为 Adapter 将各种容器运行时本身的接口适配到 Kubernetes 的 CRI 接口上。</p>
+<p>接下来就是 Docker 要搞 Swarm 进军 PaaS 市场，于是做了个架构切分，把容器操作都移动到一个单独的 Daemon 进程 containerd 中去，让 Docker Daemon 专门负责上层的封装编排。可惜 Swarm 在 Kubernetes 面前实在是不够打，惨败之后 Docker 公司就把 containerd 项目捐给 CNCF 缩回去安心搞 Docker 企业版了。</p>
+<p>最后就是我们在上一张图里看到的这一坨东西了，尽管现在已经有 CRI-O，containerd-plugin 这样更精简轻量的 Runtime 架构，dockershim 这一套作为经受了最多生产环境考验的方案，迄今为止仍是 Kubernetes 默认的 Runtime 实现。</p>
+<h1 id="OCI-CRI"><a href="#OCI-CRI" class="headerlink" title="OCI, CRI"></a>OCI, CRI</h1><p>OCI（开放容器标准），规定了2点：</p>
+<ol>
+<li>容器镜像要长啥样，即 ImageSpec。里面的大致规定就是你这个东西需要是一个压缩了的文件夹，文件夹里以 xxx 结构放 xxx 文件；</li>
+<li>容器要需要能接收哪些指令，这些指令的行为是什么，即 RuntimeSpec。这里面的大致内容就是“容器”要能够执行 “create”，“start”，“stop”，“delete” 这些命令，并且行为要规范。</li>
+</ol>
+<p>runC 为啥叫参考实现呢，就是它能按照标准将符合标准的容器镜像运行起来，标准的好处就是方便搞创新，反正只要我符合标准，生态圈里的其它工具都能和我一起愉快地工作（……当然 OCI 这个标准本身制定得不怎么样，真正工程上还是要做一些 adapter 的），那我的镜像就可以用任意的工具去构建，我的“容器”就不一定非要用 namespace 和 cgroups 来做隔离。这就让各种虚拟化容器可以更好地参与到游戏当中，我们暂且不表。</p>
+<p>而 CRI 更简单，单纯是一组 gRPC 接口，扫一眼 kubelet/apis/cri/services.go 就能归纳出几套核心接口：</p>
+<ul>
+<li>一套针对容器操作的接口，包括创建，启停容器等等；</li>
+<li>一套针对镜像操作的接口，包括拉取镜像删除镜像等；</li>
+<li>一套针对 PodSandbox（容器沙箱环境）的操作接口，我们之后再说。</li>
+</ul>
+<p>现在我们可以找到很多符合 OCI 标准或兼容了 CRI 接口的项目，而这些项目就大体构成了整个 Kuberentes 的 Runtime 生态：</p>
+<ul>
+<li>OCI Compatible：runC，Kata（以及它的前身 runV 和 Clear Containers），gVisor。其它比较偏门的还有 Rust 写的 railcar</li>
+<li>CRI Compatible：Docker（借助 dockershim），containerd（借助 CRI-containerd），CRI-O，Frakti，etc</li>
+</ul>
+<p>OCI, CRI 确实不是一个好名字，在这篇文章的语境中更准确的说法：cri-runtime 和 oci-runtime。通过这个粗略的分类，我们其实可以总结出整个 Runtime 架构万变不离其宗的三层抽象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Orchestration API -&gt; Container API(cri-runtime) -&gt; kernel API(oci-runtime)</span><br></pre></td></tr></table></figure>
 
-useradd用法：
-12345678910111213141...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/31</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
+
+
+<h1 id="Containerd和CRI-O"><a href="#Containerd和CRI-O" class="headerlink" title="Containerd和CRI-O"></a>Containerd和CRI-O</h1><p>上一节看到现在的 Runtime 实在是有点复杂了，而复杂是万恶之源（其实本质上就是想干掉 Docker），于是就有了直接拿 containerd 做 oci-runtime 的方案。当然，除了 Kubernetes 之外，containerd 还要接诸如 Swarm 等调度系统，因此它不会去直接实现 CRI，这个适配工作当然就要交给一个 shim 了。</p>
+<p>containerd 1.0 中，对 CRI 的适配通过一个单独的进程 CRI-containerd 来完成：<br><img src="https://slions.gitee.io/picbed/img/cri02.png"></p>
+<p>containerd 1.1 中做的又更漂亮一点，砍掉了 CRI-containerd 这个进程，直接把适配逻辑作为插件放进了 containerd 主进程中：</p>
+<p><img src="https://slions.gitee.io/picbed/img/cri03.png"></p>
+<p>但在 containerd 做这些事情之情，社区就已经有了一个更为专注的 cri-runtime：CRI-O，它非常纯粹，就是兼容 CRI 和 OCI，做一个 Kubernetes 专用的运行时：</p>
+<p><img src="https://slions.gitee.io/picbed/img/cri04.png"></p>
+<p>其中 conmon 就对应 containerd-shim，大体意图是一样的。<br>CRI-O 和（直接调用）containerd 的方案比起默认的 dockershim 确实简洁很多，但没啥生产环境的验证案例，我所知道的仅仅是 containerd 在 GKE 上是 beta 状态。因此假如你对 Docker 没有特殊的政治恨意，大可不必把 dockershim 这套换掉。</p>
+<h1 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011563903/article/details/90743853">https://blog.csdn.net/u011563903/article/details/90743853</a></p>
+
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
-            
-                <span>linux用户与组管理（上篇）</span>
-        </a>
-        <div class="abstract-content">
-            基本概念Linux 继承了UNIX 对用户的优秀支持，其属于多用户的操作系统。在linux中用户与组都是一种身份认证资源。
-每个用户都有用户名、用户的唯一编号uid、所属组及其默认的shell，可能还有密码、家目录、附属组、注释信息等。每个组也有自己的名称、组唯一编号gid。一般来说，gid和uid都是相同的，但可以根据自己的实际需求来设置。组分为主组(primary group)和辅助组(...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >
-            
-                <span>harbor集群系统负载升高原因分析</span>
-        </a>
-        <div class="abstract-content">
-            问题现象接到客户反馈，说是创建不了新的服务了，查看相关的Event日志，发现此服务拉取不了images，后台查看harbor节点的状态，发现问题，harbor集群的VIP丢失，并且在主机上执行命令都比较卡，top查看平均负载发现非常高。
-
-问题分析首先我们需要排查什么原因导致harbor节点这个卡顿，负载一直升高。
-
-平均负载是指单位时间内，系统处于可运行状态和不可中断状态的平均进程数，也就...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >
-            
-                <span>glusterfs可用性测试</span>
-        </a>
-        <div class="abstract-content">
-            环境描述
-
-
-主机名
-ip地址
-系统环境
-角色
-
-
-
-k8s-1
-IP:192.168.186.10
-cpu:x2  mem:2GB  disk:/dev/sdb 40GB
-K8s_master,Gluster_master,Heketi_master
-
-
-K8s-2
-IP:192.168.186.11
-cpu:x2  mem:2GB  disk:/dev/sdb 40GB
-K8s_node...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >
-            
-                <span>glusterfs回收站功能</span>
-        </a>
-        <div class="abstract-content">
-            功能简述glusterfs有一个类似windows回收站的功能，可以帮助用户获取和恢复临时被删除的数据。每个块都会保留一个隐藏的目录.trash，它将会被用于存放被从各个块删除的文件。这个translator以后还会增强功能来支持被删除文件的恢复。
-回收站的目录名应该是可配置的。trash translator也会被用于内部操作比如自卷的自修复以及再平衡。
-1# gluster volume...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/16</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >
-            
-                <span>k8s-v1.11使用glusterfs</span>
-        </a>
-        <div class="abstract-content">
-            Glusterfs提供底层存储功能，heketi为glusterfs提供restful风格的api，Heketi要求在每个glusterfs节点上配备裸磁盘，目前heketi仅支持使用裸磁盘(未格式化)添加为device，不支持文件系统，因为Heketi要用来创建PV和VG方便管理glusterfs。
-集群托管于heketi后，不能使用命令管理存储卷，以免与Heketi数据库中存储的信息不一...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >
-            
-                <span>linux添加新硬盘无法识别解决方法</span>
-        </a>
-        <div class="abstract-content">
-            我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。
-重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就可以了。
-1# for i in /sys/class/scsi_host/host*/scan;do echo &quot;- - ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >
-            
-                <span>手工安装heketi管理glusterfs</span>
-        </a>
-        <div class="abstract-content">
-            GlusterFS（gfs）由此名字也可看出是文件系统存储相关的软件，它是一个开源的分布式文件系统，具有强大的横向扩展能力。Heketi是一个GlusterFs管理软件，可以管理glusterFS集群的卷创建、删除等操作。Glusterfs作为kubernetes支持的多种卷类型之一，可以为上层应用提供多种挂载形式。
-heketi + glusterfs提供两种部署形式：
-
-容器化
-传统服务...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "heketi">heketi</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >
-            
-                <span>自己动手实现network namespace</span>
-        </a>
-        <div class="abstract-content">
-            之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实我们通过ip命令就可以模拟出网络命名空间。
-
-安装软件首先我们需要安装iprouter软件：
-12[root@slion...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >
-            
-                <span>cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</span>
-        </a>
-        <div class="abstract-content">
-            网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。
-简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，promethe...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "prometheus">prometheus</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/12/02/%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89Jinja2%E6%A8%A1%E6%9D%BF/" title= "（十一）Jinja2模板">
+                    <div class="prevTitle">（十一）Jinja2模板</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/2021/07/page/2/">2</a><a class="extend next" rel="next" href="/archives/2021/07/page/2/">NEXT &gt;</a>
-    </nav>
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1638855137000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -815,6 +657,24 @@ heketi + glusterfs提供两种部署形式：
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E7%9A%84K8S-Runtime%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">典型的K8S Runtime架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E5%8E%86%E5%8F%B2%E5%B0%8F%E5%8F%99"><span class="toc-number">2.</span> <span class="toc-text">容器历史小叙</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OCI-CRI"><span class="toc-number">3.</span> <span class="toc-text">OCI, CRI</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Containerd%E5%92%8CCRI-O"><span class="toc-number">4.</span> <span class="toc-text">Containerd和CRI-O</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">原文链接</span></a></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -2163,6 +2023,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
