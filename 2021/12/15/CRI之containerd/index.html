@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="从这篇文章可以了解云原生领域CRI与OCI的由来，为了制约docker在容器运行时的垄断地位，Google与IBM、Redhat等公司成立了CNCF，形成以kubernetes服务编排为基础，建设其周边云原生产品的生态，并陆续提出了CRI（容器运行时接口）、CSI（容器存储接口）、CNI（容器网络接口）的规范。 上篇文章开篇的图上可知，当前docker并没有实现CRI的规范，需要通过kubelet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CRI之containerd">
+<meta property="og:url" content="https://slions.github.io/2021/12/15/CRI%E4%B9%8Bcontainerd/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="从这篇文章可以了解云原生领域CRI与OCI的由来，为了制约docker在容器运行时的垄断地位，Google与IBM、Redhat等公司成立了CNCF，形成以kubernetes服务编排为基础，建设其周边云原生产品的生态，并陆续提出了CRI（容器运行时接口）、CSI（容器存储接口）、CNI（容器网络接口）的规范。 上篇文章开篇的图上可知，当前docker并没有实现CRI的规范，需要通过kubelet">
+<meta property="og:locale">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/containerd1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/containerd3.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/containerd2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/containerd4.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/containerd5.png">
+<meta property="article:published_time" content="2021-12-15T07:18:52.000Z">
+<meta property="article:modified_time" content="2021-12-15T13:43:28.617Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/containerd1.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>CRI之containerd · S_lion&#39;s Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/1.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">CRI之containerd</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            CRI之containerd
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.2k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/15</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>从<a href="/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" title="这篇文章">这篇文章</a>可以了解云原生领域CRI与OCI的由来，为了制约docker在容器运行时的垄断地位，Google与IBM、Redhat等公司成立了CNCF，形成以kubernetes服务编排为基础，建设其周边云原生产品的生态，并陆续提出了CRI（容器运行时接口）、CSI（容器存储接口）、CNI（容器网络接口）的规范。</p>
+<p>上篇文章开篇的图上可知，当前docker并没有实现CRI的规范，需要通过kubelet中集成了dokcershim（垫片）来进行“翻译”，并且对比后面直接使用containerd或者cri-o的方案来说，docker的这种实现太冗余了，性能会有较大的开销。但对于当前来说，docker依旧是主要的企业级容器运行时。</p>
+<p>kubernetes在1.20版本之后废弃docker作为容器运行时，这也符合其产品理念，后续去除掉dockershim支持，还能实现kubernetes与docker的解耦，减少kubernetes社区的负担，也能够使得kubernetes的运行时支持上可以有更好的演进和发展。</p>
+<p>类似的事情就如之前kubernetes支持的持久化存储，厂商会将存储插件代码到kubernetes核心代码中，后续改为统一的基于CSI的实现，而kubernetes就专注于CSI就行了，不用再跟很多厂商的代码耦合了。</p>
+<h1 id="containerd"><a href="#containerd" class="headerlink" title="containerd"></a>containerd</h1><p><img src="https://slions.gitee.io/picbed/img/containerd1.png"></p>
+<blockquote>
+<p>Containerd是一个工业标准的容器运行时，重点是它简洁，健壮，便携，在Linux和window上可以作为一个守护进程运行，它可以管理主机系统上容器的完整的生命周期：镜像传输和存储，容器的执行和监控，低级别的存储和网络。</p>
+<p>摘自<a target="_blank" rel="noopener" href="https://hub.fastgit.org/containerd/containerd">《containerd官方文档》</a></p>
+</blockquote>
+<h2 id="Containerd-的架构"><a href="#Containerd-的架构" class="headerlink" title="Containerd 的架构"></a>Containerd 的架构</h2><p><img src="https://slions.gitee.io/picbed/img/containerd3.png"></p>
+<p>可以看到 Containerd 仍然采用标准的 C/S 架构，服务端通过 <code>GRPC</code> 协议提供稳定的 API，客户端通过调用服务端的 API 进行高级的操作。</p>
+<p>为了解耦，Containerd 将不同的职责划分给不同的组件，每个组件就相当于一个<strong>子系统</strong>（subsystem）。连接不同子系统的组件被称为模块。</p>
+<p>下图是官方文档中的架构图：</p>
+<p><img src="https://slions.gitee.io/picbed/img/containerd2.png"></p>
+<p>具体的实现细节还需要经过一段时间的研究才能了解。</p>
+<h2 id="CRI性能对比图"><a href="#CRI性能对比图" class="headerlink" title="CRI性能对比图"></a>CRI性能对比图</h2><p>在安装使用前，看一张别人使用bucketbench对 <code>Docker</code>、<code>crio</code> 和 <code>Containerd</code> 的性能测试结果，包括启动、停止和删除容器，以比较它们所耗的时间：</p>
+<p><img src="https://slions.gitee.io/picbed/img/containerd4.png"></p>
+<p>可以看到，containerd在其中属于佼佼者。</p>
+<h1 id="containerd安装"><a href="#containerd安装" class="headerlink" title="containerd安装"></a>containerd安装</h1><h2 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h2><table>
+<thead>
+<tr>
+<th><strong>主机名</strong></th>
+<th>ip地址</th>
+<th><strong>系统环境</strong></th>
+<th>系统版本</th>
+<th>内核版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>slions_pc2</td>
+<td>192.168.100.11</td>
+<td>cpu:x2  mem:4GB  filesystem:20GB</td>
+<td>CentOS Linux release 7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+</tr>
+</tbody></table>
+<h2 id="下载与解压资源包"><a href="#下载与解压资源包" class="headerlink" title="下载与解压资源包"></a>下载与解压资源包</h2><p>主要有两种方式安装，可以使用yum安装，也可以下载离线包进行安装，另外如果是之前安装过docker的话，containerd也会自动安装的。</p>
+<p>首先从官网找到对应的<a target="_blank" rel="noopener" href="https://hub.fastgit.org/containerd/containerd/releases/tag/v1.5.8">压缩包</a>,我这里是使用的1.5.8版本来进行后续实验。</p>
+<p><img src="https://slions.gitee.io/picbed/img/containerd5.png"></p>
+<p>Containerd 提供了两个压缩包，一个叫 <code>containerd-$&#123;VERSION&#125;.$&#123;OS&#125;-$&#123;ARCH&#125;.tar.gz</code>，另一个叫 <code>cri-containerd-$&#123;VERSION&#125;.$&#123;OS&#125;-$&#123;ARCH&#125;.tar.gz</code>。其中 <code>cri-containerd-$&#123;VERSION&#125;.$&#123;OS&#125;-$&#123;ARCH&#125;.tar.gz</code> 包含了所有 Kubernetes 需要的二进制文件。Containerd 是需要调用 <code>runc</code> 的，而第一个压缩包是不包含 <code>runc</code> 二进制文件的，如果选择第一个压缩包，还需要提前安装 runc。这里我本地环境是完全干净的，就直接使用 <code>cri-containerd</code> 压缩包。</p>
+<p>下载到服务器解压</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ls</span><br><span class="line">anaconda-ks.cfg  cri-containerd-cni-1.5.8-linux-amd64.tar.gz</span><br><span class="line">[root@slions_pc2 ~]# tar -C / -zxf cri-containerd-cni-1.5.8-linux-amd64.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash">会生成如下文件</span></span><br><span class="line">etc/</span><br><span class="line">etc/systemd/</span><br><span class="line">etc/systemd/system/</span><br><span class="line">etc/systemd/system/containerd.service</span><br><span class="line">etc/crictl.yaml</span><br><span class="line">etc/cni/</span><br><span class="line">etc/cni/net.d/</span><br><span class="line">etc/cni/net.d/10-containerd-net.conflist</span><br><span class="line">usr/</span><br><span class="line">usr/local/</span><br><span class="line">usr/local/sbin/</span><br><span class="line">usr/local/sbin/runc</span><br><span class="line">usr/local/bin/</span><br><span class="line">usr/local/bin/containerd</span><br><span class="line">usr/local/bin/crictl</span><br><span class="line">usr/local/bin/ctd-decoder</span><br><span class="line">usr/local/bin/critest</span><br><span class="line">usr/local/bin/containerd-shim-runc-v1</span><br><span class="line">usr/local/bin/containerd-shim-runc-v2</span><br><span class="line">usr/local/bin/containerd-stress</span><br><span class="line">usr/local/bin/ctr</span><br><span class="line">usr/local/bin/containerd-shim</span><br><span class="line">opt/</span><br><span class="line">opt/containerd/</span><br><span class="line">opt/containerd/cluster/</span><br><span class="line">opt/containerd/cluster/version</span><br><span class="line">opt/containerd/cluster/gce/</span><br><span class="line">opt/containerd/cluster/gce/configure.sh</span><br><span class="line">opt/containerd/cluster/gce/cni.template</span><br><span class="line">opt/containerd/cluster/gce/cloud-init/</span><br><span class="line">opt/containerd/cluster/gce/cloud-init/node.yaml</span><br><span class="line">opt/containerd/cluster/gce/cloud-init/master.yaml</span><br><span class="line">opt/containerd/cluster/gce/env</span><br><span class="line">opt/cni/</span><br><span class="line">opt/cni/bin/</span><br><span class="line">opt/cni/bin/dhcp</span><br><span class="line">opt/cni/bin/firewall</span><br><span class="line">opt/cni/bin/host-local</span><br><span class="line">opt/cni/bin/ipvlan</span><br><span class="line">opt/cni/bin/sbr</span><br><span class="line">opt/cni/bin/vlan</span><br><span class="line">opt/cni/bin/vrf</span><br><span class="line">opt/cni/bin/tuning</span><br><span class="line">opt/cni/bin/bridge</span><br><span class="line">opt/cni/bin/macvlan</span><br><span class="line">opt/cni/bin/bandwidth</span><br><span class="line">opt/cni/bin/portmap</span><br><span class="line">opt/cni/bin/host-device</span><br><span class="line">opt/cni/bin/ptp</span><br><span class="line">opt/cni/bin/flannel</span><br><span class="line">opt/cni/bin/static</span><br><span class="line">opt/cni/bin/loopback</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成配置文件"><a href="#生成配置文件" class="headerlink" title="生成配置文件"></a>生成配置文件</h2><p>Containerd 的默认配置文件为 <code>/etc/containerd/config.toml</code>，需要通过命令来生成一个默认的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# mkdir /etc/containerd</span><br><span class="line">[root@slions_pc2 ~]# containerd config default &gt; /etc/containerd/config.toml</span><br></pre></td></tr></table></figure>
+
+<p>配置参数含义参照<a target="_blank" rel="noopener" href="https://github.com/containerd/containerd/blob/master/docs/man/containerd-config.toml.5.md">https://github.com/containerd/containerd/blob/master/docs/man/containerd-config.toml.5.md</a></p>
+<h3 id="存储配置"><a href="#存储配置" class="headerlink" title="存储配置"></a>存储配置</h3><p>Containerd 有两个不同的存储路径，一个用来保存持久化数据，一个用来保存运行时状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root = &quot;/var/lib/containerd&quot;</span><br><span class="line">state = &quot;/run/containerd&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>root</code>用来保存持久化数据，包括 <code>Snapshots</code>, <code>Content</code>, <code>Metadata</code> 以及各种插件的数据。每一个插件都有自己单独的目录，Containerd 本身不存储任何数据，它的所有功能都来自于已加载的插件。</p>
+<h3 id="私有仓库"><a href="#私有仓库" class="headerlink" title="私有仓库"></a>私有仓库</h3><p>私有仓库字段位置：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.mirrors]</span></span><br><span class="line">  <span class="section">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.mirrors.&quot;192.168.100.10&quot;]</span></span><br><span class="line">    <span class="attr">endpoint</span> = [<span class="string">&quot;https://192.168.100.10&quot;</span>]            <span class="comment">#镜像仓库加速地址</span></span><br><span class="line"><span class="section">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.configs]</span></span><br><span class="line">  <span class="section">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.configs.&quot;192.168.100.10&quot;.tls]</span></span><br><span class="line">    <span class="attr">insecure_skip_verify</span> = <span class="literal">true</span></span><br><span class="line">  <span class="section">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.configs.&quot;192.168.100.10&quot;.auth]</span></span><br><span class="line">    <span class="attr">username</span> = <span class="string">&quot;admin&quot;</span></span><br><span class="line">    <span class="attr">password</span> = <span class="string">&quot;Harbor12345&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里我就不修改了，默认是<code>docker.io</code></p>
+<h3 id="OOM"><a href="#OOM" class="headerlink" title="OOM"></a>OOM</h3><p>有一项配置需要留意：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oom_score = 0</span><br></pre></td></tr></table></figure>
+
+<p>Containerd 是容器的守护者，一旦发生内存不足的情况，理想的情况应该是先杀死容器，而不是杀死 Containerd。所以需要调整 Containerd 的 <code>OOM</code> 权重，减少其被 <strong>OOM Kill</strong> 的几率。最好是将 <code>oom_score</code> 的值调整为比其他守护进程略低的值。这里的 oom_socre 其实对应的是 <code>/proc/&lt;pid&gt;/oom_socre_adj</code>，在早期的 Linux 内核版本里使用 <code>oom_adj</code> 来调整权重, 后来改用 <code>oom_socre_adj</code> 了。</p>
+<p>建议 Containerd 将该值设置为 <code>-999</code> 到 <code>0</code> 之间。如果作为 Kubernetes 的 Worker 节点，可以考虑设置为 <code>-999</code>。</p>
+<h2 id="Systemd-配置"><a href="#Systemd-配置" class="headerlink" title="Systemd 配置"></a>Systemd 配置</h2><p>之前解压资源包时已经将containerd的systemd service配置文件放置在了<code>etc/systemd/system/containerd.service</code>，可以通过 systemd 配置 Containerd 作为守护进程运行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# systemctl enable containerd &amp;&amp; systemctl start containerd</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/containerd.service to /etc/systemd/system/containerd.service.</span><br><span class="line">[root@slions_pc2 ~]# systemctl status containerd</span><br><span class="line">● containerd.service - containerd container runtime</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/containerd.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 三 2021-12-15 19:32:15 CST; 11s ago</span><br><span class="line">     Docs: https://containerd.io</span><br><span class="line">  Process: 10475 ExecStartPre=/sbin/modprobe overlay (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 10483 (containerd)</span><br><span class="line">    Tasks: 9</span><br><span class="line">   Memory: 19.2M</span><br><span class="line">   CGroup: /system.slice/containerd.service</span><br><span class="line">           └─10483 /usr/local/bin/containerd</span><br><span class="line"></span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.628370353+08:00&quot; level=info msg=&quot;loading plugin \&quot;io.containerd.grpc.v1.introspection\&quot;...&quot; type=io.containerd.grpc.v1</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.629850993+08:00&quot; level=info msg=&quot;Start subscribing containerd event&quot;</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.629895514+08:00&quot; level=info msg=&quot;Start recovering state&quot;</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.630058843+08:00&quot; level=info msg=&quot;Start event monitor&quot;</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.630072189+08:00&quot; level=info msg=&quot;Start snapshots syncer&quot;</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.630079486+08:00&quot; level=info msg=&quot;Start cni network conf syncer&quot;</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.630084202+08:00&quot; level=info msg=&quot;Start streaming server&quot;</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.632856124+08:00&quot; level=info msg=serving... address=/run/containerd/containerd.sock.ttrpc</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.633175755+08:00&quot; level=info msg=serving... address=/run/containerd/containerd.sock</span><br><span class="line">12月 15 19:32:15 slions_pc2 containerd[10483]: time=&quot;2021-12-15T19:32:15.633729234+08:00&quot; level=info msg=&quot;containerd successfully booted in 0.055757s&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="ctr-使用"><a href="#ctr-使用" class="headerlink" title="ctr 使用"></a>ctr 使用</h1><p>ctr命令是containerd的客户端工具，下面是一些常见的用法：</p>
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>containerd有namespaces的概念，不同命名空间下的container是互相隔离的，如果不指定，<code>ctr</code> 默认是 <code>default</code> 空间。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr ns -h</span><br><span class="line">NAME:</span><br><span class="line">   ctr namespaces - manage namespaces</span><br><span class="line"></span><br><span class="line">USAGE:</span><br><span class="line">   ctr namespaces command [command options] [arguments...]</span><br><span class="line"></span><br><span class="line">COMMANDS:</span><br><span class="line">   create, c   create a new namespace</span><br><span class="line">   list, ls    list namespaces</span><br><span class="line">   remove, rm  remove one or more namespaces</span><br><span class="line">   label       set and clear labels for a namespace</span><br><span class="line"></span><br><span class="line">OPTIONS:</span><br><span class="line">   --help, -h  show help</span><br><span class="line"></span><br><span class="line">[root@slions_pc2 ~]# ctr ns create mytest1</span><br><span class="line">[root@slions_pc2 ~]# ctr ns create mytest2</span><br><span class="line">[root@slions_pc2 ~]# ctr ns ls</span><br><span class="line">NAME    LABELS</span><br><span class="line">mytest1</span><br><span class="line">mytest2</span><br></pre></td></tr></table></figure>
+
+<h2 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h2><h3 id="镜像下载"><a href="#镜像下载" class="headerlink" title="镜像下载"></a>镜像下载</h3><p>测试时发现需要写全镜像的名称,无法想docker一样省略默认的仓库名与项目名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 images pull docker.io/library/nginx:latest</span><br><span class="line">ctr: failed to resolve reference &quot;nginx&quot;: object required</span><br><span class="line">docker.io/library/nginx:latest:                                                   resolved       |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">index-sha256:9522864dd661dcadfd9958f9e0de192a1fdda2c162a35668ab6ac42b465f0603:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">manifest-sha256:4424e31f2c366108433ecca7890ad527b243361577180dfd9a5bb36e828abf47: done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:44be98c0fab60b6cef9887dbad59e69139cab789304964a197c27e2574d37304:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">config-sha256:f652ca386ed135a4cbe356333e08ef0816f81b2ac8d0619af01e2b256837ed3e:   done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:e5ae68f740265288a4888db98d2999a638fdcb6d725f427678814538d253aa4d:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:21e0df283cd68384e5e8dff7e6be1774c86ea3110c1b1e9326014d34c29c0657:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:ed835de16acd8f5821cf3f3ef77a66922510ee6349730d89a8dd4fd6da8437ef:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:881ff011f1c9c14982afc6e95ae70c25e38809843bb7d42abbb24eb540c93ce7:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:77700c52c9695053293be96f9cbcf42c91c5e097daa3829339333f1fe6f9d353:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">elapsed: 99.8s                                                                    total:  53.2 M (545.7 KiB/s)</span><br><span class="line">unpacking linux/amd64 sha256:9522864dd661dcadfd9958f9e0de192a1fdda2c162a35668ab6ac42b465f0603...</span><br><span class="line">done: 7.663355797s</span><br></pre></td></tr></table></figure>
+
+<p>查看该镜像。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 image ls</span><br><span class="line">REF                            TYPE                                                      DIGEST                                                                  SIZE     PLATFORMS                                                                                               LABELS</span><br><span class="line">docker.io/library/nginx:latest application/vnd.docker.distribution.manifest.list.v2+json sha256:9522864dd661dcadfd9958f9e0de192a1fdda2c162a35668ab6ac42b465f0603 54.1 MiB linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64/v8,linux/mips64le,linux/ppc64le,linux/s390x -</span><br></pre></td></tr></table></figure>
+
+<p>此时mytest2中是没有这个镜像的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest2 image ls</span><br><span class="line">REF TYPE DIGEST SIZE PLATFORMS LABELS</span><br></pre></td></tr></table></figure>
+
+<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><h3 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 container create docker.io/library/nginx:latest mynginx</span><br><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 c ls</span><br><span class="line">CONTAINER    IMAGE                             RUNTIME</span><br><span class="line">mynginx      docker.io/library/nginx:latest    io.containerd.runc.v2</span><br><span class="line">[root@slions_pc2 ~]# ps -elf|grep nginx</span><br><span class="line">0 S root      10680   9878  0  80   0 - 28181 pipe_w 20:10 pts/0    00:00:00 grep --color=auto nginx</span><br></pre></td></tr></table></figure>
+
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><p>上面 <code>create</code> 的命令创建了容器后，并没有处于运行状态，只是一个静态的容器。一个 container 对象只是包含了运行一个容器所需的资源及配置的数据结构，这意味着 namespaces、rootfs 和容器的配置都已经初始化成功了，只是用户进程(这里是 <code>nginx</code>)还没有启动。</p>
+<p>然而一个容器真正的运行起来是由 task 对象实现的，<code>task</code> 代表任务的意思，可以为容器设置网卡，还可以配置工具来对容器进行监控等。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 task start -d mynginx</span><br><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 task ls</span><br><span class="line">TASK       PID      STATUS</span><br><span class="line">mynginx    11330    RUNNING</span><br><span class="line">[root@slions_pc2 ~]# ps -elf|grep nginx</span><br><span class="line">0 S root      11305      1  0  80   0 - 177741 futex_ 21:03 ?       00:00:00 /usr/local/bin/containerd-shim-runc-v2 -namespace mytest1 -id mynginx -address /run/containerd/containerd.sock</span><br><span class="line">4 S root      11330  11305  0  80   0 -  2169 sigsus 21:03 ?        00:00:00 nginx: master process nginx -g daemon off;</span><br><span class="line">5 S 101       11367  11330  0  80   0 -  2270 ep_pol 21:03 ?        00:00:00 nginx: worker process</span><br><span class="line">5 S 101       11368  11330  0  80   0 -  2270 ep_pol 21:03 ?        00:00:00 nginx: worker process</span><br><span class="line">0 S root      11376   9878  0  80   0 - 28182 pipe_w 21:04 pts/0    00:00:00 grep --color=auto nginx</span><br></pre></td></tr></table></figure>
+
+<p>当然，也可以一步到位直接创建并运行容器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest2 images pull  docker.io/library/nginx:latest</span><br><span class="line">docker.io/library/nginx:latest:                                                   resolved       |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">index-sha256:9522864dd661dcadfd9958f9e0de192a1fdda2c162a35668ab6ac42b465f0603:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">manifest-sha256:4424e31f2c366108433ecca7890ad527b243361577180dfd9a5bb36e828abf47: done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:44be98c0fab60b6cef9887dbad59e69139cab789304964a197c27e2574d37304:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">config-sha256:f652ca386ed135a4cbe356333e08ef0816f81b2ac8d0619af01e2b256837ed3e:   done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:e5ae68f740265288a4888db98d2999a638fdcb6d725f427678814538d253aa4d:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:21e0df283cd68384e5e8dff7e6be1774c86ea3110c1b1e9326014d34c29c0657:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:ed835de16acd8f5821cf3f3ef77a66922510ee6349730d89a8dd4fd6da8437ef:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:881ff011f1c9c14982afc6e95ae70c25e38809843bb7d42abbb24eb540c93ce7:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">layer-sha256:77700c52c9695053293be96f9cbcf42c91c5e097daa3829339333f1fe6f9d353:    done           |++++++++++++++++++++++++++++++++++++++|</span><br><span class="line">elapsed: 5.8 s                                                                    total:   0.0 B (0.0 B/s)</span><br><span class="line">unpacking linux/amd64 sha256:9522864dd661dcadfd9958f9e0de192a1fdda2c162a35668ab6ac42b465f0603...</span><br><span class="line">done: 2.327616113s</span><br><span class="line">[root@slions_pc2 ~]# ctr -n mytest2 run -d docker.io/library/nginx:latest mynginx</span><br><span class="line">[root@slions_pc2 ~]# ctr -n mytest2 t ls</span><br><span class="line">TASK       PID      STATUS</span><br><span class="line">mynginx    11472    RUNNING</span><br><span class="line">[root@slions_pc2 ~]# ps -elf|grep nginx</span><br><span class="line">0 S root      11305      1  0  80   0 - 177901 futex_ 21:03 ?       00:00:00 /usr/local/bin/containerd-shim-runc-v2 -namespace mytest1 -id mynginx -address /run/containerd/containerd.sock</span><br><span class="line">4 S root      11330  11305  0  80   0 -  2169 sigsus 21:03 ?        00:00:00 nginx: master process nginx -g daemon off;</span><br><span class="line">5 S 101       11367  11330  0  80   0 -  2270 ep_pol 21:03 ?        00:00:00 nginx: worker process</span><br><span class="line">5 S 101       11368  11330  0  80   0 -  2270 ep_pol 21:03 ?        00:00:00 nginx: worker process</span><br><span class="line">0 S root      11450      1  0  80   0 - 178173 futex_ 21:09 ?       00:00:00 /usr/local/bin/containerd-shim-runc-v2 -namespace mytest2 -id mynginx -address /run/containerd/containerd.sock</span><br><span class="line">4 S root      11472  11450  0  80   0 -  2169 sigsus 21:09 ?        00:00:00 nginx: master process nginx -g daemon off;</span><br><span class="line">5 S 101       11514  11472  0  80   0 -  2270 ep_pol 21:09 ?        00:00:00 nginx: worker process</span><br><span class="line">5 S 101       11515  11472  0  80   0 -  2270 ep_pol 21:09 ?        00:00:00 nginx: worker process</span><br><span class="line">0 S root      11533   9878  0  80   0 - 28182 pipe_w 21:10 pts/0    00:00:00 grep --color=auto nginx</span><br></pre></td></tr></table></figure>
+
+<h2 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h2><p>和 docker 的操作类似，但必须要指定 –exec-id ，这个 id 可以随便写，只要唯一就行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 task exec --exec-id 0 -t mynginx bash</span><br></pre></td></tr></table></figure>
+
+<h2 id="杀死容器"><a href="#杀死容器" class="headerlink" title="杀死容器"></a>杀死容器</h2><p>ctr 没有 stop 容器的功能，只能暂停或者杀死容器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# ctr -n mytest1 task kill mynginx</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="nerdctl使用"><a href="#nerdctl使用" class="headerlink" title="nerdctl使用"></a>nerdctl使用</h1><p>可以看到原生的ctr工具对用户不是很友好，如果是用惯docker命令再用这个体会的更加明显，好在containerd也发现了这个问题，后面出来了<a target="_blank" rel="noopener" href="https://hub.fastgit.org/containerd/nerdctl">nerdctl</a>工具。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc2 ~]# mkdir nerdctl &amp;&amp; tar xvf nerdctl-0.15.0-linux-amd64.tar.gz -C nerdctl</span><br><span class="line">nerdctl</span><br><span class="line">containerd-rootless-setuptool.sh</span><br><span class="line">containerd-rootless.sh</span><br><span class="line">[root@slions_pc2 ~]# cp -rp nerdctl/* /usr/local/bin/</span><br><span class="line">[root@slions_pc2 ~]# nerdctl ps --namespace  mytest1</span><br><span class="line">CONTAINER ID    IMAGE                             COMMAND                   CREATED              STATUS    PORTS    NAMES</span><br><span class="line">mynginx         docker.io/library/nginx:latest    &quot;/docker-entrypoint.…&quot;    About an hour ago    Up</span><br><span class="line">[root@slions_pc2 ~]# nerdctl images --namespace  mytest1</span><br><span class="line">REPOSITORY    TAG       IMAGE ID        CREATED        PLATFORM       SIZE</span><br><span class="line">nginx         latest    9522864dd661    2 hours ago    linux/amd64    146.2 MiB</span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" title= "K8S Runtime CRI OCI contained dockershim（转载）">
+                    <div class="prevTitle">K8S Runtime CRI OCI contained dockershim（转载）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1639552732000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#containerd"><span class="toc-number">1.</span> <span class="toc-text">containerd</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Containerd-%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">Containerd 的架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRI%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94%E5%9B%BE"><span class="toc-number">1.2.</span> <span class="toc-text">CRI性能对比图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#containerd%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">containerd安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E4%B8%8E%E8%A7%A3%E5%8E%8B%E8%B5%84%E6%BA%90%E5%8C%85"><span class="toc-number">2.2.</span> <span class="toc-text">下载与解压资源包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.3.</span> <span class="toc-text">生成配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E9%85%8D%E7%BD%AE"><span class="toc-number">2.3.1.</span> <span class="toc-text">存储配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93"><span class="toc-number">2.3.2.</span> <span class="toc-text">私有仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OOM"><span class="toc-number">2.3.3.</span> <span class="toc-text">OOM</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Systemd-%E9%85%8D%E7%BD%AE"><span class="toc-number">2.4.</span> <span class="toc-text">Systemd 配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ctr-%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">ctr 使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="toc-number">3.1.</span> <span class="toc-text">命名空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%9C%E5%83%8F"><span class="toc-number">3.2.</span> <span class="toc-text">镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E4%B8%8B%E8%BD%BD"><span class="toc-number">3.2.1.</span> <span class="toc-text">镜像下载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8"><span class="toc-number">3.3.</span> <span class="toc-text">容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8"><span class="toc-number">3.3.1.</span> <span class="toc-text">创建容器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1"><span class="toc-number">3.4.</span> <span class="toc-text">任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8"><span class="toc-number">3.5.</span> <span class="toc-text">进入容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%80%E6%AD%BB%E5%AE%B9%E5%99%A8"><span class="toc-number">3.6.</span> <span class="toc-text">杀死容器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nerdctl%E4%BD%BF%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">nerdctl使用</span></a></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 61
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2021/12/15/CRI%E4%B9%8Bcontainerd/" >CRI之containerd</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href= "/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >K8S Runtime CRI OCI contained dockershim（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89Jinja2%E6%A8%A1%E6%9D%BF/" >（十一）Jinja2模板</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%EF%BC%89ansible%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" >（十）ansible异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >（八）ansible变量</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >（六）限制执行任务主机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >harbor对接F5的鉴权失败问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" >保留特殊字符</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href= "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >普通用户安装mysql</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >k8s-apiserver原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm证书过期时间</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >我是一个线程（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" >git原理及常用命令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >如何优雅的编写dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >镜像构建之dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >expect使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >（五）ansible常用模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >（四）剧本文件playbook</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >（三）主机清单inventory</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >实现科学上网</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >hexo特殊符号的转义问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >（二）ansible初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >（一）ansible入门</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >heketi启动失败问题排查</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >gluster排故纪实</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >修改centos7主机名</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >linux误删文件恢复思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href= "/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/" >逻辑卷管理LVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href= "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >Virtualbox虚机使用介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href= "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >df与du结果不一致问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >磁盘分区工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >ceph mimic对接k8s 1.17.0(ceph-csi)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >创建开机自启程序（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >创建开机自启程序（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" >alias与rm的最佳实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >linux用户与组管理（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >linux用户与组管理（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >harbor集群系统负载升高原因分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="虚拟机相关"><span class="iconfont-archer">&#xe606;</span>虚拟机相关</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+        <span class="sidebar-tag-name" data-tags="harbor"><span class="iconfont-archer">&#xe606;</span>harbor</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="ceph"><span class="iconfont-archer">&#xe606;</span>ceph</span>
+    
+        <span class="sidebar-tag-name" data-tags="Distributed protocol"><span class="iconfont-archer">&#xe606;</span>Distributed protocol</span>
+    
+        <span class="sidebar-tag-name" data-tags="ansible"><span class="iconfont-archer">&#xe606;</span>ansible</span>
+    
+        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+    
+        <span class="sidebar-tag-name" data-tags="shadowsocks"><span class="iconfont-archer">&#xe606;</span>shadowsocks</span>
+    
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes核心组件"><span class="iconfont-archer">&#xe606;</span>kubernetes核心组件</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes"><span class="iconfont-archer">&#xe606;</span>kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mysql"><span class="iconfont-archer">&#xe606;</span>Mysql</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="存储类"><span class="iconfont-archer">&#xe60a;</span>存储类</span>
+    
+        <span class="sidebar-category-name" data-categories="linux系统"><span class="iconfont-archer">&#xe60a;</span>linux系统</span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟机"><span class="iconfont-archer">&#xe60a;</span>虚拟机</span>
+    
+        <span class="sidebar-category-name" data-categories="k8s存储"><span class="iconfont-archer">&#xe60a;</span>k8s存储</span>
+    
+        <span class="sidebar-category-name" data-categories="镜像仓库"><span class="iconfont-archer">&#xe60a;</span>镜像仓库</span>
+    
+        <span class="sidebar-category-name" data-categories="监控"><span class="iconfont-archer">&#xe60a;</span>监控</span>
+    
+        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
+    
+        <span class="sidebar-category-name" data-categories="hello-world"><span class="iconfont-archer">&#xe60a;</span>hello-world</span>
+    
+        <span class="sidebar-category-name" data-categories="分布式一致性协议"><span class="iconfont-archer">&#xe60a;</span>分布式一致性协议</span>
+    
+        <span class="sidebar-category-name" data-categories="ansible回炉"><span class="iconfont-archer">&#xe60a;</span>ansible回炉</span>
+    
+        <span class="sidebar-category-name" data-categories="hexo使用"><span class="iconfont-archer">&#xe60a;</span>hexo使用</span>
+    
+        <span class="sidebar-category-name" data-categories="科学上网"><span class="iconfont-archer">&#xe60a;</span>科学上网</span>
+    
+        <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
+    
+        <span class="sidebar-category-name" data-categories="好文推荐"><span class="iconfont-archer">&#xe60a;</span>好文推荐</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes笔记"><span class="iconfont-archer">&#xe60a;</span>kubernetes笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes"><span class="iconfont-archer">&#xe60a;</span>kubernetes</span>
+    
+        <span class="sidebar-category-name" data-categories="Mysql"><span class="iconfont-archer">&#xe60a;</span>Mysql</span>
+    
+        <span class="sidebar-category-name" data-categories="云原生"><span class="iconfont-archer">&#xe60a;</span>云原生</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
