@@ -20,31 +20,17 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="问题现象接到客户反馈，说是创建不了新的服务了，查看相关的Event日志，发现此服务拉取不了images，后台查看harbor节点的状态，发现问题，harbor集群的VIP丢失，并且在主机上执行命令都比较卡，top查看平均负载发现非常高。  问题分析首先我们需要排查什么原因导致harbor节点这个卡顿，负载一直升高。  平均负载是指单位时间内，系统处于可运行状态和不可中断状态的平均进程数，也就是平均">
-<meta property="og:type" content="article">
-<meta property="og:title" content="harbor集群系统负载升高原因分析">
-<meta property="og:url" content="https://slions.github.io/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://slions.github.io/tags/logging/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="问题现象接到客户反馈，说是创建不了新的服务了，查看相关的Event日志，发现此服务拉取不了images，后台查看harbor节点的状态，发现问题，harbor集群的VIP丢失，并且在主机上执行命令都比较卡，top查看平均负载发现非常高。  问题分析首先我们需要排查什么原因导致harbor节点这个卡顿，负载一直升高。  平均负载是指单位时间内，系统处于可运行状态和不可中断状态的平均进程数，也就是平均">
 <meta property="og:locale">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-1.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-2.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-3.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-4.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-5.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-6.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-7.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/harbor-8.png">
-<meta property="article:published_time" content="2021-07-19T10:07:15.000Z">
-<meta property="article:modified_time" content="2021-08-12T11:51:04.060Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="harbor">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://slions.github.io/doc_picture/harbor-1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>harbor集群系统负载升高原因分析 · S_lion&#39;s Studio</title>
+    <title>S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -228,8 +214,6 @@
 </head>
 
     
-        <body class="post-body">
-    
     
 <header class="header">
 
@@ -252,17 +236,6 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
-    
-    
-    <div class="banner">
-    
-        <div class="blog-title header-element">
-            <a href="/" >S_lion&#39;s Studio</a>
-        </div>
-        <div class="post-title header-element">
-            <a href="#" class="post-name">harbor集群系统负载升高原因分析</a>
-        </div>
-    </div>
     
 </header>
     
@@ -287,74 +260,24 @@
 
 
 
-
-height:50vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-            harbor集群系统负载升高原因分析
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
-    
-</div>
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">818</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/07/19</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -455,104 +378,44 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>接到客户反馈，说是创建不了新的服务了，查看相关的Event日志，发现此服务拉取不了images，后台查看harbor节点的状态，发现问题，harbor集群的VIP丢失，并且在主机上执行命令都比较卡，top查看平均负载发现非常高。</p>
-<p><img src="/doc_picture/harbor-1.png" alt="image-20210719181131471"></p>
-<h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>首先我们需要排查什么原因导致harbor节点这个卡顿，负载一直升高。</p>
-<blockquote>
-<p>平均负载是指单位时间内，系统处于可运行状态和不可中断状态的平均进程数，也就是平均活跃进程数。所以，它不仅包括了正在使用CPU的进程，还包括等待CPU和等待I/O的进程。</p>
-</blockquote>
-<p>系统平均负载升高的原因主要有三种：</p>
-<ul>
-<li>CPU密集型进程，使用大量CPU会导致平均负载升高，此时CPU使用率跟平均负载是一致的；</li>
-<li>I/O密集型进程，等待I/O也会导致平均负载升高，但CPU使用率不一定很高；</li>
-<li>大量等待CPU的进程调度也会导致平均负载升高，此时CPU使用率也会比较高。</li>
-</ul>
-<p>首先sar -u 观察CPU情况。</p>
-<p><img src="/doc_picture/harbor-2.png" alt="image-20210719182405728"></p>
-<p>cpu使用率非常低，大部分为idle，说明没有进程在等待cpu资源。</p>
-<p>sar -b 观察IO情况 IO设备的读写tps都几乎为0。</p>
-<p><img src="/doc_picture/harbor-3.png" alt="image-20210719182429006"></p>
-<p>发现并不存在CPU/IO密集型的进程后，执行了下df操作，发现命令hang死，另外开一个终端，通过strace去分析df命令的系统调用及信号情况，可以明显发现df是在系统调用尝试获取目录/harborimages的stat信息时挂起。</p>
-<p><img src="/doc_picture/harbor-4.png" alt="image-20210719182846933"></p>
-<p>通过ps aux抓取系统运行的df进程信息（状态为D+(无法中断的休眠状态)）：</p>
-<p><img src="/doc_picture/harbor-5.png" alt="image-20210719182903747"></p>
-<p>通过ps aux查看内存和cpu占用最多的5个进程发现了问题，没有cpu占用特别大的进程，但是有一个状态为Dl的进程（无法中断的休眠状态/多线程，克隆线程）</p>
-<p><img src="/doc_picture/harbor-6.png" alt="image-20210719182922163"></p>
-<p>我们再查看下此进程的线程状态：</p>
-<p><img src="/doc_picture/harbor-7.png" alt="image-20210719182944057"></p>
-<p>发现有一堆不可中断的线程，而且越来越多，cpu使用率都为0，此时可以定位问题了，有大量进程读写请求一直获取不到资源，从而进程一直是不可中断状态。造成负载很高。平均负载升高导致机器性能降低，内部的keepalived服务心跳机制超时，最后使得VIP丢失。</p>
-<p><img src="/doc_picture/harbor-8.png" alt="image-20210719184236890"></p>
-<p>registry是harbor中负责存储镜像文件的组件，同时负责处理镜像的pull/push命令。此服务会将宿主机的/harborimages作为挂载目录，为了保障可用性我们后端使用了客户现成的nas来挂载到了/harborimages目录，之前执行df hang住的地方正是这个目录。 又在本地创了个测试目录，使用之前的nas地址挂载发现异常。此时回想起来，前一天客户发通知说要进行xxx区机器网络进行调整，大概率是由于这个引起了。联系客户方运维协助排查，最后发现nas服务器因为重启过导致防火墙开启了。</p>
+            <main class="main index-page">
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/12/18/%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B9%8BFilebeat/" >
+            
+                <span>日志系统之Filebeat</span>
+        </a>
+        <div class="abstract-content">
+            日志系统架构上可分为收集、纳管、展示三个层级，业界常说的ELK架构是指elasticsearch（纳管）、Logstash（收集）、Kibana（展示）的日志系统解决方案，但是logstash对内存、CPU、io等资源消耗比较高，与同类产品Beats比，性能有较大的开销。
+Beats是一个轻量级日志采集器，目前Beats家族有7个成员：
 
+Packetbeat：网络数据（收集网络流量数据）
+...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "logging">logging</a>
+    
+</div>
+            
+        </div>
     </article>
-    <!-- license  -->
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" title= "linux用户与组管理（上篇）">
-                    <div class="nextTitle">linux用户与组管理（上篇）</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" title= "glusterfs可用性测试">
-                    <div class="prevTitle">glusterfs可用性测试</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-<!-- City版安装代码已完成 -->
-    
-    
-    
-    <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
-    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
-    <script>
-        let idOption = '1626689235000'
-        
-        idOption = location.pathname
-        
-        const gitalk = new Gitalk({
-            clientID: '408256f64d15631774e7',
-            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
-            repo: 'Slions_blog_comment',
-            owner: 'Slions',
-            admin: "Slions",
-            id: md5(idOption),
-            distractionFreeMode: false,
-            createIssueManually: true,
-        })
-        console.log(gitalk)
-        gitalk.render('gitalk-container')
-    </script>
-    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
- 
-    <!-- utteranc评论 -->
-
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
-
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
-
             <!-- profile -->
             
         </div>
@@ -642,24 +505,6 @@ height:50vh;
 </footer>
     </div>
     <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%8E%B0%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">问题现象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li></ol>
-    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -2078,8 +1923,6 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
