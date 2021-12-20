@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/filebear1.png">
 <meta property="og:image" content="https://slions.gitee.io/picbed/img/filebeat2.png">
 <meta property="article:published_time" content="2021-12-18T08:36:46.000Z">
-<meta property="article:modified_time" content="2021-12-20T03:33:55.947Z">
+<meta property="article:modified_time" content="2021-12-20T06:27:52.960Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="logging">
 <meta name="twitter:card" content="summary">
@@ -322,7 +322,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">5.8k</span>阅读时长: <span class="post-count reading-time">26 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">6k</span>阅读时长: <span class="post-count reading-time">27 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -561,9 +561,19 @@ height:50vh;
 <h2 id="查看filebeat文件"><a href="#查看filebeat文件" class="headerlink" title="查看filebeat文件"></a>查看filebeat文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@test1 nginx]# cat /tmp/filebeat/slions_nginx_fb</span><br><span class="line">&#123;&quot;@timestamp&quot;:&quot;2021-12-20T03:11:08.772Z&quot;,&quot;@metadata&quot;:&#123;&quot;beat&quot;:&quot;filebeat&quot;,&quot;type&quot;:&quot;doc&quot;,&quot;version&quot;:&quot;6.8.8&quot;&#125;,&quot;offset&quot;:0,&quot;input&quot;:&#123;&quot;type&quot;:&quot;log&quot;&#125;,&quot;host&quot;:&#123;&quot;name&quot;:&quot;test1&quot;&#125;,&quot;message&quot;:&quot;[192.168.100.10] - 我的老家就住在这个屯&quot;,&quot;source&quot;:&quot;/var/log/nginx/access.log&quot;,&quot;log&quot;:&#123;&quot;file&quot;:&#123;&quot;path&quot;:&quot;/var/log/nginx/access.log&quot;&#125;&#125;,&quot;prospector&quot;:&#123;&quot;type&quot;:&quot;log&quot;&#125;,&quot;fields&quot;:&#123;&quot;log_se&quot;:&quot;slions&quot;&#125;,&quot;beat&quot;:&#123;&quot;name&quot;:&quot;test1&quot;,&quot;hostname&quot;:&quot;test1&quot;,&quot;version&quot;:&quot;6.8.8&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;@timestamp&quot;:&quot;2021-12-20T03:11:08.773Z&quot;,&quot;@metadata&quot;:&#123;&quot;beat&quot;:&quot;filebeat&quot;,&quot;type&quot;:&quot;doc&quot;,&quot;version&quot;:&quot;6.8.8&quot;&#125;,&quot;source&quot;:&quot;/var/log/nginx/access.log&quot;,&quot;input&quot;:&#123;&quot;type&quot;:&quot;log&quot;&#125;,&quot;fields&quot;:&#123;&quot;log_se&quot;:&quot;slions&quot;&#125;,&quot;beat&quot;:&#123;&quot;name&quot;:&quot;test1&quot;,&quot;hostname&quot;:&quot;test1&quot;,&quot;version&quot;:&quot;6.8.8&quot;&#125;,&quot;message&quot;:&quot;[192.168.100.10] - 我是这个屯里土生土长的人&quot;,&quot;offset&quot;:50,&quot;log&quot;:&#123;&quot;file&quot;:&#123;&quot;path&quot;:&quot;/var/log/nginx/access.log&quot;&#125;&#125;,&quot;prospector&quot;:&#123;&quot;type&quot;:&quot;log&quot;&#125;,&quot;host&quot;:&#123;&quot;name&quot;:&quot;test1&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>收集到的文件内容放置在了message中。</p>
-<h2 id="查看注册表文件"><a href="#查看注册表文件" class="headerlink" title="查看注册表文件"></a>查看注册表文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@test1 nginx]# cat /var/lib/filebeat/registry</span><br><span class="line">[&#123;&quot;source&quot;:&quot;/var/log/nginx/access.log&quot;,&quot;offset&quot;:106,&quot;timestamp&quot;:&quot;2021-12-20T11:12:13.778841289+08:00&quot;,&quot;ttl&quot;:172800000000000,&quot;type&quot;:&quot;log&quot;,&quot;meta&quot;:null,&quot;FileStateOS&quot;:&#123;&quot;inode&quot;:72139638,&quot;device&quot;:64768&#125;&#125;]</span><br></pre></td></tr></table></figure>
+<h2 id="查看注册表文件"><a href="#查看注册表文件" class="headerlink" title="查看注册表文件"></a>查看注册表文件</h2><p>从之前的filebeat日志中可知注册表文件为<code>/var/lib/filebeat/registry</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2021-12-20T11:11:08.769+0800    INFO    registrar/registrar.go:97       No registry file found under: /var/lib/filebeat/registry. Creating a new registry file.</span><br><span class="line">2021-12-20T11:11:08.772+0800    INFO    registrar/registrar.go:134      Loading registrar data from /var/lib/filebeat/registry</span><br></pre></td></tr></table></figure>
 
-<p>每收集到一个文件都会将相关信息记录到注册表中，其中通过inode定位文件，通过offset识别位置，通过timestamp更新时间。</p>
+<blockquote>
+<p>默认的路径是 <code>$&#123;path.data&#125;/registry</code>，可编辑配置文件中 <code>filebeat.registry_file: registry</code>对其修改。</p>
+</blockquote>
+<blockquote>
+<p>配置<code>registry_flush </code>来控制何时将注册表项写入磁盘(刷新)的超时值。当一个未写的更新超过这个值时，当一个未写的更新超过这个值时，它会触发对磁盘的写操作。默认是0,既每批事件成功发布后，注册表将被写入磁盘。</p>
+</blockquote>
+<p>每收集到一个文件都会将相关信息记录到注册表中，其中通过inode定位文件，通过offset识别位置，通过timestamp记录时间戳。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@test1 nginx]# cat /var/lib/filebeat/registry</span><br><span class="line">[&#123;&quot;source&quot;:&quot;/var/log/nginx/access.log&quot;,&quot;offset&quot;:106,&quot;timestamp&quot;:&quot;2021-12-20T11:12:13.778841289+08:00&quot;,&quot;ttl&quot;:172800000000000,&quot;type&quot;:&quot;log&quot;,&quot;meta&quot;:null,&quot;FileStateOS&quot;:&#123;&quot;inode&quot;:72139638,&quot;device&quot;:64768&#125;&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>注册表文件仅在刷新新事件时更新，而不是在预定义的时间段内更新。这意味着，在TTL过期的情况下，只有在处理新事件时，这些状态才会被删除。</p>
 <h1 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h1><p>默认情况下，Filebeat将其所有输出发送到syslog。在前台运行Filebeat时，使用-e命令行标志将输出重定向到标准错误。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filebeat -e</span><br></pre></td></tr></table></figure>
 
