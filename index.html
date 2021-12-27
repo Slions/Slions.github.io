@@ -404,11 +404,10 @@ height:57vh;
                 <span>日志系统之Filebeat</span>
         </a>
         <div class="abstract-content">
-            日志系统架构上可分为收集、纳管、展示三个层级，业界常说的ELK架构是指elasticsearch（纳管）、Logstash（收集）、Kibana（展示）的日志系统解决方案，但是logstash对内存、CPU、io等资源消耗比较高，与同类产品Beats比，性能有较大的开销。
+            日志系统架构上可分为收集、纳管、展示三个层级，业界常说的ELK架构是指elasticsearch（搜索、存储）、Logstash（采集、清洗）、Kibana（展示）的日志系统解决方案。在日志采集方面，logstash对内存、CPU、io等资源消耗比较高，与同类产品Beats比，性能有较大的开销。
 Beats是一个轻量级日志采集器，目前Beats家族有7个成员：
 
-Packetbeat：网络数据（收集网络流量数据）
-...
+Packetbeat：网络数...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
