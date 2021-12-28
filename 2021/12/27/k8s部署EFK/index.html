@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="EFK架构分别代表Elasticsearch、Filebeat、Kibana。 下面所验证的是通过filebeat来收集pods的控制台日志，通过es来检索存储收集到的日志，通过kibana来进行图形化的展示。  环境描述   主机名 ip地址 系统环境 系统版本 内核版本    slions-pc1 192.168.100.10 cpu:x4  mem:8GB  filesystem:40GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s部署EFK">
+<meta property="og:url" content="https://slions.github.io/2021/12/27/k8s%E9%83%A8%E7%BD%B2EFK/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="EFK架构分别代表Elasticsearch、Filebeat、Kibana。 下面所验证的是通过filebeat来收集pods的控制台日志，通过es来检索存储收集到的日志，通过kibana来进行图形化的展示。  环境描述   主机名 ip地址 系统环境 系统版本 内核版本    slions-pc1 192.168.100.10 cpu:x4  mem:8GB  filesystem:40GB">
+<meta property="og:locale">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/elk02.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/elk01.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/elk03.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/elk04.png">
+<meta property="article:published_time" content="2021-12-27T07:12:53.000Z">
+<meta property="article:modified_time" content="2021-12-28T06:27:51.667Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="logging">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/elk02.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>k8s部署EFK · S_lion&#39;s Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/1.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">k8s部署EFK</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            k8s部署EFK
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "logging">logging</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/27</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>EFK架构分别代表Elasticsearch、Filebeat、Kibana。</p>
+<p>下面所验证的是通过filebeat来收集pods的控制台日志，通过es来检索存储收集到的日志，通过kibana来进行图形化的展示。</p>
+</blockquote>
+<h1 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h1><table>
+<thead>
+<tr>
+<th><strong>主机名</strong></th>
+<th>ip地址</th>
+<th><strong>系统环境</strong></th>
+<th>系统版本</th>
+<th>内核版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>slions-pc1</td>
+<td>192.168.100.10</td>
+<td>cpu:x4  mem:8GB  filesystem:40GB</td>
+<td>CentOS  7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+</tr>
+</tbody></table>
+<p><code>kubernetes version</code>: <code>1.19.0</code></p>
+<p><code>filebeat</code>: <code>6.8.8</code></p>
+<p><code>elasticsearch</code>: <code>6.8.8</code></p>
+<p><code>kibana</code>: <code>6.8.8</code></p>
+<h1 id="安装EFK"><a href="#安装EFK" class="headerlink" title="安装EFK"></a>安装EFK</h1><p>将efk部署在一个单独的namespaces中，提前创建：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@slions-pc1 ~]# kubectl create namespace agree-logging</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署elasticsearch"><a href="#部署elasticsearch" class="headerlink" title="部署elasticsearch"></a>部署elasticsearch</h2><ol>
+<li>部署前，需要调整es节点”限制一个进程可以拥有的VMA(虚拟内存区域)的数量”，以下通过初始化容器来进行环境设置。</li>
+<li>此次部署就一个节点，要将此es节点赋予master、node、ingest的角色。</li>
+<li>es实际存储路径为hostpath设置的<code>/es-data</code></li>
+</ol>
+<h3 id="configmap"><a href="#configmap" class="headerlink" title="configmap"></a>configmap</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions-pc1</span> <span class="string">es-statefulset</span>]<span class="comment"># cat es-statefulset-cm.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">cluster.name:</span> <span class="string">&quot;elasticsearch-cluster&quot;</span></span><br><span class="line">  <span class="attr">node.name:</span> <span class="string">&quot;$&#123;HOSTNAME&#125;&quot;</span></span><br><span class="line">  <span class="attr">bootstrap.memory_lock:</span> <span class="string">&quot;false&quot;</span></span><br><span class="line">  <span class="attr">discovery.zen.ping.unicast.hosts:</span> <span class="string">&quot;elasticsearch-discovery&quot;</span></span><br><span class="line">  <span class="attr">discovery.zen.minimum_master_nodes:</span> <span class="string">&quot;1&quot;</span></span><br><span class="line">  <span class="attr">discovery.zen.ping_timeout:</span> <span class="string">&quot;5s&quot;</span></span><br><span class="line">  <span class="attr">node.master:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">  <span class="attr">node.data:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">  <span class="attr">node.ingest:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">  <span class="attr">ES_JAVA_OPTS:</span> <span class="string">&quot;-Xms1000m -Xmx1000m&quot;</span></span><br><span class="line">  <span class="attr">TZ:</span> <span class="string">&quot;Asia/Shanghai&quot;</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">es-statefulsets-configmaps</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">agree-logging</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="rbac"><a href="#rbac" class="headerlink" title="rbac"></a>rbac</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions-pc1</span> <span class="string">acaas</span>]<span class="comment"># cat es-rbac.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">    <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">addonmanager.kubernetes.io/mode:</span> <span class="string">Reconcile</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">    <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">addonmanager.kubernetes.io/mode:</span> <span class="string">Reconcile</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiGroups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;services&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;namespaces&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;endpoints&quot;</span></span><br><span class="line">  <span class="attr">verbs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;get&quot;</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">    <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">addonmanager.kubernetes.io/mode:</span> <span class="string">Reconcile</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="statefulset"><a href="#statefulset" class="headerlink" title="statefulset"></a>statefulset</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions-pc1</span> <span class="string">es-statefulset</span>]<span class="comment"># cat es-statefulset.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">    <span class="attr">version:</span> <span class="number">6.8</span><span class="number">.8</span></span><br><span class="line">    <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">addonmanager.kubernetes.io/mode:</span> <span class="string">Reconcile</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">serviceName:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">        <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">priorityClassName:</span> <span class="string">system-cluster-critical</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">acaas-registry.agree:9980/library/elasticsearch:6.8.8</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">9200</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">db</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">9300</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">transport</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">         <span class="attr">requests:</span></span><br><span class="line">           <span class="attr">memory:</span> <span class="string">2000Mi</span></span><br><span class="line">         <span class="attr">limits:</span></span><br><span class="line">           <span class="attr">memory:</span> <span class="string">2000Mi</span></span><br><span class="line">        <span class="attr">envFrom:</span></span><br><span class="line">           <span class="bullet">-</span> <span class="attr">configMapRef:</span></span><br><span class="line">                <span class="attr">name:</span> <span class="string">es-statefulsets-configmaps</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">agree-logging</span></span><br><span class="line">            <span class="attr">valueFrom:</span></span><br><span class="line">              <span class="attr">fieldRef:</span></span><br><span class="line">                <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="attr">livenessProbe:</span></span><br><span class="line">          <span class="attr">failureThreshold:</span> <span class="number">3</span></span><br><span class="line">          <span class="attr">httpGet:</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">/_cluster/health</span></span><br><span class="line">            <span class="attr">port:</span> <span class="number">9200</span></span><br><span class="line">            <span class="attr">scheme:</span> <span class="string">HTTP</span></span><br><span class="line">          <span class="attr">initialDelaySeconds:</span> <span class="number">180</span></span><br><span class="line">          <span class="attr">periodSeconds:</span> <span class="number">30</span></span><br><span class="line">          <span class="attr">successThreshold:</span> <span class="number">1</span></span><br><span class="line">          <span class="attr">timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/usr/share/elasticsearch/data</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">      <span class="attr">initContainers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">acaas-registry.agree:9980/library/alpine:3.6</span></span><br><span class="line">        <span class="attr">command:</span> [<span class="string">&quot;/sbin/sysctl&quot;</span>, <span class="string">&quot;-w&quot;</span>, <span class="string">&quot;vm.max_map_count=262144&quot;</span>]</span><br><span class="line">        <span class="attr">name:</span> <span class="string">elasticsearch-logging-init</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">hostPath:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/es-data</span>                        <span class="comment"># 日志存储路径</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="service"><a href="#service" class="headerlink" title="service"></a>service</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions-pc1</span> <span class="string">acaas</span>]<span class="comment"># cat es-svc.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">    <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">addonmanager.kubernetes.io/mode:</span> <span class="string">Reconcile</span></span><br><span class="line">    <span class="attr">kubernetes.io/name:</span> <span class="string">&quot;Elasticsearch&quot;</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">9200</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">nodePort:</span> <span class="number">30007</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">elasticsearch-discovery</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">acaas-logcenter</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">    <span class="attr">kubernetes.io/cluster-service:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">addonmanager.kubernetes.io/mode:</span> <span class="string">Reconcile</span></span><br><span class="line">    <span class="attr">kubernetes.io/name:</span> <span class="string">&quot;Elasticsearch&quot;</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">9300</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="string">transport</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">elasticsearch-logging</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部署filebeat"><a href="#部署filebeat" class="headerlink" title="部署filebeat"></a>部署filebeat</h2><p>创建一个mynginx示例服务，查看其/var/log/containers/下的日志即为其控制台日志（标准输出），可以看到其是<code>/var/log/pods/$&lt;pod_name&gt;/xxx.log</code>下的软连接。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@slions-pc1 ~]# kubectl get pods</span><br><span class="line">NAME                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">mynginx-5bb654c97-ng8jn   1/1     Running   0          13s</span><br><span class="line">[root@slions-pc1 ~]# ll /var/log/containers/mynginx-5bb654c97-ng8jn_default_nginx-949db3d8631e6de802f0fd70c2ee8af52ebdae827c30bbc0e0f9ecef89e57ae6.log</span><br><span class="line">lrwxrwxrwx 1 root root 94 12月 28 11:39 /var/log/containers/mynginx-5bb654c97-ng8jn_default_nginx-949db3d8631e6de802f0fd70c2ee8af52ebdae827c30bbc0e0f9ecef89e57ae6.log -&gt; /var/log/pods/default_mynginx-5bb654c97-ng8jn_14e795c4-66e3-4195-b550-72b50f84d364/nginx/0.log</span><br></pre></td></tr></table></figure>
+
+<p>可以看到<code>/var/log/pods/$&lt;pod_name&gt;/xxx.log</code>也是软连接。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions-pc1 ~]# ll /var/log/pods/default_mynginx-5bb654c97-ng8jn_14e795c4-66e3-4195-b550-72b50f84d364/nginx/0.log</span><br><span class="line">lrwxrwxrwx 1 root root 157 12月 28 11:39 /var/log/pods/default_mynginx-5bb654c97-ng8jn_14e795c4-66e3-4195-b550-72b50f84d364/nginx/0.log -&gt; /export/containers/949db3d8631e6de802f0fd70c2ee8af52ebdae827c30bbc0e0f9ecef89e57ae6/949db3d8631e6de802f0fd70c2ee8af52ebdae827c30bbc0e0f9ecef89e57ae6-json.log</span><br></pre></td></tr></table></figure>
+
+<p>Docker默认的日志驱动（LogDriver）是<code>json-driver</code>，其会将日志以JSON文件的方式存储。所有容器输出到控制台的日志，都会以<code>*-json.log</code>的命名方式保存在<code>/$&#123;Docker Root Dir&#125;/containers/</code>目录下。</p>
+<p>知道了pod控制台日志的路径后可完成filebeat配置。</p>
+<h3 id="configmap-1"><a href="#configmap-1" class="headerlink" title="configmap"></a>configmap</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat-config</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">filebeat</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">filebeat.yml:</span> <span class="string">|-</span></span><br><span class="line"><span class="string">    filebeat.inputs:</span></span><br><span class="line"><span class="string">    - type: log</span></span><br><span class="line"><span class="string">      paths:</span></span><br><span class="line"><span class="string">        - /var/lib/docker/containers/*/*.log*</span></span><br><span class="line"><span class="string">      enable: true</span></span><br><span class="line"><span class="string">      scan_frequency: 3s                  # 检测新文件频率</span></span><br><span class="line"><span class="string">      close_inactive: 1m                  # 在指定时间没有被读取，将关闭文件句柄</span></span><br><span class="line"><span class="string">      close_timeout: 1h                   # harvester设置预定义关闭时间</span></span><br><span class="line"><span class="string">      clean_inactive: 48h                 # 从注册表文件中删除先前收获的文件的状态</span></span><br><span class="line"><span class="string">      ignore_older: 46h                   # 忽略超过设置值未更新的文件或者文件从来没有被harvester收集</span></span><br><span class="line"><span class="string">      max_bytes: 1000000                  # 单个日志消息可以拥有的最大字节数</span></span><br><span class="line"><span class="string">    tags: [&quot;acaas&quot;,&quot;testlog&quot;]             # 列表中添加标签，用于过滤</span></span><br><span class="line"><span class="string">    fields:                               # 新增字段</span></span><br><span class="line"><span class="string">      log_type: sjydemo111</span></span><br><span class="line"><span class="string">    fields_under_root: true               # fields存储在输出文档的顶级位置</span></span><br><span class="line"><span class="string">    processors:                           # 将数据发送到配置的输出之前，可以使用处理器来过滤和增强数据。</span></span><br><span class="line"><span class="string">      - add_kubernetes_metadata:             # 添加kubernetes元数据</span></span><br><span class="line"><span class="string">          in_cluster: true                   # 作为pods运行时需设置为true</span></span><br><span class="line"><span class="string">    setup.template.overwrite: true           # 是否覆盖默认模板</span></span><br><span class="line"><span class="string">    setup.template.enabled: true             # 是否开启自定义模板</span></span><br><span class="line"><span class="string">    output.elasticsearch.index: &quot;fb-slions-%&#123;+yyyy.MM.dd&#125;&quot;       # 要输出的es index名称</span></span><br><span class="line"><span class="string">    setup.template.pattern: &quot;fb-slions*&quot;       # 模板适配的索引</span></span><br><span class="line"><span class="string">    setup.template.name: &quot;fb-slions&quot;           # 模板名称</span></span><br><span class="line"><span class="string">    setup.template.settings:                   # index级别的设置</span></span><br><span class="line"><span class="string">      index:</span></span><br><span class="line"><span class="string">         number_of_shards: 1</span></span><br><span class="line"><span class="string">         number_of_replicas: 0</span></span><br><span class="line"><span class="string">    queue.mem.events: 2000                     # 写入的缓存队列的大小</span></span><br><span class="line"><span class="string">    queue.mem.flush.min_events: 1000           # 写入缓存的最小队列大小</span></span><br><span class="line"><span class="string">    logging.level: info                        # 日志级别</span></span><br><span class="line"><span class="string">    output.elasticsearch:</span></span><br><span class="line"><span class="string">      hosts: [&#x27;$&#123;ELASTICSEARCH_HOST:elasticsearch-logging&#125;:$&#123;ELASTICSEARCH_PORT:9200&#125;&#x27;]</span></span><br><span class="line"><span class="string">      max_message_bytes: 1000000</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="rbac-1"><a href="#rbac-1" class="headerlink" title="rbac"></a>rbac</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">filebeat</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>] <span class="comment"># &quot;&quot; indicates the core API group</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">namespaces</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pods</span></span><br><span class="line">  <span class="attr">verbs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">get</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">watch</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">list</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">filebeat</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="daemonset"><a href="#daemonset" class="headerlink" title="daemonset"></a>daemonset</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DaemonSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">k8s-app:</span> <span class="string">filebeat</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">k8s-app:</span> <span class="string">filebeat</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">k8s-app:</span> <span class="string">filebeat</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">filebeat</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">filebeat</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">docker.elastic.co/beats/filebeat:6.8.8</span></span><br><span class="line">        <span class="attr">args:</span> [</span><br><span class="line">          <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;/etc/filebeat.yml&quot;</span>,</span><br><span class="line">          <span class="string">&quot;-e&quot;</span>,</span><br><span class="line">        ]</span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ELASTICSEARCH_HOST</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">elasticsearch-logging</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ELASTICSEARCH_PORT</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">&quot;9200&quot;</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">runAsUser:</span> <span class="number">0</span></span><br><span class="line">          <span class="comment"># If using Red Hat OpenShift uncomment this:</span></span><br><span class="line">          <span class="comment">#privileged: true</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">100m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">100Mi</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/etc/filebeat.yml</span>              <span class="comment"># filebeat配置文件</span></span><br><span class="line">          <span class="attr">readOnly:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">subPath:</span> <span class="string">filebeat.yml</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">data</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/usr/share/filebeat/data</span>       <span class="comment"># filebeat注册文件</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">varlibdockercontainers</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/var/lib/docker/containers</span>     <span class="comment"># pod控制台日志存储路径</span></span><br><span class="line">          <span class="attr">readOnly:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config</span></span><br><span class="line">        <span class="attr">configMap:</span></span><br><span class="line">          <span class="attr">defaultMode:</span> <span class="number">0600</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">filebeat-config</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">varlibdockercontainers</span></span><br><span class="line">        <span class="attr">hostPath:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/export/containers</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">data</span></span><br><span class="line">        <span class="attr">hostPath:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/filebeat-data</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">DirectoryOrCreate</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部署kibana"><a href="#部署kibana" class="headerlink" title="部署kibana"></a>部署kibana</h2><h3 id="configmap-2"><a href="#configmap-2" class="headerlink" title="configmap"></a>configmap</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions-pc1</span> <span class="string">kibana</span>]<span class="comment"># cat kibana-cm.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kibana-config</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">kibana</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">kibana.yml:</span> <span class="string">|-</span></span><br><span class="line"><span class="string">    server.host: 0.0.0.0</span></span><br><span class="line"><span class="string">    elasticsearch:</span></span><br><span class="line"><span class="string">      hosts: &quot;http://elasticsearch-logging.agree-logging.svc.cluster.local:9200&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="deployment"><a href="#deployment" class="headerlink" title="deployment"></a>deployment</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[root@slions-pc1 kibana]# cat kibana-dep.yaml</span><br><span class="line">---</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  namespace: agree-logging</span><br><span class="line">  name: kibana</span><br><span class="line">  labels:</span><br><span class="line">    app: kibana</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: kibana</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: kibana</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: kibana</span><br><span class="line">        image: docker.elastic.co/kibana/kibana:6.8.8</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 5601</span><br><span class="line">          name: webinterface</span><br><span class="line">        env:</span><br><span class="line">        - name: ELASTICSEARCH_HOSTS</span><br><span class="line">          value: &quot;http://elasticsearch-logging.agree-logging.svc.cluster.local:9200&quot;</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: config</span><br><span class="line">          mountPath: /usr/share/kibana/config/kibana.yml</span><br><span class="line">          readOnly: true</span><br><span class="line">          subPath: kibana.yml</span><br><span class="line">      volumes:</span><br><span class="line">      - name: config</span><br><span class="line">        configMap:</span><br><span class="line">          name: kibana-config</span><br></pre></td></tr></table></figure>
+
+<h3 id="svc"><a href="#svc" class="headerlink" title="svc"></a>svc</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">root@slions-pc1</span> <span class="string">kibana</span>]<span class="comment"># cat kibana-svc.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">kibana-api</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">agree-logging</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">5601</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">5601</span></span><br><span class="line">    <span class="attr">nodePort:</span> <span class="number">30006</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">kibana</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1><p>访问es地址：<a target="_blank" rel="noopener" href="http://192.168.100.10:30007/">http://192.168.100.10:30007/</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;name&quot;</span> : <span class="string">&quot;masternode&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;cluster_name&quot;</span> : <span class="string">&quot;elasticsearch-cluster&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;cluster_uuid&quot;</span> : <span class="string">&quot;TgyaNTKTTai93ukKjRwqVA&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;version&quot;</span> : &#123;</span><br><span class="line">    <span class="attr">&quot;number&quot;</span> : <span class="string">&quot;6.8.8&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build_flavor&quot;</span> : <span class="string">&quot;default&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build_type&quot;</span> : <span class="string">&quot;docker&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build_hash&quot;</span> : <span class="string">&quot;2f4c224&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build_date&quot;</span> : <span class="string">&quot;2020-03-18T23:22:18.622755Z&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build_snapshot&quot;</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;lucene_version&quot;</span> : <span class="string">&quot;7.7.2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;minimum_wire_compatibility_version&quot;</span> : <span class="string">&quot;5.6.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;minimum_index_compatibility_version&quot;</span> : <span class="string">&quot;5.0.0&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;tagline&quot;</span> : <span class="string">&quot;You Know, for Search&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问es健康接口：<a target="_blank" rel="noopener" href="http://192.168.100.10:30007/_cat/health?v">http://192.168.100.10:30007/_cat/health?v</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">epoch      timestamp cluster               status node.total node.data shards pri relo init unassign pending_tasks max_task_wait_time active_shards_percent</span><br><span class="line">1640671797 06:09:57  elasticsearch-cluster green           1         1     14  14    0    0        0             0                  -                100.0%</span><br></pre></td></tr></table></figure>
+
+<p>访问kibana地址：<a target="_blank" rel="noopener" href="http://192.168.100.10:30006/">http://192.168.100.10:30006/</a></p>
+<p>monitoring中会展示当前es与kibana的状态：</p>
+<p><img src="https://slions.gitee.io/picbed/img/elk02.png"></p>
+<p>management中点击index management查看当前集群中的索引信息：</p>
+<p><img src="https://slions.gitee.io/picbed/img/elk01.png"></p>
+<p>log中能实时查看已收集到的日志，并可根据过滤条件进行查询，因为在filebeat中设置了存储到es的索引模板，这里需要添加<code>Log indices</code>项<code>fb-*</code></p>
+<p><img src="https://slions.gitee.io/picbed/img/elk03.png"></p>
+<p>dev tools中可以通过接口方式来操作es</p>
+<p><img src="https://slions.gitee.io/picbed/img/elk04.png"></p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2021/12/18/%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B9%8BFilebeat/" title= "日志系统之Filebeat">
+                    <div class="prevTitle">日志系统之Filebeat</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1640589173000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85EFK"><span class="toc-number">2.</span> <span class="toc-text">安装EFK</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2elasticsearch"><span class="toc-number">2.1.</span> <span class="toc-text">部署elasticsearch</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#configmap"><span class="toc-number">2.1.1.</span> <span class="toc-text">configmap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rbac"><span class="toc-number">2.1.2.</span> <span class="toc-text">rbac</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#statefulset"><span class="toc-number">2.1.3.</span> <span class="toc-text">statefulset</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#service"><span class="toc-number">2.1.4.</span> <span class="toc-text">service</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2filebeat"><span class="toc-number">2.2.</span> <span class="toc-text">部署filebeat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#configmap-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">configmap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rbac-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">rbac</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#daemonset"><span class="toc-number">2.2.3.</span> <span class="toc-text">daemonset</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2kibana"><span class="toc-number">2.3.</span> <span class="toc-text">部署kibana</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#configmap-2"><span class="toc-number">2.3.1.</span> <span class="toc-text">configmap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#deployment"><span class="toc-number">2.3.2.</span> <span class="toc-text">deployment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#svc"><span class="toc-number">2.3.3.</span> <span class="toc-text">svc</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81"><span class="toc-number">3.</span> <span class="toc-text">验证</span></a></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 64
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/27</span><a class="archive-post-title" href= "/2021/12/27/k8s%E9%83%A8%E7%BD%B2EFK/" >k8s部署EFK</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span><a class="archive-post-title" href= "/2021/12/18/%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B9%8BFilebeat/" >日志系统之Filebeat</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href= "/2021/12/16/k8s%E6%9B%BF%E6%8D%A2%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E4%B8%BAcontainerd/" >k8s替换容器运行时为containerd</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2021/12/15/CRI%E4%B9%8Bcontainerd/" >CRI之containerd</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href= "/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >K8S Runtime CRI OCI contained dockershim（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89Jinja2%E6%A8%A1%E6%9D%BF/" >（十一）Jinja2模板</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%EF%BC%89ansible%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" >（十）ansible异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >（八）ansible变量</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >（六）限制执行任务主机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >harbor对接F5的鉴权失败问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" >保留特殊字符</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href= "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >普通用户安装mysql</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >k8s-apiserver原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm证书过期时间</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >我是一个线程（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" >git原理及常用命令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >如何优雅的编写dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >镜像构建之dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >expect使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >（五）ansible常用模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >（四）剧本文件playbook</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >（三）主机清单inventory</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >实现科学上网</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >hexo特殊符号的转义问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >（二）ansible初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >（一）ansible入门</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >heketi启动失败问题排查</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >gluster排故纪实</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >修改centos7主机名</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >linux误删文件恢复思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href= "/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/" >逻辑卷管理LVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href= "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >Virtualbox虚机使用介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href= "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >df与du结果不一致问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >磁盘分区工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >ceph mimic对接k8s 1.17.0(ceph-csi)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >创建开机自启程序（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >创建开机自启程序（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" >alias与rm的最佳实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >linux用户与组管理（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >linux用户与组管理（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >harbor集群系统负载升高原因分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="虚拟机相关"><span class="iconfont-archer">&#xe606;</span>虚拟机相关</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+        <span class="sidebar-tag-name" data-tags="harbor"><span class="iconfont-archer">&#xe606;</span>harbor</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="ceph"><span class="iconfont-archer">&#xe606;</span>ceph</span>
+    
+        <span class="sidebar-tag-name" data-tags="Distributed protocol"><span class="iconfont-archer">&#xe606;</span>Distributed protocol</span>
+    
+        <span class="sidebar-tag-name" data-tags="ansible"><span class="iconfont-archer">&#xe606;</span>ansible</span>
+    
+        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+    
+        <span class="sidebar-tag-name" data-tags="shadowsocks"><span class="iconfont-archer">&#xe606;</span>shadowsocks</span>
+    
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes核心组件"><span class="iconfont-archer">&#xe606;</span>kubernetes核心组件</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes"><span class="iconfont-archer">&#xe606;</span>kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mysql"><span class="iconfont-archer">&#xe606;</span>Mysql</span>
+    
+        <span class="sidebar-tag-name" data-tags="logging"><span class="iconfont-archer">&#xe606;</span>logging</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="存储类"><span class="iconfont-archer">&#xe60a;</span>存储类</span>
+    
+        <span class="sidebar-category-name" data-categories="linux系统"><span class="iconfont-archer">&#xe60a;</span>linux系统</span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟机"><span class="iconfont-archer">&#xe60a;</span>虚拟机</span>
+    
+        <span class="sidebar-category-name" data-categories="k8s存储"><span class="iconfont-archer">&#xe60a;</span>k8s存储</span>
+    
+        <span class="sidebar-category-name" data-categories="镜像仓库"><span class="iconfont-archer">&#xe60a;</span>镜像仓库</span>
+    
+        <span class="sidebar-category-name" data-categories="监控"><span class="iconfont-archer">&#xe60a;</span>监控</span>
+    
+        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
+    
+        <span class="sidebar-category-name" data-categories="hello-world"><span class="iconfont-archer">&#xe60a;</span>hello-world</span>
+    
+        <span class="sidebar-category-name" data-categories="分布式一致性协议"><span class="iconfont-archer">&#xe60a;</span>分布式一致性协议</span>
+    
+        <span class="sidebar-category-name" data-categories="ansible回炉"><span class="iconfont-archer">&#xe60a;</span>ansible回炉</span>
+    
+        <span class="sidebar-category-name" data-categories="hexo使用"><span class="iconfont-archer">&#xe60a;</span>hexo使用</span>
+    
+        <span class="sidebar-category-name" data-categories="科学上网"><span class="iconfont-archer">&#xe60a;</span>科学上网</span>
+    
+        <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
+    
+        <span class="sidebar-category-name" data-categories="好文推荐"><span class="iconfont-archer">&#xe60a;</span>好文推荐</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes笔记"><span class="iconfont-archer">&#xe60a;</span>kubernetes笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes"><span class="iconfont-archer">&#xe60a;</span>kubernetes</span>
+    
+        <span class="sidebar-category-name" data-categories="Mysql"><span class="iconfont-archer">&#xe60a;</span>Mysql</span>
+    
+        <span class="sidebar-category-name" data-categories="云原生"><span class="iconfont-archer">&#xe60a;</span>云原生</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
