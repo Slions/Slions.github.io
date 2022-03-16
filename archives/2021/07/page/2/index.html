@@ -479,14 +479,14 @@ docker架构在我的本地环境执行docker ...
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >
+        <a class="abstract-title" href = "/2021/07/10/docker%20Cgroup/" >
             
-                <span>聊聊Cgroup</span>
+                <span>docker Cgroup</span>
         </a>
         <div class="abstract-content">
-            此前已经聊了容器隔离技术namespace,这次我们接着来看看如何来限制容器的资源。
-什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂...
+            什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。
+在 Linux 中，Cgroups 给用户暴露出来的操作接口是文件系...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -570,9 +570,9 @@ docker架构在我的本地环境执行docker ...
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >
+        <a class="abstract-title" href = "/2021/07/09/docker%20namespace/" >
             
-                <span>聊聊namespace</span>
+                <span>docker namespace</span>
         </a>
         <div class="abstract-content">
             我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
@@ -727,6 +727,44 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1846,7 +1884,7 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/%E8%81%8A%E8%81%8ACgroup/" >聊聊Cgroup</a>
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/docker%20Cgroup/" >docker Cgroup</a>
         </li>
     
     
@@ -1861,7 +1899,7 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E8%81%8A%E8%81%8Anamespace/" >聊聊namespace</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/docker%20namespace/" >docker namespace</a>
         </li>
     
     
