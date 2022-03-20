@@ -399,6 +399,237 @@ height:100vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >
+            
+                <span>普通用户安装mysql</span>
+        </a>
+        <div class="abstract-content">
+            Mysql是最为常用的关系型数据库，关于安装网上大多都是通过root用户直接来安装的，真实场景中，多数情况是不会给root用户的，要不是直接向甲方申请mysql，要不是给普通用户自己安装。
+下面演示如何通过普通用户完成mysql服务的搭建。
+环境描述
+
+
+主机名
+ip地址
+系统版本
+系统资源
+
+
+
+slions_pc2
+192.168.100.11
+CentOS Linux release ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/31</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Mysql">Mysql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >
+            
+                <span>k8s-controller-manager原理</span>
+        </a>
+        <div class="abstract-content">
+            controller-manager作用Controller Manager作为集群内部的管理控制中心，负责集群内的Node、Pod副本、服务端点（Endpoint）、命名空间（Namespace）、服务账号（ServiceAccount）、资源定额（ResourceQuota）的管理。
+
+逻辑上，每个控制器是一个单独的协程。用于监视 apiserver 暴露的集群状态，并且不断地尝试把当前...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >
+            
+                <span>kube-proxy原理</span>
+        </a>
+        <div class="abstract-content">
+            kube-proxy的作用kube-proxy是Kubernetes的核心组件，部署在每个Node节点上，它是实现Kubernetes Service的通信与负载均衡机制的重要组件; kube-proxy负责为Pod创建代理服务，从apiserver获取所有server信息，并根据server信息创建代理服务，实现server到Pod的请求路由和转发，从而实现K8s层级的虚拟转发网络。
+
+在...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >
+            
+                <span>k8s-etcd理解</span>
+        </a>
+        <div class="abstract-content">
+            etcd作用是用来存储所有 Kubernetes 的集群状态的，它除了具备状态存储的功能，还有事件监听和订阅、Leader选举的功能。
+存储k8s集群状态整个kubernetes系统需要用到etcd用来协同和存储配置的有：
+
+网络插件flannel、calico等网络插件也需要用到etcd存储网络的配置信息
+kubernetes本身，包括各种对象的状态和元信息配置
+
+
+很多网上资料讲flan...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >
+            
+                <span>k8s-scheduler原理</span>
+        </a>
+        <div class="abstract-content">
+            scheduler作用负责整个集群资源的调度功能，根据特定的调度算法和策略，将 Pod 调度到最优的工作节点上面去，从而更加合理、更加充分的利用集群的资源。
+
+工作机制根据特定的调度算法和调度策略将 Pod 调度到合适的 Node 节点上去，是一个独立的二进制程序，启动之后会一直监听 API Server，获取到 PodSpec.NodeName 为空的 Pod，对每个 Pod 都会创建一个...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >
+            
+                <span>k8s-apiserver原理</span>
+        </a>
+        <div class="abstract-content">
+            apiserver作用其对外暴露了Kubernetes API。它是的 Kubernetes 核心控制层。它被设计为水平扩展，即通过部署更多实例来横向扩展。API Server 负责和 etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。API Server 提供...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >
+            
+                <span>修改kubeadm证书过期时间</span>
+        </a>
+        <div class="abstract-content">
+            使用kubeadm创建完Kubernetes集群后, 默认会在/etc/kubernetes/pki目录下存放集群中需要用到的证书文件, 整体结构如下图所示:
+12345678910111213141516171819202122232425root@k8s-master:/etc/kubernetes/pki# tree.|-- apiserver.crt|-- apiserver-etc...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >
             
                 <span>我是一个线程（转载）</span>
@@ -491,236 +722,10 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >
-            
-                <span>镜像构建之dockerfile</span>
-        </a>
-        <div class="abstract-content">
-            近几年来容器技术几乎席卷了整个IT界，当今容器已经成为了被大家广泛认可的应用托管技术，各种传统行业也在投入容器化的技术革新浪潮中。
-docker镜像可以被看做容器的基石，虽然dockerhub上提供了大量可用的镜像，但是由于环境的多样性和需求的特殊性，很多时候都需要自己制作适合的镜像。
-制作docker镜像有两种常见的方式：
-
-docker commit
-Dockerfile
-
-其中dock...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >
-            
-                <span>expect使用</span>
-        </a>
-        <div class="abstract-content">
-            使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。
-expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。
-安装1$ yum install -y expect
-
-
-
-使用方法
-​    定义脚本的执行shell，类似于bash...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >
-            
-                <span>（五）ansible常用模块</span>
-        </a>
-        <div class="abstract-content">
-            ansible基于模块工作，ansible 2.9.24版本已经有3387个模块了，当然这些模块不需要也没精力全懂，但了解些常用模块的使用方式对日常运维过程中大有脾益。
-123456789[root@slions_pc1 ansible]# ansible --versionansible 2.9.24  config file = /etc/ansible/ansible.cfg  con...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >
-            
-                <span>（四）剧本文件playbook</span>
-        </a>
-        <div class="abstract-content">
-            我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。
-ansible之所以能...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >
-            
-                <span>（三）主机清单inventory</span>
-        </a>
-        <div class="abstract-content">
-            上一章在讲ansible基本用法时的几个例子中host都是localhost,是因为在没有对ansible进行任何配置时，ansible只能通过localhost来控制本机。
-inventory⽤于定义ansible要管理的主机列表，可以定义单个主机和主机组。/etc/ansible/hosts就是默认的全局inventory，当然我们可以在配置文件中修改此配置项，但通常不会去修改这个配置项...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >
-            
-                <span>实现科学上网</span>
-        </a>
-        <div class="abstract-content">
-            shadowsocks是当前比较受欢迎的科学上网工具。
-服务端配置准备代理服务器首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。
-安装shadowsockslinux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。
-1234567# pip3 install shadowsocksWARN...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "shadowsocks">shadowsocks</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >
-            
-                <span>hexo特殊符号的转义问题</span>
-        </a>
-        <div class="abstract-content">
-            最近写ansible相关文章时，发现hexo与Jinja2的语法有冲突。
-123line: 93,location: &#x27;_posts/（二）ansible初体验.md [Line 93, Column 133]&#x27;,type: &#x27;unexpected token: &#125;&#125;&#x27;
-
-它的模板语法 &#123;&#123;&#125;&#125...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "hexo">hexo</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/page/2/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">NEXT &gt;</a>
+        <a class="extend prev" rel="prev" href="/page/2/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">NEXT &gt;</a>
     </nav>
     
 </main>
@@ -1778,9 +1783,122 @@ inventory⽤于定义ansible要管理的主机列表，可以定义单个主机�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 64
+        Total : 71
         </div>
         <!-- search  -->
         
@@ -1790,6 +1908,50 @@ inventory⽤于定义ansible要管理的主机列表，可以定义单个主机�
     
     
     
+    
+    <div class="archive-year"> 2022 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/iptables/" >iptables</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ip%E9%80%89%E8%B7%AF/" >ip选路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ping%E5%92%8Ctraceroute/" >ping和traceroute</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/RARP/" >RARP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E8%A2%AB%E5%8D%A0%E7%94%A8%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" >查看端口被占用的四种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%94%B9%E5%8F%98%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4dns%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F/" >改变系统默认dns解析顺序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%8E%92%E6%9F%A5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8ip%E5%9C%B0%E5%9D%80%E5%8D%A0%E7%94%A8%E7%8E%B0%E8%B1%A1/" >排查是否存在ip地址占用现象</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
@@ -2155,6 +2317,8 @@ inventory⽤于定义ansible要管理的主机列表，可以定义单个主机�
     
         <span class="sidebar-tag-name" data-tags="logging"><span class="iconfont-archer">&#xe606;</span>logging</span>
     
+        <span class="sidebar-tag-name" data-tags="Network"><span class="iconfont-archer">&#xe606;</span>Network</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2223,6 +2387,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Mysql"><span class="iconfont-archer">&#xe60a;</span>Mysql</span>
     
         <span class="sidebar-category-name" data-categories="云原生"><span class="iconfont-archer">&#xe60a;</span>云原生</span>
+    
+        <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

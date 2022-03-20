@@ -386,6 +386,241 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/%E6%8E%92%E6%9F%A5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8ip%E5%9C%B0%E5%9D%80%E5%8D%A0%E7%94%A8%E7%8E%B0%E8%B1%A1/" >
+            
+                <span>排查是否存在ip地址占用现象</span>
+        </a>
+        <div class="abstract-content">
+            arping干嘛用的？
+arping主要干的活就是查看ip的MAC地址及IP占用的问题。
+123456789101112-A ARP回复模式，更新邻居-b 保持广播-D 复制地址检测模式-f 得到第一个回复就 退出-q 不显示警告信息-U 主动的ARP模式，更新邻居-c&lt;数据包的数目&gt; 发送的数据包的数目-w&lt;超时时间&gt; 设置超时时间-I&lt;网卡&gt; 使用指定...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/%E6%94%B9%E5%8F%98%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4dns%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F/" >
+            
+                <span>改变系统默认dns解析顺序</span>
+        </a>
+        <div class="abstract-content">
+            linux中，往往解析一个域名时，先会找/etc/hosts文件，如果/etc/hosts文件没有对应，才会去找DNS，如何让主机先找DNS呢？
+在/etc/nsswitch.conf这个文件里定义:
+编辑/etc/nsswitch.conf
+12hosts:   files dns   //找到这段，改成下面这样hosts:   dns files
+
+其中dns代表/etc/resolv....
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E8%A2%AB%E5%8D%A0%E7%94%A8%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" >
+            
+                <span>查看端口被占用的四种方式</span>
+        </a>
+        <div class="abstract-content">
+            netstat -anlp或ss
+
+
+
+lsof
+
+
+
+fuser
+
+
+
+nmap
+
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/RARP/" >
+            
+                <span>RARP</span>
+        </a>
+        <div class="abstract-content">
+            反向地址转换协议简称RARP。
+RARP是许多无盘系统在引导时用来获取IP地址的。RARP实现起来要比ARP复杂，因为RARP请求是在硬件层上广播的。这意味着他们不经过路由器进行转发。为了能让无盘系统在RARP关机的情况下也能引导，通常要在一个网络上（一根电缆）提供多个RARP服务器。
+允许局域网的物理机器从网关服务器的 ARP 表或者缓存上请求其 IP 地址。网络管理员在局域网网关路由器里...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/ping%E5%92%8Ctraceroute/" >
+            
+                <span>ping和traceroute</span>
+        </a>
+        <div class="abstract-content">
+            Pingping 程序的主要目的是测试主机是否可达，它发送 ICMP 回显请求报文给目的主机，返回 ICMP 回显应答。
+工作机制ping 程序一般会周期性持续地发送 ICMP 请求报文，除非用户手动终止，或指定了发包个数，回显请求和回显应答通过序列号（icmp_seq）进行匹配，下图中序列号依次为 1、2、..
+ping 程序通过数据报中记录的发送请求时间值和接收到回显应答报文的当前时间值...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/ip%E9%80%89%E8%B7%AF/" >
+            
+                <span>ip选路</span>
+        </a>
+        <div class="abstract-content">
+            选路是IP最重要的功能之一。需要进行选路的数据报可以由本地主机产生，也可以由其他主机产生。在后一种情况下，主机必须配置成一个路由器，否则通过网络接口接收到的数据报，如果目的地址不是本机就要被丢弃（例如，悄无声息地被丢弃）。
+选路原理ip搜索路由表的步骤：
+
+搜索匹配的主机地址；
+搜索匹配的网络地址；
+搜索默认表项（默认表项一般在路由表中被指定为一个网络表项，其网络号为0）。匹配主机地址步骤始...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/iptables/" >
+            
+                <span>iptables</span>
+        </a>
+        <div class="abstract-content">
+            老的系统防火墙使用的一直是iptables，centos/redhat7后默认的防火墙变为了firewalld，
+iptables主要是通过四表五链对网络数据进行处理，firewalld则是通过设置zone来限制网络，firewalld与iptables不能共存，会产生不兼容的问题。
+我们一般只是知道iptables，但它实际上由两个组件netfilter 和 iptables 组成。
+ne...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/12/27/k8s%E9%83%A8%E7%BD%B2EFK/" >
             
                 <span>k8s部署EFK</span>
@@ -507,236 +742,10 @@ k8s master &amp; node
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/15/CRI%E4%B9%8Bcontainerd/" >
-            
-                <span>CRI之containerd</span>
-        </a>
-        <div class="abstract-content">
-            从这篇文章可以了解云原生领域CRI与OCI的由来，为了制约docker在容器运行时的垄断地位，Google与IBM、Redhat等公司成立了CNCF，形成以kubernetes服务编排为基础，建设其周边云原生产品的生态，并陆续提出了CRI（容器运行时接口）、CSI（容器存储接口）、CNI（容器网络接口）的规范。
-上篇文章开篇的图上可知，当前docker并没有实现CRI的规范，需要通过kube...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >
-            
-                <span>K8S Runtime CRI OCI contained dockershim（转载）</span>
-        </a>
-        <div class="abstract-content">
-            
-本文转载自CSDN “Frank范”
-
-典型的K8S Runtime架构从最常见的Docker说起，kubelet和Docker的集成方案图如下：
-
-当kubelet要创建一个容器时，需要以下几步：
-
-Kubelet 通过 CRI 接口（gRPC）调用 dockershim，请求创建一个容器。CRI 即容器运行时接口（Container Runtime Interface），这一步中，Ku...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/07</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/02/%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89Jinja2%E6%A8%A1%E6%9D%BF/" >
-            
-                <span>（十一）Jinja2模板</span>
-        </a>
-        <div class="abstract-content">
-            日常ansible playbook编写过程中，会涉及到很多变量的解析与替换，解析并替换模板表达式的过程称为渲染。
-ansibles使用Jinja2来完成渲染工作，它是Python的一种模板引擎。
-Jinja2模板引擎提供了三种特殊符号来包围模板表达式：
-
-&#123;&#123;xxx&#125;&#125;：双大括号包围变量或表达式(Ansible中的变量就是它包围的)
-&#123;#x...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/02/%EF%BC%88%E5%8D%81%EF%BC%89ansible%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" >
-            
-                <span>（十）ansible异常处理</span>
-        </a>
-        <div class="abstract-content">
-            在日常使用ansible的过程中会发现，执行shell或command模块时，Ansible只认为0退出状态码是正确的，其它所有退出状态码都是失败的，但我们自己知道非0退出状态码并非一定代表着失败。
-比如下例：
-12345678- hosts: localhost  gather_facts: false  tasks:    - shell: &gt;        ls /home/aa...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >
-            
-                <span>（九）ansible流程控制</span>
-        </a>
-        <div class="abstract-content">
-            流程控制是每种编程语言控制逻辑走向和执行次序的重要部分，流程控制可以说是一门语言的“经脉”。
-条件判断ansible提供的条件判断只有when指令，因为可以写Jinja2条件判断表达式，所以判断方式比较灵活。
-同时满足多个条件常见的编程语言在多条件判断时要么使用逻辑与（and或&amp;&amp;）,要么使用逻辑或（or或||）。ansible同样支持这种写法。
-1when: age &gt...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >
-            
-                <span>（八）ansible变量</span>
-        </a>
-        <div class="abstract-content">
-            列表、字典变量列表和字典是ansible中常见的变量类型。
-1234567human:   name: slions  age: 29 files:  - /tmp/a.txt  - /tmp/b.txt
-
-对于这类变量的访问，ansible中提供了两种方式：
-123456---- hosts: localhost  gather_facts: false  tasks:    - debu...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >
-            
-                <span>（七）收集节点信息facts</span>
-        </a>
-        <div class="abstract-content">
-            收集节点信息ansible可以获取目标主机的节点信息，如ip地址，主机名、系统版本、内核版本等等，对于运维来说是一个很好的功能，但是正是它收集的信息很全面，运行也很慢，在日常工作中，没有特殊的需求会在playbook中将其关闭，或者开启facts缓存，在运行任务前手动执行一次。
-ansible中提供了两个模块（setup与gather_facts）来实现收集主机facts，其中setup是最...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &gt;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/8/">8</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &gt;</a>
     </nav>
     
 </main>
@@ -1683,9 +1692,122 @@ ansible中提供了两个模块（setup与gather_facts）来实现收集主机fa
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 64
+        Total : 71
         </div>
         <!-- search  -->
         
@@ -1695,6 +1817,50 @@ ansible中提供了两个模块（setup与gather_facts）来实现收集主机fa
     
     
     
+    
+    <div class="archive-year"> 2022 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/iptables/" >iptables</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ip%E9%80%89%E8%B7%AF/" >ip选路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ping%E5%92%8Ctraceroute/" >ping和traceroute</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/RARP/" >RARP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E8%A2%AB%E5%8D%A0%E7%94%A8%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" >查看端口被占用的四种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%94%B9%E5%8F%98%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4dns%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F/" >改变系统默认dns解析顺序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%8E%92%E6%9F%A5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8ip%E5%9C%B0%E5%9D%80%E5%8D%A0%E7%94%A8%E7%8E%B0%E8%B1%A1/" >排查是否存在ip地址占用现象</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2021 </div>
     <ul class="year-list">
@@ -2060,6 +2226,8 @@ ansible中提供了两个模块（setup与gather_facts）来实现收集主机fa
     
         <span class="sidebar-tag-name" data-tags="logging"><span class="iconfont-archer">&#xe606;</span>logging</span>
     
+        <span class="sidebar-tag-name" data-tags="Network"><span class="iconfont-archer">&#xe606;</span>Network</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2128,6 +2296,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Mysql"><span class="iconfont-archer">&#xe60a;</span>Mysql</span>
     
         <span class="sidebar-category-name" data-categories="云原生"><span class="iconfont-archer">&#xe60a;</span>云原生</span>
+    
+        <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
