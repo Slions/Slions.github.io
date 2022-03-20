@@ -20,34 +20,30 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="环境描述   主机名 ip地址 系统环境 角色    k8s-1 IP:192.168.186.10 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_master,Gluster_master,Heketi_master   K8s-2 IP:192.168.186.11 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_node,Gl">
+    <meta name="description" content="地址解析协议（Address Resolution Protocol），其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。 工作流程假设主机A和B在同一个网段，主机A要向主机B发送信息，具体的地址解析过程如下：  主机A首先查看自己的ARP表，确定其中是否包含有主机B">
 <meta property="og:type" content="article">
-<meta property="og:title" content="glusterfs可用性测试">
-<meta property="og:url" content="https://slions.github.io/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:title" content="ARP">
+<meta property="og:url" content="https://slions.github.io/2022/03/20/ARP/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="环境描述   主机名 ip地址 系统环境 角色    k8s-1 IP:192.168.186.10 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_master,Gluster_master,Heketi_master   K8s-2 IP:192.168.186.11 cpu:x2  mem:2GB  disk:&#x2F;dev&#x2F;sdb 40GB K8s_node,Gl">
+<meta property="og:description" content="地址解析协议（Address Resolution Protocol），其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。 工作流程假设主机A和B在同一个网段，主机A要向主机B发送信息，具体的地址解析过程如下：  主机A首先查看自己的ARP表，确定其中是否包含有主机B">
 <meta property="og:locale">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-1.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-2.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-3.jpg">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-4.jpg">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-5.jpg">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-6.jpg">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-7.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-8.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-9.png">
-<meta property="og:image" content="https://slions.github.io/doc_picture/gfs-test-10.png">
-<meta property="article:published_time" content="2021-07-18T10:58:16.000Z">
-<meta property="article:modified_time" content="2021-08-12T11:51:16.613Z">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp1.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp2.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp3.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp4.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp5.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp6.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp7.png">
+<meta property="article:published_time" content="2022-03-20T08:14:39.000Z">
+<meta property="article:modified_time" content="2022-03-20T08:35:25.539Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="glusterfs">
-<meta property="article:tag" content="kubernetes storage">
+<meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://slions.github.io/doc_picture/gfs-test-1.png">
+<meta name="twitter:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>glusterfs可用性测试 · S_lion&#39;s Studio</title>
+    <title>ARP · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -263,7 +259,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">glusterfs可用性测试</a>
+            <a href="#" class="post-name">ARP</a>
         </div>
     </div>
     
@@ -306,7 +302,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            glusterfs可用性测试
+            ARP
             <!-- 404 -->
             
         </h1>
@@ -325,20 +321,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.2k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/07/18</span>
+                    <span class="post-intro-time">2022/03/20</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -462,130 +456,108 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h1><table>
-<thead>
-<tr>
-<th><strong>主机名</strong></th>
-<th>ip地址</th>
-<th><strong>系统环境</strong></th>
-<th><strong>角色</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>k8s-1</td>
-<td>IP:192.168.186.10</td>
-<td>cpu:x2  mem:2GB  disk:/dev/sdb 40GB</td>
-<td>K8s_master,Gluster_master,Heketi_master</td>
-</tr>
-<tr>
-<td>K8s-2</td>
-<td>IP:192.168.186.11</td>
-<td>cpu:x2  mem:2GB  disk:/dev/sdb 40GB</td>
-<td>K8s_node,Gluster_node</td>
-</tr>
-<tr>
-<td>K8s-3</td>
-<td>IP:192.168.186.12</td>
-<td>cpu:x2  mem:2GB  disk:/dev/sdb 40GB</td>
-<td>K8s_master,Gluster_node</td>
-</tr>
-</tbody></table>
-<h1 id="集群扩容"><a href="#集群扩容" class="headerlink" title="集群扩容"></a>集群扩容</h1><h2 id="添加新磁盘"><a href="#添加新磁盘" class="headerlink" title="添加新磁盘"></a>添加新磁盘</h2><blockquote>
-<p>添加设备时，请记住将设备添加为一组。例如，如果创建的卷使用副本为2，则应将device添加到两个节点（每个节点一个device）。如果使用副本3，则将device添加到三个节点。</p>
-</blockquote>
-<h3 id="命令行方式"><a href="#命令行方式" class="headerlink" title="命令行方式"></a>命令行方式</h3><p>假设在k8s-3上增加磁盘，查看k8s-3部署的pod name及IP：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# kubectl get po -o wide -l glusterfs-node</span><br><span class="line">NAME             READY      STATUS    RESTARTS   AGE           IP            NODE</span><br><span class="line">glusterfs-5npwn   1/1       Running   0          20h       192.168.186.10   k8s-1</span><br><span class="line">glusterfs-8zfzq   1/1       Running   0          20h       192.168.186.11   k8s-2</span><br><span class="line">glusterfs-bd5dx   1/1       Running   0          20h       192.168.186.12   k8s-3</span><br></pre></td></tr></table></figure>
+        <p><strong>地址解析协议</strong>（Address Resolution Protocol），其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。</p>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p>假设主机A和B在同一个网段，主机A要向主机B发送信息，具体的地址解析过程如下：</p>
+<ol>
+<li>主机A首先查看自己的ARP表，确定其中是否包含有主机B对应的ARP表项。如果找到了对应的MAC地址，则主机A直接利用ARP表中的MAC地址，对IP数据包进行帧封装，并将数据包发送给主机B。</li>
+<li>如果主机A在ARP表中找不到对应的MAC地址，<strong>则将缓存该数据报文</strong>，然后以广播方式发送一个ARP请求报文。ARP请求报文中的发送端IP地址和发送端MAC地址为主机A的IP地址和MAC地址，目标IP地址和目标MAC地址为主机B的IP地址和ff-ff-ff-ff-ff-ff的MAC地址。由于ARP请求报文以<strong>广播方式</strong>发送，该网段上的所有主机都可以接收到该请求，但只有被请求的主机（即主机B）会对该请求进行处理。</li>
+<li>主机B比较自己的IP地址和ARP请求报文中的目标IP地址，当两者相同时进行如下处理：将ARP请求报文中的发送端（即主机A）的IP地址和MAC地址存入自己的ARP表中。之后以<strong>单播方式</strong>发送ARP响应报文给主机A，其中包含了自己的MAC地址。</li>
+<li>主机A收到ARP响应报文后，<strong>将主机B的MAC地址加入到自己的ARP表中以用于后续报文的转发</strong>，同时将IP数据包进行封装后发送出去。</li>
+</ol>
+<h1 id="ARP报文"><a href="#ARP报文" class="headerlink" title="ARP报文"></a>ARP报文</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/arp1.png"/>
 
-<p>在k8s-3上确认新添加的盘符：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/sdc: 42.9 GB, 42949672960 bytes, 83886080 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br></pre></td></tr></table></figure>
+<p>一般说以太网地址就是指MAC地址。</p>
+<ul>
+<li>字段1是ARP请求的目的以太网地址，全1时代表广播地址。</li>
+<li>字段2是发送ARP请求的以太网地址。</li>
+<li>字段3以太网帧类型表示的是后面的数据类型，ARP请求和ARP应答这个值为0x0806。</li>
+<li>字段4表示硬件地址的类型，硬件地址不只以太网一种，是以太网类型时此值为1。</li>
+<li>字段5表示要映射的协议地址的类型，要对IPv4地址进行映射，此值为0x0800。</li>
+<li>字段6和7表示硬件地址长度和协议地址长度，MAC地址占6字节，IP地址占4字节。</li>
+<li>字段8是操作类型字段，值为1，表示进行ARP请求；值为2，表示进行ARP应答；值，表示进行RARP请求；值为4，表示进行RARP应答。</li>
+<li>字段9是发送端ARP请求或应答的硬件地址，这里是以太网地址，和字段2相同。</li>
+<li>字段10是发送ARP请求或应答的IP地址。</li>
+<li>字段11和12是目的端的硬件地址和协议地址。</li>
+</ul>
+<p>图中红框圈起来的是一对ARP请求和ARP应答。</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/arp2.png"/>
 
-<p>使用heketi-cli查看cluster ID和所有node ID：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli cluster list</span><br><span class="line">Clusters:</span><br><span class="line">Id:5dec5676c731498c2bdf996e110a3e5e [file][block]</span><br><span class="line">[root@k8s-1 ~]# heketi-cli cluster info 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Cluster id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Nodes:</span><br><span class="line">0f00835397868d3591f45432e432ba38</span><br><span class="line">d38819746cab7d567ba5f5f4fea45d91</span><br><span class="line">fb181b0cef571e9af7d84d2ecf534585</span><br><span class="line">Volumes:</span><br><span class="line">32146a51be9f980c14bc86c34f67ebd5</span><br><span class="line">56d636b452d31a9d4cb523d752ad0891</span><br><span class="line">828dc2dfaa00b7213e831b91c6213ae4</span><br><span class="line">b9c68075c6f20438b46db892d15ed45a</span><br><span class="line">Block: true</span><br><span class="line">File: true</span><br></pre></td></tr></table></figure>
-
-<p>找到对应的k8s-3的node ID：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli node info 0f00835397868d3591f45432e432ba38</span><br><span class="line">Node Id: 0f00835397868d3591f45432e432ba38</span><br><span class="line">State: online</span><br><span class="line">Cluster Id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Zone: 1</span><br><span class="line">Management Hostname: k8s-node02</span><br><span class="line">Storage Hostname: 192.168.186.12</span><br><span class="line">Devices:</span><br><span class="line">Id:82af8e5f2fb2e1396f7c9e9f7698a178   Name:/dev/sdb            State:online    Size (GiB):39      Used (GiB):25      Free (GiB):14      Bricks:4</span><br></pre></td></tr></table></figure>
-
-<p>添加磁盘至GFS集群的k8s-3：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli device add --name=/dev/sdc --node=0f00835397868d3591f45432e432ba38</span><br><span class="line">Device added successfully</span><br></pre></td></tr></table></figure>
-
-<p>查看结果：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 ~]# heketi-cli node info 0f00835397868d3591f45432e432ba38</span><br><span class="line">Node Id: 0f00835397868d3591f45432e432ba38</span><br><span class="line">State: online</span><br><span class="line">Cluster Id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Zone: 1</span><br><span class="line">Management Hostname: k8s-3</span><br><span class="line">Storage Hostname: 192.168.186.12</span><br><span class="line">Devices:</span><br><span class="line">Id:5539e74bc2955e7c70b3a20e72c04615   Name:/dev/sdc            State:online    Size (GiB):39      Used (GiB):0       Free (GiB):39      Bricks:0       </span><br><span class="line">Id:82af8e5f2fb2e1396f7c9e9f7698a178   Name:/dev/sdb            State:online    Size (GiB):39      Used (GiB):25      Free (GiB):14      Bricks:4</span><br></pre></td></tr></table></figure>
-
-<h3 id="拓扑文件方式"><a href="#拓扑文件方式" class="headerlink" title="拓扑文件方式"></a>拓扑文件方式</h3><p>当一次添加多个设备的一种更简单的方法是将新设备添加到用于设置群集的拓扑文件(topology.json)中的节点描述中。然后重新运行该命令以加载新拓扑。下面是我们向节点添加新的/dev/sdc磁盘的示例：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;topology.json&lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;clusters&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">&quot;nodes&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;hostnames&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;manage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;k8s-1&quot;</span></span><br><span class="line">              ],</span><br><span class="line">              <span class="attr">&quot;storage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;192.168.186.10&quot;</span></span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">&quot;zone&quot;</span>: <span class="number">1</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">&quot;devices&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;/dev/sdb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/dev/sdc&quot;</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;hostnames&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;manage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;k8s-2&quot;</span></span><br><span class="line">              ],</span><br><span class="line">              <span class="attr">&quot;storage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;192.168.186.11&quot;</span></span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">&quot;zone&quot;</span>: <span class="number">1</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">&quot;devices&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;/dev/sdb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/dev/sdc&quot;</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;hostnames&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;manage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;k8s-3&quot;</span></span><br><span class="line">              ],</span><br><span class="line">              <span class="attr">&quot;storage&quot;</span>: [</span><br><span class="line">                <span class="string">&quot;192.168.186.12&quot;</span></span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">&quot;zone&quot;</span>: <span class="number">1</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">&quot;devices&quot;</span>: [</span><br><span class="line">            <span class="string">&quot;/dev/sdb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/dev/sdc&quot;</span></span><br><span class="line">          ]                                                                                    </span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<p>heketi加载拓扑配置：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli topology load --json=topology.json</span></span><br><span class="line">   Creating cluster ... ID: 224a5a6555fa5c0c930691111c63e863</span><br><span class="line">     Allowing file volumes on cluster.</span><br><span class="line">     Allowing block volumes on cluster.</span><br><span class="line">     Creating node 192.168.186.10 ... ID: 7946b917b91a579c619ba51d9129aeb0</span><br><span class="line">Found device /dev/sdb</span><br><span class="line">Adding device /dev/sdc ... OK</span><br><span class="line">     Creating node 192.168.186.11 ... ID: 5d10e593e89c7c61f8712964387f959c</span><br><span class="line">Found device /dev/sdb</span><br><span class="line">            Adding device /dev/sdc ... OK</span><br><span class="line">     Creating node 192.168.186.12 ... ID: de620cb2c313a5461d5e0a6ae234c553</span><br><span class="line">Found device /dev/sdb</span><br><span class="line">            Adding device /dev/sdc ... OK</span><br></pre></td></tr></table></figure>
-
-<h2 id="添加新节点"><a href="#添加新节点" class="headerlink" title="添加新节点"></a>添加新节点</h2><p>假设将k8s-4，IP为192.168.186.13的加入glusterfs集群，并将该节点的/dev/sdb,/dev/sdc加入到集群。</p>
-<p>先给node加标签，之后会自动创建pod：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 kubernetes]# kubectl label node k8s-4 storagenode=glusterfs</span><br><span class="line">node/k8s-4 labeled</span><br><span class="line"></span><br><span class="line">[root@k8s-1 kubernetes]# kubectl  get pod -o wide -l glusterfs-node</span><br><span class="line">NAME        READY     STATUS        RESTARTS   AGE       IP          NODE</span><br><span class="line">glusterfs-5npwn   1/1     Running     0     21h       192.168.186.11        k8s-2</span><br><span class="line">glusterfs-8zfzq   1/1       Running      0    21h      192.168.186.10        k8s-1</span><br><span class="line">glusterfs-96w74   0/1  ContainerCreating   0   2m     192.168.186.13         k8s-4</span><br><span class="line">glusterfs-bd5dx   1/1     Running       0      21h       192.168.186.12     k8s-3</span><br></pre></td></tr></table></figure>
-
-<p>进入任意节点的gfs服务容器执行peer probe，加入新节点：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 kubernetes]# kubectl exec -ti glusterfs-5npwn -- gluster peer probe 192.168.186.13</span><br><span class="line">peer probe: success.</span><br></pre></td></tr></table></figure>
-
-<p>将新节点纳入heketi数据库统一管理：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-1 kubernetes]# heketi-cli cluster list</span><br><span class="line">Clusters:</span><br><span class="line">Id:5dec5676c731498c2bdf996e110a3e5e [file][block]</span><br><span class="line"></span><br><span class="line">[root@k8s-1 kubernetes]# heketi-cli node add --zone=1 --cluster=5dec5676c731498c2bdf996e110a3e5e --management-host-name=k8s-4 --storage-host-name=192.168.186.13</span><br><span class="line">Node information:</span><br><span class="line">Id: 150bc8c458a70310c6137e840619758c</span><br><span class="line">State: online</span><br><span class="line">Cluster Id: 5dec5676c731498c2bdf996e110a3e5e</span><br><span class="line">Zone: 1</span><br><span class="line">Management Hostname k8s-4</span><br><span class="line">Storage Hostname 192.168.186.13</span><br></pre></td></tr></table></figure>
-
-<p>将新节点的磁盘加入到集群中，参考上面的两种方式之一即可。</p>
-<h1 id="存储卷扩容"><a href="#存储卷扩容" class="headerlink" title="存储卷扩容"></a>存储卷扩容</h1><h2 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h2><p>扩容volume可使用命令（单位为G）：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli volume expand --volume=volumeID --expand-size=10</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="集群缩容"><a href="#集群缩容" class="headerlink" title="集群缩容"></a>集群缩容</h1><p>Heketi也支持降低存储容量。这可以通过删除device，节点和集群来实现。可以使用API或使用heketi-cli执行这些更改。</p>
-<blockquote>
-<p> heketi删除device的前提是device没有被使用（Used为0）</p>
-</blockquote>
-<p>以下是如何从Heketi删除没有device被使用的命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli topology info</span></span><br><span class="line">Cluster Id: 6fe4dcffb9e077007db17f737ed999fe </span><br><span class="line">Volumes:</span><br><span class="line"></span><br><span class="line">    Nodes:</span><br><span class="line">  </span><br><span class="line">        Node Id: 61d019bb0f717e04ecddfefa5555bc41</span><br><span class="line">        State: online</span><br><span class="line">        Cluster Id: 6fe4dcffb9e077007db17f737ed999fe</span><br><span class="line">        Zone: 1</span><br><span class="line">        Management Hostname: k8s-3</span><br><span class="line">        Storage Hostname: 192.168.186.12</span><br><span class="line">        Devices:</span><br><span class="line">                Id:e4805400ffa45d6da503da19b26baad6   Name:/dev/sdb            State:online    Size (GiB):40     Used (GiB):0       Free (GiB):40</span><br><span class="line">                        Bricks:</span><br><span class="line">                Id:ecc3c65e4d22abf3980deba4ae90238c   Name:/dev/sdc            State:online    Size (GiB):40     Used (GiB):0       Free (GiB):40</span><br><span class="line">                        Bricks:</span><br><span class="line">  </span><br><span class="line">        Node Id: e97d77d0191c26089376c78202ee2f20</span><br><span class="line">        State: online</span><br><span class="line">        Cluster Id: 6fe4dcffb9e077007db17f737ed999fe</span><br><span class="line">        Zone: 2</span><br><span class="line">        Management Hostname: k8s-4</span><br><span class="line">        Storage Hostname: 192.168.186.13</span><br><span class="line">        Devices:</span><br><span class="line">                Id:3dc3b3f0dfd749e8dc4ee98ed2cc4141   Name:/dev/sdb            State:online    Size (GiB):40     Used (GiB):0       Free (GiB):40</span><br><span class="line">                        Bricks:</span><br><span class="line">                Id:4122bdbbe28017944a44e42b06755b1c   Name:/dev/sdc            State:online    Size (GiB):40     Used (GiB):0       Free (GiB)40</span><br><span class="line">                        Bricks:</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> d=`heketi-cli topology info | grep Size | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> | cut -d: -f 2`</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$d</span> ; <span class="keyword">do</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> heketi-cli device delete <span class="variable">$i</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="keyword">done</span></span></span><br><span class="line">Device e4805400ffa45d6da503da19b26baad6 deleted</span><br><span class="line">Device ecc3c65e4d22abf3980deba4ae90238c deleted</span><br><span class="line">Device 3dc3b3f0dfd749e8dc4ee98ed2cc4141 deleted</span><br><span class="line">Device 4122bdbbe28017944a44e42b06755b1c deleted</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli node delete <span class="variable">$node1</span></span></span><br><span class="line">Node 61d019bb0f717e04ecddfefa5555bc41 deleted</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli node delete <span class="variable">$node2</span></span></span><br><span class="line">Node e97d77d0191c26089376c78202ee2f20 deleted</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> heketi-cli cluster delete <span class="variable">$cluster</span></span></span><br><span class="line">Cluster 6fe4dcffb9e077007db17f737ed999fe deleted</span><br></pre></td></tr></table></figure>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><img src="https://gitee.com/Slions/picbed/raw/master/img/arp3.png"/>
 
 
 
-<h1 id="可用性测试"><a href="#可用性测试" class="headerlink" title="可用性测试"></a>可用性测试</h1><h2 id="添加节点"><a href="#添加节点" class="headerlink" title="添加节点"></a>添加节点</h2><p>通过restful api添加一台glusterfs主机，可以正常使用，前提是在添加之前要在新节点安装好glusterfs和lvm，加载 dm_thin_pool 模块，开启相关端口，给新节点打glusterfs的tag(daemonset用)，集群内节点可以互相解析域名。</p>
-<h2 id="关闭节点"><a href="#关闭节点" class="headerlink" title="关闭节点"></a>关闭节点</h2><p>测试高可用中的坑。</p>
-<p>三个glusterfs节点，关闭一台，客户端可读可写。</p>
-<p>三个glusterfs节点，关闭两台，客户端可读不可写。</p>
-<p>关闭虚机后发现heketi中还是显示节点在线，bricks不会同步到新增的虚机上，尝试把那台关了的机器剔除，发现bricks同步到了新增的节点。具体操作如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@redhat1 /]# heketi-cli -s http://redhat1:30080 node list</span><br><span class="line">Id:05ac57499e3fbc0f8ec5a3301fac92c7	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">Id:5e10a4c264a2fc13ecdf8d2482ba7281	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">Id:b1e3ba52f6e8c82e8b3e512798348876	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">Id:f1bd8cd0f52b2d91b13e79799a34c2ed	Cluster:43c28e6f4b4e05f58ebd3b6f158982cd</span><br><span class="line">f1bd8cd0f52b2d91b13e79799a34c2ed为已关闭的节点</span><br><span class="line">5e10a4c264a2fc13ecdf8d2482ba7281为新添加的节点</span><br><span class="line"> </span><br><span class="line">[root@redhat1 /]# heketi-cli -s http://redhat1:30080 node disable f1bd8cd0f52b2d91b13e79799a34c2ed</span><br><span class="line">Node f1bd8cd0f52b2d91b13e79799a34c2ed is now offline</span><br><span class="line"></span><br><span class="line">[root@redhat1 /]#heketi-cli-s http://redhat1:30080 node remove f1bd8cd0f52b2d91b13e79799a34c2ed</span><br><span class="line">Node f1bd8cd0f52b2d91b13e79799a34c2ed is now removed</span><br><span class="line"></span><br><span class="line">[root@redhat1 /]#heketi-cli -s http://redhat1:30080 device delete ff257d2350f05f7f5ebaa2853e5815e8</span><br><span class="line">Error: Failed to delete device /dev/sdb with id ff257d2350f05f7f5ebaa2853e5815e8 on host redhat3: error dialing backend: dial tcp 192.168.186.12:10250: connect: no route to host</span><br><span class="line"></span><br><span class="line">[root@redhat1 /]# heketi-cli -s http://redhat1:30080 node delete f1bd8cd0f52b2d91b13e79799a34c2ed</span><br><span class="line">Error: Unable to delete node [f1bd8cd0f52b2d91b13e79799a34c2ed] because it contains devices</span><br></pre></td></tr></table></figure>
+<h2 id="应答报文"><a href="#应答报文" class="headerlink" title="应答报文"></a>应答报文</h2><p>ARP应答分组中，将ARP请求中的源和目的地址进行交换，此外，变化的还有字段8 Opcode。其余字段内容不会发生变化。</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/arp4.png"/>
 
-<p>报错是因为关机了连不上节点，此时再查看关闭的哪个节点上bricks已经没了，同步到了新增加的节点上。</p>
-<blockquote>
-<p> 在旧节点从群集中完全清除之前，新增的节点不能和原先关闭的节点共用同样的标识。</p>
-</blockquote>
-<h2 id="硬盘损坏"><a href="#硬盘损坏" class="headerlink" title="硬盘损坏"></a>硬盘损坏</h2><p>本地三台gfs节点，每台挂载一块裸盘，把其中一块盘给删除模拟磁盘损坏，此时heketi中还能看到device，并且正在使用，登录那台节点执行partprobe更新下磁盘后发现lv和vg没有了，pv会存在残留数据，重启此节点后残留数据消失，heketi端还显示device正在使用。</p>
-<p>手动删除device报以下错误</p>
-<p>Error: Failed to remove device, error: No Replacement was found for resource</p>
-<p>此错误是因为存储设备当前没有达到副本数要求的三个。</p>
-<p><strong>解决方案：</strong></p>
-<p>添加device后删除原先的device即可。</p>
-<h2 id="brick损坏"><a href="#brick损坏" class="headerlink" title="brick损坏"></a>brick损坏</h2><p>手动删除gfs节点的一个brick:</p>
-<p><img src="/doc_picture/gfs-test-1.png" alt="image-20210718192918628"></p>
-<p>查看当前volume的状态，此时brick显示离线:</p>
-<p><img src="/doc_picture/gfs-test-2.png" alt="image-20210718192931819"></p>
-<p><strong>解决方案：</strong></p>
-<p>先从volume端删除此brick</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> gluster volume remove-brick &lt;volume-name&gt;  replica &lt;count&gt; force</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="ARP表"><a href="#ARP表" class="headerlink" title="ARP表"></a>ARP表</h1><p>设备通过ARP解析到目的MAC地址后，将会在自己的ARP表中增加IP地址到MAC地址的映射表项，以用于后续到同一目的地报文的转发。</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/arp5.png"/>
+
+<h2 id="动态ARP表"><a href="#动态ARP表" class="headerlink" title="动态ARP表"></a>动态ARP表</h2><p>动态ARP表项由ARP协议通过ARP报文自动生成和维护，可以被老化，可以被新的ARP报文更新，可以被静态ARP表项覆盖。当到达老化时间、接口down时会删除相应的动态ARP表项。</p>
+<h2 id="静态ARP表"><a href="#静态ARP表" class="headerlink" title="静态ARP表"></a>静态ARP表</h2><p>静态ARP表项通过手工配置和维护，不会被老化，不会被动态ARP表项覆盖。</p>
+<p><strong>配置静态ARP表项可以增加通信的安全性</strong>。静态ARP表项可以限制和指定IP地址的设备通信时只使用指定的MAC地址，此时攻击报文无法修改此表项的IP地址和MAC地址的映射关系，从而保护了本设备和指定设备间的正常通信。</p>
+<h1 id="免费ARP"><a href="#免费ARP" class="headerlink" title="免费ARP"></a>免费ARP</h1><p>免费ARP指主机发送ARP查找自己的IP地址，通常发生在系统引导期间进行接口配置时。与标准ARP的区别就是免费ARP分组的目的IP地址字段封装的是自己的IP地址，即向所在网络请求自己的MAC地址。</p>
+<p>免费ARP的作用有：</p>
+<ol>
+<li>一个主机可以通过它来确定另一个主机是否设置了相同的 IP地址。</li>
+</ol>
+<p>正常情况下发送免费ARP请求不会收到ARP应答，如果收到了一个ARP应答，则说明网络中存在与本机相同的IP地址的主机，发生了地址冲突。</p>
+<ol start="2">
+<li>   更新其他主机高速缓存中旧的硬件地址信息。</li>
+</ol>
+<p>如果发送免费ARP的主机正好改变了硬件地址，如更换了接口卡。<br>其他主机接收到这个ARP请求的时候，发现自己的ARP高速缓存表中存在对应的IP地址，但是MAC地址不匹配，那么就需要利用接收的ARP请求来更新本地的ARP高速缓存表表项。</p>
+<ol start="3">
+<li>网关利用免费ARP防止ARP攻击</li>
+</ol>
+<p>有些网关设备在一定的时间间隔内向网络主动发送免费ARP报文，让网络内的其他主机更新ARP表项中的网关MAC地址信息，以达到防止或缓解ARP攻击的效果。</p>
+<ol start="4">
+<li>利用免费ARP进行ARP攻击</li>
+</ol>
+<p>ARP协议并不只在发送了ARP请求才接收ARP应答，计算机只要接收到ARP应答数据包，就会使用应答中的IP和MAC地址对本地的ARP缓存进行更新。<br>主机可以构造虚假的免费ARP应答，将ARP的源MAC地址设为错误的MAC地址，并把这个虚假的免费ARP应答发送到网络中，那么所有接收到这个免费ARP应答的主机都会更新本地ARP表项中相应IP地址对应的MAC地址。更新成功后，这些主机的数据报文就会被转发到错误的MAC地址，从而实现了ARP欺骗的攻击。</p>
+<h1 id="代理ARP"><a href="#代理ARP" class="headerlink" title="代理ARP"></a>代理ARP</h1><p>代理ARP就是通过使用一个主机(通常为router)，来作为指定的设备使用自己的 MAC 地址来对另一设备的ARP请求作出应答。</p>
+<p>为什么需要代理ARP？</p>
+<p>先要了解，路由器的重要功能之一就是把局域网的广播包限制在该网内，阻止其扩散，否则会造成网络风暴。</p>
+<p>ARP请求是个广播包，它询问的对象如果在同一个局域网内，就会收到应答。但是如果询问的对象不在同一个局域网该如何处理？路由器就提供了代理ARP为这个问题提供了解决方案。</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/arp6.png"/>
+
+<p>两台主机A和B处于同一网段但不同的广播段（不在同一物理网络上）时，主机A发送ARP请求主机B的MAC地址时，因为路由器不转发广播包的原因，ARP请求只能到达路由器。如果路由器启用了代理ARP功能，并知道主机B属于它连接的网络，那么路由器就用自己接口的MAC地址代替主机B的MAC地址来对主机A进行ARP应答。主机A接收ARP应答，但并不知道代理ARP的存在。</p>
+<p>代理ARP的<strong>优缺点</strong></p>
+<p><strong>优点</strong>：代理ARP能在不影响路由表的情况下添加一个新的Router，使子网对该主机变得透明化。一般代理ARP应该使用在主机没有配置默认网关或没有任何路由策略的网络上。</p>
+<p><strong>缺点</strong>：从工作工程可以看到，这其实是一种ARP欺骗。而且，通过两个物理网络之间的路由器的代理ARP功能其实互相隐藏了物理网络，这导致无法对网络拓扑进行网络概括。此外，代理ARP增加了使用它的那段网络的ARP流量，主机需要更大的ARP缓存空间，也不会为不使用ARP进行地址解析的网络工作。</p>
+<h1 id="ARP攻击"><a href="#ARP攻击" class="headerlink" title="ARP攻击"></a>ARP攻击</h1><p>我们知道，当PC1对PC2正常通信的时候（先别管攻击者PC3），PC2、PC1会先后建立对方的IP和MAC地址的映射（即建立ARP缓存表），同时对于交换机而言，它也具有记忆功能，会基于源MAC地址建立一个CAM缓存表（记录MAC对应接口的信息），理解为当PC1发送消息至交换机的Port1时，交换机会把源MAC（也就是MAC1）记录下来，添加一条MAC1和Port1的映射，之后交换机可以根据MAC帧的目的MAC进行端口转发，这个时候PC3只是处于监听状态，会把PC1的广播丢弃。</p>
+<p>正常的PC3会把广播包丢弃，同样的PC3可以抓住这一环节的漏洞，把不属于自己的广播包接收，同时回应一个虚假的回应包，告诉PC1我就是PC2</p>
+<p>（IP2-MAC3），这样PC1会收到两个回应包（一个正确的IP2-MAC2，一个虚假的IP2-MAC3），但是PC1并不知道到底哪个是真的，所以PC1会做出判断，并且判断后到达的为真，那么怎么让虚假的回应包后到达呢，PC3可以连续不断的发送这样的回应包，总会把哪个正确的回应包覆盖掉。</p>
+<p>而后PC1会建立IP2-MAC3这样一条ARP缓存条目，以后当PC1给PC2发送信息的时候，PC1依据OSI模型从上至下在网络层给数据封装目的IP为IP2的包头，在链路层通过查询ARP缓存表封装目的MAC为MAC3的数据帧，送至交换机，根据查询CAM表，发现MAC3对应的接口为Port3，就这样把信息交付到了PC3，完成了一次ARP攻击。</p>
+<p>一般情况下，受到ARP攻击的计算机会出现两种现象：</p>
+<ol>
+<li>不断弹出“本机的XXX段硬件地址与网络中的XXX段地址冲突”的对话框。</li>
+<li>计算机不能正常上网，出现网络中断的症状。</li>
+</ol>
+<p>因为这种攻击是利用ARP请求报文进行“欺骗”的，所以防火墙会误以为是正常的请求数据包，不予拦截。因此普通的防火墙很难抵挡这种攻击。</p>
+<h1 id="ARP老化时间"><a href="#ARP老化时间" class="headerlink" title="ARP老化时间"></a>ARP老化时间</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/arp7.png"/>
+
+
+
+<h1 id="命令解析"><a href="#命令解析" class="headerlink" title="命令解析"></a>命令解析</h1><p>arp指令用来管理系统的arp缓冲区，可以显示、删除、添加静态mac地址。ARP以各种方式操纵内核的ARP缓存。主要选项是清除地址映射项并手动设置。为了调试目的，ARP程序还允许对ARP缓存进行完全转储。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-v          显示详细信息--verbose；</span><br><span class="line">-n          以数字地址形式显示；</span><br><span class="line">-i          If选择界面；</span><br><span class="line">-H          type设置和查询arp缓存时检查 type 类型的地址；</span><br><span class="line">-a          [hostname]  显示指定 hostname 的所有入口；</span><br><span class="line">-d          hostname  删除指定 hostname 的所有入口；</span><br><span class="line">-D          使用ifa硬件地址界面；</span><br><span class="line">-s          hostname hw_addr  手工加入 hostname 的地址映射；</span><br><span class="line">-f          filename  从指定文件中读入 hostname 和硬件地址信息</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用示例</strong>：</p>
+<p>添加静态映射：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -i eth0 -s 192.168.1.6 ff:ee:ee:ee:ee:ee</span><br></pre></td></tr></table></figure>
+
+<p>以数字方式显示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arp -vn</span><br><span class="line">Address                  HWtype  HWaddress          Flags Mask            Iface</span><br><span class="line">10.0.2.2                 ether   52:54:00:12:35:02   C                     eth0</span><br><span class="line">192.168.1.6              ether   ff:ee:ee:ee:ee:ee   CM                    eth0</span><br></pre></td></tr></table></figure>
+
+<p>删除一个arp表项，这里，删除之后只是硬件地址没有了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -d 10.1.10.118</span><br></pre></td></tr></table></figure>
+
+<p>指定回复的MAC地址，当eth0收到IP地址为10.0.0.2的请求时，将会用eth1的MAC地址回答。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -i eth0 -Ds 10.0.0.2 eth1 pub</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>replica  2参数，开始我们创建卷时复制数是3，现在变为2。</p>
+<p>以上输出结果中用”C”表示ARP缓存内容，”M”表示永久性表项，”P”表示公共的表项。</p>
 </blockquote>
-<p><img src="/doc_picture/gfs-test-3.jpg" alt="img"> </p>
-<p>此时查看volume状态，brick已经删除，volume变为2副本</p>
-<p><img src="/doc_picture/gfs-test-4.jpg" alt="img"> </p>
-<p>重新添加回此brick:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> gluster volume add-brick &lt;volume-name&gt;  replica &lt;count&gt; force</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/doc_picture/gfs-test-5.jpg" alt="img"> </p>
-<p>查看volume状态，brick已经添加回来了</p>
-<p><img src="/doc_picture/gfs-test-6.jpg" alt="img"> </p>
-<p>查看此brick中数据已恢复。</p>
-<p>上述方法是模拟其中一个brick故障，如果此卷可以重启的话可以快速重启尝试恢复。</p>
-<h2 id="创建大于剩余空间的卷"><a href="#创建大于剩余空间的卷" class="headerlink" title="创建大于剩余空间的卷"></a>创建大于剩余空间的卷</h2><p>创建不出来，报错</p>
-<p><img src="/doc_picture/gfs-test-7.png" alt="image-20210718193341163"></p>
-<h2 id="扩容volume"><a href="#扩容volume" class="headerlink" title="扩容volume"></a>扩容volume</h2><p>提前申请一个1g大小的pvc并且挂载到应用服务，写一些数据，然后将应用服务停掉，扩容pvc到2G大小，再把应用服务开启，测试写，因为扩容volume想当于是在原先子卷的情况下又加了一个子卷，但是就算是新加入的子卷有剩余空间，glusterfs的hash寻址机制也会一直读写老的子卷（找之前的文件hash值），尝试给卷做rebalance操作来触发数据均衡操作，（扩容后会自动进行rebalance），没有效果。</p>
-<p>创建存储盘使应提前预估好使用量大小。</p>
-<p><img src="/doc_picture/gfs-test-8.png" alt="image-20210718193421419"></p>
-<p><img src="/doc_picture/gfs-test-9.png" alt="image-20210718193430193"></p>
-<p><img src="/doc_picture/gfs-test-10.png" alt="image-20210718193443985"></p>
 
     </article>
     <!-- license  -->
@@ -594,17 +566,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" title= "harbor集群系统负载升高原因分析">
-                    <div class="nextTitle">harbor集群系统负载升高原因分析</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" title= "glusterfs回收站功能">
-                    <div class="prevTitle">glusterfs回收站功能</div>
+                <a href= "/2022/03/20/%E6%8E%92%E6%9F%A5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8ip%E5%9C%B0%E5%9D%80%E5%8D%A0%E7%94%A8%E7%8E%B0%E8%B1%A1/" title= "排查是否存在ip地址占用现象">
+                    <div class="prevTitle">排查是否存在ip地址占用现象</div>
                 </a>
             
         </li>
@@ -620,7 +587,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1626605896000'
+        let idOption = '1647764079000'
         
         idOption = location.pathname
         
@@ -759,7 +726,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9"><span class="toc-number">2.</span> <span class="toc-text">集群扩容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A3%81%E7%9B%98"><span class="toc-number">2.1.</span> <span class="toc-text">添加新磁盘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-number">2.1.1.</span> <span class="toc-text">命令行方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E6%89%91%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F"><span class="toc-number">2.1.2.</span> <span class="toc-text">拓扑文件方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E8%8A%82%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">添加新节点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%8D%B7%E6%89%A9%E5%AE%B9"><span class="toc-number">3.</span> <span class="toc-text">存储卷扩容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9"><span class="toc-number">3.1.</span> <span class="toc-text">扩容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%BC%A9%E5%AE%B9"><span class="toc-number">4.</span> <span class="toc-text">集群缩容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">可用性测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%8A%82%E7%82%B9"><span class="toc-number">5.1.</span> <span class="toc-text">添加节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9"><span class="toc-number">5.2.</span> <span class="toc-text">关闭节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E7%9B%98%E6%8D%9F%E5%9D%8F"><span class="toc-number">5.3.</span> <span class="toc-text">硬盘损坏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#brick%E6%8D%9F%E5%9D%8F"><span class="toc-number">5.4.</span> <span class="toc-text">brick损坏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%A4%A7%E4%BA%8E%E5%89%A9%E4%BD%99%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8D%B7"><span class="toc-number">5.5.</span> <span class="toc-text">创建大于剩余空间的卷</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9volume"><span class="toc-number">5.6.</span> <span class="toc-text">扩容volume</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">工作流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ARP%E6%8A%A5%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">ARP报文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87"><span class="toc-number">2.1.</span> <span class="toc-text">请求报文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%AD%94%E6%8A%A5%E6%96%87"><span class="toc-number">2.2.</span> <span class="toc-text">应答报文</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ARP%E8%A1%A8"><span class="toc-number">3.</span> <span class="toc-text">ARP表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81ARP%E8%A1%A8"><span class="toc-number">3.1.</span> <span class="toc-text">动态ARP表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81ARP%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">静态ARP表</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%8D%E8%B4%B9ARP"><span class="toc-number">4.</span> <span class="toc-text">免费ARP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%90%86ARP"><span class="toc-number">5.</span> <span class="toc-text">代理ARP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ARP%E6%94%BB%E5%87%BB"><span class="toc-number">6.</span> <span class="toc-text">ARP攻击</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ARP%E8%80%81%E5%8C%96%E6%97%B6%E9%97%B4"><span class="toc-number">7.</span> <span class="toc-text">ARP老化时间</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90"><span class="toc-number">8.</span> <span class="toc-text">命令解析</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">

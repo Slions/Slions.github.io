@@ -6,7 +6,7 @@
   <link href="https://slions.github.io/atom.xml" rel="self"/>
   
   <link href="https://slions.github.io/"/>
-  <updated>2022-03-20T07:41:56.088Z</updated>
+  <updated>2022-03-20T08:35:25.539Z</updated>
   <id>https://slions.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ARP</title>
+    <link href="https://slions.github.io/2022/03/20/ARP/"/>
+    <id>https://slions.github.io/2022/03/20/ARP/</id>
+    <published>2022-03-20T08:14:39.000Z</published>
+    <updated>2022-03-20T08:35:25.539Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>地址解析协议</strong>（Address Resolution Protocol），其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。</p><h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p>假设主机A和B在同一个网段，主机A要向主机B发送信息，具体的地址解析过程如下：</p><ol><li>主机A首先查看自己的ARP表，确定其中是否包含有主机B对应的ARP表项。如果找到了对应的MAC地址，则主机A直接利用ARP表中的MAC地址，对IP数据包进行帧封装，并将数据包发送给主机B。</li><li>如果主机A在ARP表中找不到对应的MAC地址，<strong>则将缓存该数据报文</strong>，然后以广播方式发送一个ARP请求报文。ARP请求报文中的发送端IP地址和发送端MAC地址为主机A的IP地址和MAC地址，目标IP地址和目标MAC地址为主机B的IP地址和ff-ff-ff-ff-ff-ff的MAC地址。由于ARP请求报文以<strong>广播方式</strong>发送，该网段上的所有主机都可以接收到该请求，但只有被请求的主机（即主机B）会对该请求进行处理。</li><li>主机B比较自己的IP地址和ARP请求报文中的目标IP地址，当两者相同时进行如下处理：将ARP请求报文中的发送端（即主机A）的IP地址和MAC地址存入自己的ARP表中。之后以<strong>单播方式</strong>发送ARP响应报文给主机A，其中包含了自己的MAC地址。</li><li>主机A收到ARP响应报文后，<strong>将主机B的MAC地址加入到自己的ARP表中以用于后续报文的转发</strong>，同时将IP数据包进行封装后发送出去。</li></ol><h1 id="ARP报文"><a href="#ARP报文" class="headerlink" title="ARP报文"></a>ARP报文</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/arp1.png"/><p>一般说以太网地址就是指MAC地址。</p><ul><li>字段1是ARP请求的目的以太网地址，全1时代表广播地址。</li><li>字段2是发送ARP请求的以太网地址。</li><li>字段3以太网帧类型表示的是后面的数据类型，ARP请求和ARP应答这个值为0x0806。</li><li>字段4表示硬件地址的类型，硬件地址不只以太网一种，是以太网类型时此值为1。</li><li>字段5表示要映射的协议地址的类型，要对IPv4地址进行映射，此值为0x0800。</li><li>字段6和7表示硬件地址长度和协议地址长度，MAC地址占6字节，IP地址占4字节。</li><li>字段8是操作类型字段，值为1，表示进行ARP请求；值为2，表示进行ARP应答；值，表示进行RARP请求；值为4，表示进行RARP应答。</li><li>字段9是发送端ARP请求或应答的硬件地址，这里是以太网地址，和字段2相同。</li><li>字段10是发送ARP请求或应答的IP地址。</li><li>字段11和12是目的端的硬件地址和协议地址。</li></ul><p>图中红框圈起来的是一对ARP请求和ARP应答。</p><img src="https://gitee.com/Slions/picbed/raw/master/img/arp2.png"/><h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><img src="https://gitee.com/Slions/picbed/raw/master/img/arp3.png"/><h2 id="应答报文"><a href="#应答报文" class="headerlink" title="应答报文"></a>应答报文</h2><p>ARP应答分组中，将ARP请求中的源和目的地址进行交换，此外，变化的还有字段8 Opcode。其余字段内容不会发生变化。</p><img src="https://gitee.com/Slions/picbed/raw/master/img/arp4.png"/><h1 id="ARP表"><a href="#ARP表" class="headerlink" title="ARP表"></a>ARP表</h1><p>设备通过ARP解析到目的MAC地址后，将会在自己的ARP表中增加IP地址到MAC地址的映射表项，以用于后续到同一目的地报文的转发。</p><img src="https://gitee.com/Slions/picbed/raw/master/img/arp5.png"/><h2 id="动态ARP表"><a href="#动态ARP表" class="headerlink" title="动态ARP表"></a>动态ARP表</h2><p>动态ARP表项由ARP协议通过ARP报文自动生成和维护，可以被老化，可以被新的ARP报文更新，可以被静态ARP表项覆盖。当到达老化时间、接口down时会删除相应的动态ARP表项。</p><h2 id="静态ARP表"><a href="#静态ARP表" class="headerlink" title="静态ARP表"></a>静态ARP表</h2><p>静态ARP表项通过手工配置和维护，不会被老化，不会被动态ARP表项覆盖。</p><p><strong>配置静态ARP表项可以增加通信的安全性</strong>。静态ARP表项可以限制和指定IP地址的设备通信时只使用指定的MAC地址，此时攻击报文无法修改此表项的IP地址和MAC地址的映射关系，从而保护了本设备和指定设备间的正常通信。</p><h1 id="免费ARP"><a href="#免费ARP" class="headerlink" title="免费ARP"></a>免费ARP</h1><p>免费ARP指主机发送ARP查找自己的IP地址，通常发生在系统引导期间进行接口配置时。与标准ARP的区别就是免费ARP分组的目的IP地址字段封装的是自己的IP地址，即向所在网络请求自己的MAC地址。</p><p>免费ARP的作用有：</p><ol><li>一个主机可以通过它来确定另一个主机是否设置了相同的 IP地址。</li></ol><p>正常情况下发送免费ARP请求不会收到ARP应答，如果收到了一个ARP应答，则说明网络中存在与本机相同的IP地址的主机，发生了地址冲突。</p><ol start="2"><li>   更新其他主机高速缓存中旧的硬件地址信息。</li></ol><p>如果发送免费ARP的主机正好改变了硬件地址，如更换了接口卡。<br>其他主机接收到这个ARP请求的时候，发现自己的ARP高速缓存表中存在对应的IP地址，但是MAC地址不匹配，那么就需要利用接收的ARP请求来更新本地的ARP高速缓存表表项。</p><ol start="3"><li>网关利用免费ARP防止ARP攻击</li></ol><p>有些网关设备在一定的时间间隔内向网络主动发送免费ARP报文，让网络内的其他主机更新ARP表项中的网关MAC地址信息，以达到防止或缓解ARP攻击的效果。</p><ol start="4"><li>利用免费ARP进行ARP攻击</li></ol><p>ARP协议并不只在发送了ARP请求才接收ARP应答，计算机只要接收到ARP应答数据包，就会使用应答中的IP和MAC地址对本地的ARP缓存进行更新。<br>主机可以构造虚假的免费ARP应答，将ARP的源MAC地址设为错误的MAC地址，并把这个虚假的免费ARP应答发送到网络中，那么所有接收到这个免费ARP应答的主机都会更新本地ARP表项中相应IP地址对应的MAC地址。更新成功后，这些主机的数据报文就会被转发到错误的MAC地址，从而实现了ARP欺骗的攻击。</p><h1 id="代理ARP"><a href="#代理ARP" class="headerlink" title="代理ARP"></a>代理ARP</h1><p>代理ARP就是通过使用一个主机(通常为router)，来作为指定的设备使用自己的 MAC 地址来对另一设备的ARP请求作出应答。</p><p>为什么需要代理ARP？</p><p>先要了解，路由器的重要功能之一就是把局域网的广播包限制在该网内，阻止其扩散，否则会造成网络风暴。</p><p>ARP请求是个广播包，它询问的对象如果在同一个局域网内，就会收到应答。但是如果询问的对象不在同一个局域网该如何处理？路由器就提供了代理ARP为这个问题提供了解决方案。</p><img src="https://gitee.com/Slions/picbed/raw/master/img/arp6.png"/><p>两台主机A和B处于同一网段但不同的广播段（不在同一物理网络上）时，主机A发送ARP请求主机B的MAC地址时，因为路由器不转发广播包的原因，ARP请求只能到达路由器。如果路由器启用了代理ARP功能，并知道主机B属于它连接的网络，那么路由器就用自己接口的MAC地址代替主机B的MAC地址来对主机A进行ARP应答。主机A接收ARP应答，但并不知道代理ARP的存在。</p><p>代理ARP的<strong>优缺点</strong></p><p><strong>优点</strong>：代理ARP能在不影响路由表的情况下添加一个新的Router，使子网对该主机变得透明化。一般代理ARP应该使用在主机没有配置默认网关或没有任何路由策略的网络上。</p><p><strong>缺点</strong>：从工作工程可以看到，这其实是一种ARP欺骗。而且，通过两个物理网络之间的路由器的代理ARP功能其实互相隐藏了物理网络，这导致无法对网络拓扑进行网络概括。此外，代理ARP增加了使用它的那段网络的ARP流量，主机需要更大的ARP缓存空间，也不会为不使用ARP进行地址解析的网络工作。</p><h1 id="ARP攻击"><a href="#ARP攻击" class="headerlink" title="ARP攻击"></a>ARP攻击</h1><p>我们知道，当PC1对PC2正常通信的时候（先别管攻击者PC3），PC2、PC1会先后建立对方的IP和MAC地址的映射（即建立ARP缓存表），同时对于交换机而言，它也具有记忆功能，会基于源MAC地址建立一个CAM缓存表（记录MAC对应接口的信息），理解为当PC1发送消息至交换机的Port1时，交换机会把源MAC（也就是MAC1）记录下来，添加一条MAC1和Port1的映射，之后交换机可以根据MAC帧的目的MAC进行端口转发，这个时候PC3只是处于监听状态，会把PC1的广播丢弃。</p><p>正常的PC3会把广播包丢弃，同样的PC3可以抓住这一环节的漏洞，把不属于自己的广播包接收，同时回应一个虚假的回应包，告诉PC1我就是PC2</p><p>（IP2-MAC3），这样PC1会收到两个回应包（一个正确的IP2-MAC2，一个虚假的IP2-MAC3），但是PC1并不知道到底哪个是真的，所以PC1会做出判断，并且判断后到达的为真，那么怎么让虚假的回应包后到达呢，PC3可以连续不断的发送这样的回应包，总会把哪个正确的回应包覆盖掉。</p><p>而后PC1会建立IP2-MAC3这样一条ARP缓存条目，以后当PC1给PC2发送信息的时候，PC1依据OSI模型从上至下在网络层给数据封装目的IP为IP2的包头，在链路层通过查询ARP缓存表封装目的MAC为MAC3的数据帧，送至交换机，根据查询CAM表，发现MAC3对应的接口为Port3，就这样把信息交付到了PC3，完成了一次ARP攻击。</p><p>一般情况下，受到ARP攻击的计算机会出现两种现象：</p><ol><li>不断弹出“本机的XXX段硬件地址与网络中的XXX段地址冲突”的对话框。</li><li>计算机不能正常上网，出现网络中断的症状。</li></ol><p>因为这种攻击是利用ARP请求报文进行“欺骗”的，所以防火墙会误以为是正常的请求数据包，不予拦截。因此普通的防火墙很难抵挡这种攻击。</p><h1 id="ARP老化时间"><a href="#ARP老化时间" class="headerlink" title="ARP老化时间"></a>ARP老化时间</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/arp7.png"/><h1 id="命令解析"><a href="#命令解析" class="headerlink" title="命令解析"></a>命令解析</h1><p>arp指令用来管理系统的arp缓冲区，可以显示、删除、添加静态mac地址。ARP以各种方式操纵内核的ARP缓存。主要选项是清除地址映射项并手动设置。为了调试目的，ARP程序还允许对ARP缓存进行完全转储。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-v          显示详细信息--verbose；</span><br><span class="line">-n          以数字地址形式显示；</span><br><span class="line">-i          If选择界面；</span><br><span class="line">-H          type设置和查询arp缓存时检查 type 类型的地址；</span><br><span class="line">-a          [hostname]  显示指定 hostname 的所有入口；</span><br><span class="line">-d          hostname  删除指定 hostname 的所有入口；</span><br><span class="line">-D          使用ifa硬件地址界面；</span><br><span class="line">-s          hostname hw_addr  手工加入 hostname 的地址映射；</span><br><span class="line">-f          filename  从指定文件中读入 hostname 和硬件地址信息</span><br></pre></td></tr></table></figure><p><strong>常用示例</strong>：</p><p>添加静态映射：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -i eth0 -s 192.168.1.6 ff:ee:ee:ee:ee:ee</span><br></pre></td></tr></table></figure><p>以数字方式显示：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arp -vn</span><br><span class="line">Address                  HWtype  HWaddress          Flags Mask            Iface</span><br><span class="line">10.0.2.2                 ether   52:54:00:12:35:02   C                     eth0</span><br><span class="line">192.168.1.6              ether   ff:ee:ee:ee:ee:ee   CM                    eth0</span><br></pre></td></tr></table></figure><p>删除一个arp表项，这里，删除之后只是硬件地址没有了：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -d 10.1.10.118</span><br></pre></td></tr></table></figure><p>指定回复的MAC地址，当eth0收到IP地址为10.0.0.2的请求时，将会用eth1的MAC地址回答。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -i eth0 -Ds 10.0.0.2 eth1 pub</span><br></pre></td></tr></table></figure><blockquote><p>以上输出结果中用”C”表示ARP缓存内容，”M”表示永久性表项，”P”表示公共的表项。</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;strong&gt;地址解析协议&lt;/strong&gt;（Address Resolution Protocol），其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（N</summary>
+      
+    
+    
+    
+    <category term="Network" scheme="https://slions.github.io/categories/Network/"/>
+    
+    
+    <category term="Network" scheme="https://slions.github.io/tags/Network/"/>
+    
+  </entry>
   
   <entry>
     <title>排查是否存在ip地址占用现象</title>
@@ -497,32 +521,6 @@
     
     
     <category term="harbor" scheme="https://slions.github.io/tags/harbor/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>保留特殊字符</title>
-    <link href="https://slions.github.io/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/"/>
-    <id>https://slions.github.io/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/</id>
-    <published>2021-11-17T10:24:36.000Z</published>
-    <updated>2021-12-01T12:26:51.840Z</updated>
-    
-    <content type="html"><![CDATA[<p>由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。</p><p>如下示例：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&quot;测试特殊字符&quot;</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">var:</span> <span class="string">pvar</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">pvar:</span> <span class="type">!myvar</span></span><br></pre></td></tr></table></figure><p>运行时会报语法错误</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ansible_poc]# ansible-playbook test.yml</span><br><span class="line">ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:</span><br><span class="line">JSON: No JSON object could be decoded</span><br><span class="line"></span><br><span class="line">Syntax Error while loading YAML.</span><br><span class="line">  could not determine a constructor for the tag &#x27;!myvar&#x27;</span><br><span class="line"></span><br><span class="line">The error appears to be in &#x27;/home/ansible_poc/six.yml&#x27;: line 9, column 15, but may</span><br><span class="line">be elsewhere in the file depending on the exact syntax problem.</span><br><span class="line"></span><br><span class="line">The offending line appears to be:</span><br><span class="line"></span><br><span class="line">      vars:</span><br><span class="line">        pvar: !myvar</span><br><span class="line">              ^ here</span><br></pre></td></tr></table></figure><p>想要在定义变量时、指定name属性值时或其它会渲染的地方使用这些Jinja2的特殊符号，需要加上<code>!unsafe</code>标记。这个标记会禁止渲染，保留原始的特殊符号。</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line">  <span class="attr">pvar:</span> <span class="type">!unsafe</span> <span class="string">&quot;!myvar&quot;</span></span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。&lt;/p&gt;
-&lt;p&gt;如下示例：&lt;/p&gt;
-&lt;figure class=&quot;highlight yml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
-      
-    
-    
-    
-    <category term="ansible回炉" scheme="https://slions.github.io/categories/ansible%E5%9B%9E%E7%82%89/"/>
-    
-    
-    <category term="ansible" scheme="https://slions.github.io/tags/ansible/"/>
     
   </entry>
   
