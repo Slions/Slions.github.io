@@ -386,6 +386,35 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/21/docker%E7%BD%91%E7%BB%9C/" >
+            
+                <span>docker网络</span>
+        </a>
+        <div class="abstract-content">
+            自己动手实现network namespace中演示了network namespace的实现方式，network namespace可以为命名空间内的所有进程提供了全新隔离的网络协议栈。而所谓“网络栈”，就包括了：网卡（Network Interface）、回环设备（Loopback Device）、路由表（Routing Table）和 iptables 规则。对于一个进程来说，这些要素...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >
             
                 <span>如何优雅的编写dockerfile</span>
@@ -457,10 +486,10 @@ Dockerfile
                 <span>自己动手实现network namespace</span>
         </a>
         <div class="abstract-content">
-            之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。
+            之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和iptables规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。
 
 安装软件首先需要安装iprouter软件：
-12[root@slions_pc...
+12[root@slions_pc1 ~]...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -662,39 +691,11 @@ docker架构在我的本地环境执行docker ...
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/09/docker%20namespace/" >
-            
-                <span>docker namespace</span>
-        </a>
-        <div class="abstract-content">
-            我们谈及docker，都知道docker容器本质上是宿主机的进程，Docker通过namespace实现了资源隔离，通过cgroups实现了资源限制，接下来先聊聊namespaces是怎么一回事。
-namespace是什么
-Namespace是将内核的全局资源做封装，使得每个namespace都有一份独立的资源，因此不同的进程在各自的namespace中对同一种资源的使用不会互相干扰。
- —...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/categories/docker/page/2/">2</a><a class="extend next" rel="next" href="/categories/docker/page/2/">NEXT &gt;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -1786,9 +1787,14 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 72
+        Total : 73
         </div>
         <!-- search  -->
         
@@ -1801,6 +1807,11 @@ Namespace是将内核的全局资源做封装，使得每个namespace都有一�
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2022/03/21/docker%E7%BD%91%E7%BB%9C/" >docker网络</a>
+        </li>
     
     
         <li class="archive-post-item">

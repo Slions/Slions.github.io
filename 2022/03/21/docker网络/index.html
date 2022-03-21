@@ -20,17 +20,31 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/tags/linux/page/2/index.html">
+    <meta name="description" content="自己动手实现network namespace中演示了network namespace的实现方式，network namespace可以为命名空间内的所有进程提供了全新隔离的网络协议栈。而所谓“网络栈”，就包括了：网卡（Network Interface）、回环设备（Loopback Device）、路由表（Routing Table）和 iptables 规则。对于一个进程来说，这些要素，构成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker网络">
+<meta property="og:url" content="https://slions.github.io/2022/03/21/docker%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="自己动手实现network namespace中演示了network namespace的实现方式，network namespace可以为命名空间内的所有进程提供了全新隔离的网络协议栈。而所谓“网络栈”，就包括了：网卡（Network Interface）、回环设备（Loopback Device）、路由表（Routing Table）和 iptables 规则。对于一个进程来说，这些要素，构成">
 <meta property="og:locale">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn3.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn4.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn5.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn6.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn7.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/dn8.png">
+<meta property="article:published_time" content="2022-03-21T14:14:19.000Z">
+<meta property="article:modified_time" content="2022-03-21T14:42:52.349Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/dn1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>docker网络 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +228,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +252,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">docker网络</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +287,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            docker网络
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.3k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2022/03/21</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,109 +455,109 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
-            
-                <span>linux用户与组管理（下篇）</span>
-        </a>
-        <div class="abstract-content">
-            用户和组管理命令useradd 和 adduseradduser是useradd的一个软链接。
-12[root@slions_pc1 ~]# ls -l /usr/sbin/adduserlrwxrwxrwx. 1 root root 7 5月  21 16:45 /usr/sbin/adduser -&gt; useradd
+            <main class="main post-page">
+    <article class="article-entry">
+        <a href="/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" title="自己动手实现network namespace">自己动手实现network namespace</a>中演示了network namespace的实现方式，network namespace可以为命名空间内的所有进程提供了全新隔离的网络协议栈。而所谓“网络栈”，就包括了：网卡（Network Interface）、回环设备（Loopback Device）、路由表（Routing Table）和 iptables 规则。对于一个进程来说，这些要素，构成了它发起和响应网络请求的基本环境。
 
-useradd用法：
-12345678910111213141...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/31</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
+<p>作为一个容器，它可以声明直接使用宿主机的网络栈（–net=host），即：不开启 Network Namespace，比如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker run –d –net=host --name nginx-host nginx</span></span><br></pre></td></tr></table></figure>
+
+<p>直接使用主机网络模式虽然可以为容器提供良好的网络性能，但会引入共享网络资源的问题，比如端口冲突。所以，在大多数情况下，我们都希望容器进程能使用自己 Network Namespace 里的网络栈，即：拥有属于自己的 IP 地址和端口。</p>
+<p>如何让隔离的容器进程跟其他 Network Namespace 里的容器进程进行交互呢？Linux 中可以通过虚拟网桥实现，docker中也是通过“网桥”实现的。</p>
+<h1 id="Docker-Bridge"><a href="#Docker-Bridge" class="headerlink" title="Docker Bridge"></a>Docker Bridge</h1><p>当 Docker 启动时，会自动在主机上创建一个 docker0 虚拟网桥，实际上是 Linux 的一个 bridge，可以理解为一个软件交换机。它会在挂载到它的网口之间进行转发。</p>
+<p>创建一个 Docker 容器的时候，同时会创建了一对 veth pair 接口（当数据包发送到一个接口时，另外一个接口也可以收到相同的数据包）。这对接口一端在容器内，即 eth0 ；另一端在本地并被挂载到docker0 网桥，名称以 veth 开头（例如vethAQI)。通过这种方式，主机可以跟容器通信，容器之间也可以相互通信。Docker 就创建了在主机和所有容器之间一个虚拟共享网络。</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn1.png"></p>
+<p>brctl show查看当前的网桥：</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn2.png"></p>
+<p>上面显示中的接口是由对应的桥提供网络流转的，在宿主机上也可以看出只有bridge拥有ip地址，而挂在bridge上的vethxxx则没有ip。</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn3.png"></p>
+<h1 id="网络流转拓扑"><a href="#网络流转拓扑" class="headerlink" title="网络流转拓扑"></a>网络流转拓扑</h1><p><img src="https://slions.gitee.io/picbed/img/dn4.png"></p>
+<h2 id="容器与宿主机通信"><a href="#容器与宿主机通信" class="headerlink" title="容器与宿主机通信"></a>容器与宿主机通信</h2><p>在桥接模式下，Docker Daemon 将 veth0 附加到 docker0 网桥上，保证宿主机的报文有能力发往 veth0。再将 veth1 添加到 Docker 容器所属的网络命名空间，保证宿主机的网络报文若发往 veth0 可以立即被 veth1 收到。</p>
+<h2 id="容器与外界通信"><a href="#容器与外界通信" class="headerlink" title="容器与外界通信"></a>容器与外界通信</h2><p>容器如果需要联网，则需要采用 NAT 方式。准确的说，是 NATP (网络地址端口转换) 方式。NATP 包含两种转换方式：SNAT 和 DNAT 。</p>
+<h3 id="外部访问容器"><a href="#外部访问容器" class="headerlink" title="外部访问容器"></a>外部访问容器</h3><blockquote>
+<p>目的 NAT (Destination NAT，DNAT): 修改数据包的目的地址。</p>
+</blockquote>
+<p>当宿主机以外的世界需要访问容器时，数据包的流向如下图所示：</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn5.png"></p>
+<p>由于容器的 IP 与端口对外都是不可见的，所以数据包的目的地址为宿主机的 ip 和端口，为 192.168.1.10:24 。</p>
+<p>数据包经过路由器发给宿主机 eth0，再经 eth0 转发给 docker0 网桥。由于存在 DNAT 规则，会将数据包的目的地址转换为容器的 ip 和端口，为 172.17.0.n:24 。</p>
+<p>宿主机上的 docker0 网桥识别到容器 ip 和端口，于是将数据包发送附加到 docker0 网桥上的 veth0 接口，veth0 接口再将数据包发送给容器内部的 veth1 接口，容器接收数据包并作出响应。</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn6.png"></p>
+<h3 id="容器访问外部"><a href="#容器访问外部" class="headerlink" title="容器访问外部"></a>容器访问外部</h3><blockquote>
+<p>目的 NAT (Destination NAT，DNAT): 修改数据包的目的地址。</p>
+</blockquote>
+<p>当容器需要访问宿主机以外的世界时，数据包的流向为下图所示：</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn7.png"></p>
+<p>此时数据包的源地址为容器的 ip 和端口，为 172.17.0.n:24，容器内部的 veth1 接口将数据包发往 veth0 接口，到达 docker0 网桥。</p>
+<p>宿主机上的 docker0 网桥发现数据包的目的地址为外界的 IP 和端口，便会将数据包转发给 eth0 ，并从 eth0 发出去。由于存在 SNAT 规则，会将数据包的源地址转换为宿主机的 ip 和端口，为 192.168.1.10:24 。</p>
+<p>由于路由器可以识别到宿主机的 ip 地址，所以再将数据包转发给外界，外界接受数据包并作出响应。这时候，在外界看来，这个数据包就是从 192.168.1.10:24 上发出来的，Docker 容器对外是不可见的。</p>
+<p><img src="https://slions.gitee.io/picbed/img/dn8.png"></p>
+<p>docker0 之所以能将对外报文转发到eth0，是因为在一个主机内，通过路由表规则进行转发，在主机内docker0可以reach到eth0所对应的IP。</p>
+<p>当进行端口映射的时候我们可以查看到宿主机中多了一个进程，这就是前面所说的docker-proxy，每增加一个端口映射，宿主机就会多出一个docker-proxy进程，当其他的人访问这个主机的时候，docker-proxy就会自动找到对应容器的端口。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="http://blog.daocloud.io/4896.html">http://blog.daocloud.io/4896.html</a></p>
+
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
-            
-                <span>linux用户与组管理（上篇）</span>
-        </a>
-        <div class="abstract-content">
-            基本概念Linux 继承了UNIX 对用户的优秀支持，其属于多用户的操作系统。在linux中用户与组都是一种身份认证资源。
-每个用户都有用户名、用户的唯一编号uid、所属组及其默认的shell，可能还有密码、家目录、附属组、注释信息等。每个组也有自己的名称、组唯一编号gid。一般来说，gid和uid都是相同的，但可以根据自己的实际需求来设置。组分为主组(primary group)和辅助组(...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >
-            
-                <span>linux添加新硬盘无法识别解决方法</span>
-        </a>
-        <div class="abstract-content">
-            我们经常会遇到当主机新添加磁盘后，进入宿主机查看并没有显示多出来的那块磁盘，是因为Linux目前缺乏允许动态SCSI通道重配的命令。
-重启主机是检测新添加磁盘设备的可靠方式，但是会造成上面运行的应用服务中断，有没有什么方法是能优雅的解决此问题呢。执行以下脚本就可以了。
-1# for i in /sys/class/scsi_host/host*/scan;do echo &quot;- - ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2022/03/20/ARP/" title= "ARP">
+                    <div class="prevTitle">ARP</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/tags/linux/">&lt; PREV</a><a class="page-number" href="/tags/linux/">1</a><span class="page-number current">2</span>
-    </nav>
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1647872059000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -570,6 +647,24 @@ useradd用法：
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-Bridge"><span class="toc-number">1.</span> <span class="toc-text">Docker Bridge</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%B5%81%E8%BD%AC%E6%8B%93%E6%89%91"><span class="toc-number">2.</span> <span class="toc-text">网络流转拓扑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%AE%BF%E4%B8%BB%E6%9C%BA%E9%80%9A%E4%BF%A1"><span class="toc-number">2.1.</span> <span class="toc-text">容器与宿主机通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%A4%96%E7%95%8C%E9%80%9A%E4%BF%A1"><span class="toc-number">2.2.</span> <span class="toc-text">容器与外界通信</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE%E5%AE%B9%E5%99%A8"><span class="toc-number">2.2.1.</span> <span class="toc-text">外部访问容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%A4%96%E9%83%A8"><span class="toc-number">2.2.2.</span> <span class="toc-text">容器访问外部</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">3.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -2111,6 +2206,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

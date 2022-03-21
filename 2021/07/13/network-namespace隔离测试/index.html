@@ -20,15 +20,15 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。  安装软件首先需要安装iprouter软件： 12[root@slions_pc1 ~">
+    <meta name="description" content="之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和iptables规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。  安装软件首先需要安装iprouter软件： 12[root@slions_pc1 ~]# r">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自己动手实现network namespace">
 <meta property="og:url" content="https://slions.github.io/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。  安装软件首先需要安装iprouter软件： 12[root@slions_pc1 ~">
+<meta property="og:description" content="之前的文章提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和iptables规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。  安装软件首先需要安装iprouter软件： 12[root@slions_pc1 ~]# r">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-07-13T15:20:49.000Z">
-<meta property="article:modified_time" content="2022-03-19T06:14:05.676Z">
+<meta property="article:modified_time" content="2022-03-21T14:42:25.456Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -448,7 +448,7 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <a href="/2021/07/09/docker%20namespace/" title="之前的文章">之前的文章</a>提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和**iptables**规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。
+        <a href="/2021/07/09/docker%20namespace/" title="之前的文章">之前的文章</a>提到了6种Linux的namespace隔离技术，其中network namespace为命名空间内的所有进程提供了全新隔离的网络协议栈。这包括网络接口，路由表和iptables规则。通过使用网络命名空间就可以实现网络虚拟环境，实现彼此之间的网络隔离，其实通过ip命令就可以模拟出网络命名空间。
 
 <h1 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h1><p>首先需要安装iprouter软件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slions_pc1 ~]# rpm -q iproute</span><br><span class="line">iproute-4.11.0-14.el7.x86_64</span><br></pre></td></tr></table></figure>
@@ -1676,9 +1676,14 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 72
+        Total : 73
         </div>
         <!-- search  -->
         
@@ -1691,6 +1696,11 @@ top:50vh;
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2022/03/21/docker%E7%BD%91%E7%BB%9C/" >docker网络</a>
+        </li>
     
     
         <li class="archive-post-item">
