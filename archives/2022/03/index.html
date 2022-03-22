@@ -386,6 +386,72 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/22/k8s%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E4%B8%8Ecni%E6%8F%92%E4%BB%B6/" >
+            
+                <span>k8s网络模型与cni插件</span>
+        </a>
+        <div class="abstract-content">
+            Docker是基于一个虚拟网桥设备docker0来实现宿主机上容器通信的，而k8s本身不提供网络方案，只提供cni接口，维护了一个单独的网桥（cni0）来代替 docker0，由遵从cni的第三方网络插件提供。
+在使用cni插件时，一旦使用了k8s创建Pod,那么会产生一个CNI网桥来接管所有CNI插件负责的Pod，而我们单纯使用docker run命令创建的容器，还是由docker0负责。...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/22/docker%E8%B7%A8%E4%B8%BB%E6%9C%BA%E9%80%9A%E4%BF%A1/" >
+            
+                <span>docker跨主机通信</span>
+        </a>
+        <div class="abstract-content">
+            Docker默认的网络模式有三种：bridge、host、none，其中想实现不同宿主机上的容器相互访问是做不到的。对应”docker跨主通信”的需求，社区里涌现了大批的方案，其中flannel是用的最多也是较为简单的。
+FlannelFlannel本身是个框架，真正提供网络功能的是flannel的后端实现。Flannel支持三种后端实现：
+
+udp
+vxlan
+host-gw
+
+udpfl...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2022/03/21/docker%E7%BD%91%E7%BB%9C/" >
             
                 <span>docker网络</span>
@@ -644,39 +710,11 @@ ping 程序通过数据报中记录的发送请求时间值和接收到回显应
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2022/03/20/iptables/" >
-            
-                <span>iptables</span>
-        </a>
-        <div class="abstract-content">
-            老的系统防火墙使用的一直是iptables，centos/redhat7后默认的防火墙变为了firewalld，
-iptables主要是通过四表五链对网络数据进行处理，firewalld则是通过设置zone来限制网络，firewalld与iptables不能共存，会产生不兼容的问题。
-我们一般只是知道iptables，但它实际上由两个组件netfilter 和 iptables 组成。
-ne...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/archives/2022/03/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/03/page/2/">NEXT &gt;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -1773,9 +1811,55 @@ ne...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 73
+        Total : 75
         </div>
         <!-- search  -->
         
@@ -1788,6 +1872,16 @@ ne...
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2022/03/22/k8s%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E4%B8%8Ecni%E6%8F%92%E4%BB%B6/" >k8s网络模型与cni插件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2022/03/22/docker%E8%B7%A8%E4%B8%BB%E6%9C%BA%E9%80%9A%E4%BF%A1/" >docker跨主机通信</a>
+        </li>
     
     
         <li class="archive-post-item">

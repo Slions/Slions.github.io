@@ -386,6 +386,67 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >
+            
+                <span>Virtualbox虚机使用介绍</span>
+        </a>
+        <div class="abstract-content">
+             VMware workstation是最常见也是最常用的虚拟机工具，但是很多公司不会购买其商用授权，VirtualBox 也是一款虚拟化产品，重要的是其开源免费，好早之前在本地安装使用了下，感觉与VMware workstation比还是不太习惯，包括虚拟机的安装和设置也要重新习惯，本文主要讲下安装好软件后如何完成基础设置与网络配置，安装部分比较简单请自行解决。
+新建虚机
+进入virtua...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/05</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "虚拟机相关">虚拟机相关</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >
+            
+                <span>df与du结果不一致问题</span>
+        </a>
+        <div class="abstract-content">
+            df与du命令都是运维人员常用的检测存储空间大小的命令，平时我们并不太关注这两个命令的差别，但是经常会遇到这样一种场景，使用df查看到空间使用率已经非常高了，但使用du命令排查时发现不存在占用空间大的文件， 两者间的结果不一致。
+du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后累加，du能看到的文件只是一些当前存在的，没有被删除的。他计算的大小就是当前他认为存在的...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >
             
                 <span>磁盘分区工具</span>
@@ -633,87 +694,6 @@ useradd用法：
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >
-            
-                <span>glusterfs可用性测试</span>
-        </a>
-        <div class="abstract-content">
-            环境描述
-
-
-主机名
-ip地址
-系统环境
-角色
-
-
-
-k8s-1
-IP:192.168.186.10
-cpu:x2  mem:2GB  disk:/dev/sdb 40GB
-K8s_master,Gluster_master,Heketi_master
-
-
-K8s-2
-IP:192.168.186.11
-cpu:x2  mem:2GB  disk:/dev/sdb 40GB
-K8s_node...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >
-            
-                <span>glusterfs回收站功能</span>
-        </a>
-        <div class="abstract-content">
-            功能简述glusterfs有一个类似windows回收站的功能，可以帮助用户获取和恢复临时被删除的数据。每个块都会保留一个隐藏的目录.trash，它将会被用于存放被从各个块删除的文件。这个translator以后还会增强功能来支持被删除文件的恢复。
-回收站的目录名应该是可配置的。trash translator也会被用于内部操作比如自卷的自修复以及再平衡。
-1# gluster volume...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/16</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "glusterfs">glusterfs</a>
     
 </div>
             
@@ -1821,9 +1801,55 @@ K8s_node...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 73
+        Total : 75
         </div>
         <!-- search  -->
         
@@ -1836,6 +1862,16 @@ K8s_node...
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2022/03/22/k8s%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E4%B8%8Ecni%E6%8F%92%E4%BB%B6/" >k8s网络模型与cni插件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2022/03/22/docker%E8%B7%A8%E4%B8%BB%E6%9C%BA%E9%80%9A%E4%BF%A1/" >docker跨主机通信</a>
+        </li>
     
     
         <li class="archive-post-item">
