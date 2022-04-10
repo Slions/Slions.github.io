@@ -386,6 +386,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >
+            
+                <span>（三）主机清单inventory</span>
+        </a>
+        <div class="abstract-content">
+            上一章在讲ansible基本用法时的几个例子中host都是localhost,是因为在没有对ansible进行任何配置时，ansible只能通过localhost来控制本机。
+inventory⽤于定义ansible要管理的主机列表，可以定义单个主机和主机组。/etc/ansible/hosts就是默认的全局inventory，当然我们可以在配置文件中修改此配置项，但通常不会去修改这个配置项...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >
             
                 <span>实现科学上网</span>
@@ -690,38 +720,6 @@ pretty类
 
 
 /etc/hostnam...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/07</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >
-            
-                <span>linux误删文件恢复思路</span>
-        </a>
-        <div class="abstract-content">
-            使用linux时对于执行删除操作要慎之又慎，特别是重要的数据最好提前备份。当然，如果真的删除了一个文件时，我们也要冷静思考，想想如何通过其他手段弥补或减小损失。
-在解决问题前，我们先了解下涉及到的基本概念：
-
-我们看到的文件实际上是一个指向inode的链接, inode链接包含了文件的所有属性, 比如权限和所有者, 数据块地址(文件存储在磁盘的这些数据块中)。当你删除(rm)一个文件, 实际...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1919,9 +1917,16 @@ pretty类
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 76
+        Total : 77
         </div>
         <!-- search  -->
         
@@ -1934,6 +1939,11 @@ pretty类
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2022/04/10/shell%E5%A4%87%E5%BF%98%E5%BD%95/" >shell备忘录</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2367,6 +2377,8 @@ pretty类
     
         <span class="sidebar-tag-name" data-tags="Network"><span class="iconfont-archer">&#xe606;</span>Network</span>
     
+        <span class="sidebar-tag-name" data-tags="shell"><span class="iconfont-archer">&#xe606;</span>shell</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2437,6 +2449,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="云原生"><span class="iconfont-archer">&#xe60a;</span>云原生</span>
     
         <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
+    
+        <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
