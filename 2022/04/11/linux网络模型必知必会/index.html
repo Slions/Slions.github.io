@@ -27,16 +27,16 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="网络模型说到网络，肯定经常提起七层负载均衡、四层负载均衡，或者三层设备、二层设备等等。那么，这里说的二层、三层、四层、七层又都是什么意思呢？ 实际上，这些层都来自国际标准化组织制定的开放式系统互联通信参考模型（Open System Interconnection Reference Model），简称为 OSI 网络模型。 为了解决网络互联中异构设备的兼容性问题，并解耦复杂的网络包处理流程，OS">
 <meta property="og:locale">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/74layer.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/tcp封包.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/linux网络栈.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/网卡处理流程.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/74layer.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/tcp封包.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/linux网络栈.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/网卡处理流程.png">
 <meta property="article:published_time" content="2022-04-11T14:20:48.000Z">
-<meta property="article:modified_time" content="2022-04-11T14:51:35.098Z">
+<meta property="article:modified_time" content="2022-04-11T15:17:36.992Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Slions/picbed/raw/master/img/74layer.png">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/74layer.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
@@ -474,14 +474,14 @@ height:50vh;
 <li>网络接口层，负责网络包在物理网络中的传输，比如 MAC 寻址、错误侦测以及通过网卡传输网络帧等。</li>
 </ol>
 <p> TCP/IP 与 OSI 模型的关系，如下所示：</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/74layer.png"/>
+<img src="https://slions.gitee.io/picbed/img/74layer.png"/>
 
 <p>当然了，虽说 Linux 实际按照 TCP/IP 模型，实现了网络协议栈，但在平时的学习交流中，我们习惯上还是用 OSI 七层模型来描述。比如，说到七层和四层负载均衡，对应的分别是 OSI 模型中的应用层和传输层（而它们对应到 TCP/IP 模型中，实际上是四层和三层）。</p>
 <h1 id="Linux网络栈"><a href="#Linux网络栈" class="headerlink" title="Linux网络栈"></a>Linux网络栈</h1><p>有了 TCP/IP 模型后，在进行网络传输时，数据包就会按照协议栈，对上一层发来的数据进行逐层处理；然后封装上该层的协议头，再发送给下一层。</p>
 <p>当然，网络包在每一层的处理逻辑，都取决于各层采用的网络协议。比如在应用层，一个提供 REST API 的应用，可以使用 HTTP 协议，把它需要传输的 JSON 数据封装到 HTTP 协议中，然后向下传递给 TCP 层。</p>
 <p>而封装做的事情就很简单了，只是在原来的负载前后，增加固定格式的元数据，原始的负载数据并不会被修改。</p>
 <p>比如，以通过 TCP 协议通信的网络包为例，通过下面这张图，我们可以看到，应用程序数据在每个层的封装格式。</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/tcp封包.png"/>
+<img src="https://slions.gitee.io/picbed/img/tcp封包.png"/>
 
 <p>其中：</p>
 <ul>
@@ -492,7 +492,7 @@ height:50vh;
 <p>这些新增的头部和尾部，都按照特定的协议格式填充，想了解具体格式，你可以查看协议的文档。 比如，你可以查看这里，了解 TCP 头的格式。这些新增的头部和尾部，增加了网络包的大小，但我们都知道，物理链路中并不能传输任意大小的数据包。网络接口配置的最大传输单元（MTU），就规定了最大的 IP 包大小。在我们最常用的以太网中，MTU 默认值是 1500（这也是 Linux 的默认值）。</p>
 <p>一旦网络包超过 MTU 的大小，就会在网络层分片，以保证分片后的 IP 包不大于 MTU 值。显然，MTU 越大，需要的分包也就越少，自然，网络吞吐能力就越好。</p>
 <p>理解了 TCP/IP 网络模型和网络包的封装原理后，很容易能想到，Linux 内核中的网络栈，其实也类似于 TCP/IP 的四层结构。如下图所示，就是 Linux 通用 IP 网络栈的示意图：</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/linux网络栈.png"/>
+<img src="https://slions.gitee.io/picbed/img/linux网络栈.png"/>
 
 <ul>
 <li>最上层的应用程序，需要通过系统调用，来跟套接字接口进行交互；</li>
@@ -522,7 +522,7 @@ height:50vh;
 <li><p>最后，应用程序就可以使用 Socket 接口，读取到新接收到数据。</p>
 </li>
 </ol>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/网卡处理流程.png"/>
+<img src="https://slions.gitee.io/picbed/img/网卡处理流程.png"/>
 
 
 
