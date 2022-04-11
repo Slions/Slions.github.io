@@ -20,17 +20,27 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2021/page/3/index.html">
+    <meta name="description" content="网络模型说到网络，肯定经常提起七层负载均衡、四层负载均衡，或者三层设备、二层设备等等。那么，这里说的二层、三层、四层、七层又都是什么意思呢？ 实际上，这些层都来自国际标准化组织制定的开放式系统互联通信参考模型（Open System Interconnection Reference Model），简称为 OSI 网络模型。 为了解决网络互联中异构设备的兼容性问题，并解耦复杂的网络包处理流程，OS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux网络模型必知必会">
+<meta property="og:url" content="https://slions.github.io/2022/04/11/linux%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="网络模型说到网络，肯定经常提起七层负载均衡、四层负载均衡，或者三层设备、二层设备等等。那么，这里说的二层、三层、四层、七层又都是什么意思呢？ 实际上，这些层都来自国际标准化组织制定的开放式系统互联通信参考模型（Open System Interconnection Reference Model），简称为 OSI 网络模型。 为了解决网络互联中异构设备的兼容性问题，并解耦复杂的网络包处理流程，OS">
 <meta property="og:locale">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/74layer.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/tcp封包.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/linux网络栈.png">
+<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/网卡处理流程.png">
+<meta property="article:published_time" content="2022-04-11T14:20:48.000Z">
+<meta property="article:modified_time" content="2022-04-11T14:51:35.098Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/Slions/picbed/raw/master/img/74layer.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>linux网络模型必知必会 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +224,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +248,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">linux网络模型必知必会</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +283,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            linux网络模型必知必会
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.8k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2022/04/11</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,339 +451,146 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >
-            
-                <span>我是一个线程（转载）</span>
-        </a>
-        <div class="abstract-content">
-            
-本文转载自IBM前架构师刘欣
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h1><p>说到网络，肯定经常提起七层负载均衡、四层负载均衡，或者三层设备、二层设备等等。那么，这里说的二层、三层、四层、七层又都是什么意思呢？</p>
+<p>实际上，这些层都来自国际标准化组织制定的开放式系统互联通信参考模型（Open System Interconnection Reference Model），简称为 <strong>OSI 网络模型</strong>。</p>
+<p>为了解决网络互联中异构设备的兼容性问题，并解耦复杂的网络包处理流程，OSI 模型把网络互联的框架分为应用层、表示层、会话层、传输层、网络层、数据链路层以及物理层等七层，每个层负责不同的功能。其中：</p>
+<ol>
+<li>应用层，负责为应用程序提供统一的接口。</li>
+<li>表示层，负责把数据转换成兼容接收系统的格式。</li>
+<li>会话层，负责维护计算机之间的通信连接。</li>
+<li>传输层，负责为数据加上传输表头，形成数据包。</li>
+<li>网络层，负责数据的路由和转发。</li>
+<li>数据链路层，负责 MAC 寻址、错误侦测和改错。</li>
+<li>物理层，负责在物理网络中传输数据帧。</li>
+</ol>
+<p>但是 OSI 模型还是太复杂了，也没能提供一个可实现的方法。所以，在 Linux 中，我们实际上使用的是另一个更实用的四层模型，即 <strong>TCP/IP 网络模型</strong>。</p>
+<p>TCP/IP 模型，把网络互联的框架分为应用层、传输层、网络层、网络接口层等四层，其中：</p>
+<ol>
+<li>应用层，负责向用户提供一组应用程序，比如 HTTP、FTP、DNS 等。</li>
+<li>传输层，负责端到端的通信，比如 TCP、UDP 等。</li>
+<li>网络层，负责网络包的封装、寻址和路由，比如 IP、ICMP 等。</li>
+<li>网络接口层，负责网络包在物理网络中的传输，比如 MAC 寻址、错误侦测以及通过网卡传输网络帧等。</li>
+</ol>
+<p> TCP/IP 与 OSI 模型的关系，如下所示：</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/74layer.png"/>
 
-初生牛犊我是一个线程，我一出生就被编了个号：0x3704，然后被领到一个昏暗的屋子里，在这里我发现了很多和我一模一样的同伴。
-我身边的同伴0x6900 待的时间比较长，他带着沧桑的口气对我说：“我们线程的宿命就是处理包裹。把包裹处理完以后还得马上回到这里，否则可能永远回不来了。”
-我一脸懵懂，“包裹，什么包裹？”
-“不要着急，马上你就会明白了，我们这里是不养...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" >
-            
-                <span>git原理及常用命令</span>
-        </a>
-        <div class="abstract-content">
-            关于git的使用介绍网上也比较多了，尤其是廖雪峰大佬的git教程与苏玲大佬的git网课都是git入门的经典。写这篇文章主要是想通过图示化配合文字的方式，加深记忆，也在日常工作中起到速查的作用。
-git简介
-Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地处理从小到大的所有项目。这是git官网对其的描述。
+<p>当然了，虽说 Linux 实际按照 TCP/IP 模型，实现了网络协议栈，但在平时的学习交流中，我们习惯上还是用 OSI 七层模型来描述。比如，说到七层和四层负载均衡，对应的分别是 OSI 模型中的应用层和传输层（而它们对应到 TCP/IP 模型中，实际上是四层和三层）。</p>
+<h1 id="Linux网络栈"><a href="#Linux网络栈" class="headerlink" title="Linux网络栈"></a>Linux网络栈</h1><p>有了 TCP/IP 模型后，在进行网络传输时，数据包就会按照协议栈，对上一层发来的数据进行逐层处理；然后封装上该层的协议头，再发送给下一层。</p>
+<p>当然，网络包在每一层的处理逻辑，都取决于各层采用的网络协议。比如在应用层，一个提供 REST API 的应用，可以使用 HTTP 协议，把它需要传输的 JSON 数据封装到 HTTP 协议中，然后向下传递给 TCP 层。</p>
+<p>而封装做的事情就很简单了，只是在原来的负载前后，增加固定格式的元数据，原始的负载数据并不会被修改。</p>
+<p>比如，以通过 TCP 协议通信的网络包为例，通过下面这张图，我们可以看到，应用程序数据在每个层的封装格式。</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/tcp封包.png"/>
 
-在没有出现版本控制系统前，常见的作法是在一台服务器上把文件共享出来，每个成...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "git">git</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >
-            
-                <span>如何优雅的编写dockerfile</span>
-        </a>
-        <div class="abstract-content">
-            写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品化程度高”的dockerfile是需要设计的。
-操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对于系统的开销也就越大。dockerhub上有上万个镜像，我们可以随意的拿来作为基础镜像，与之伴随的就是潜在的安全隐患，某些特殊的场景...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >
-            
-                <span>镜像构建之dockerfile</span>
-        </a>
-        <div class="abstract-content">
-            近几年来容器技术几乎席卷了整个IT界，当今容器已经成为了被大家广泛认可的应用托管技术，各种传统行业也在投入容器化的技术革新浪潮中。
-docker镜像可以被看做容器的基石，虽然dockerhub上提供了大量可用的镜像，但是由于环境的多样性和需求的特殊性，很多时候都需要自己制作适合的镜像。
-制作docker镜像有两种常见的方式：
+<p>其中：</p>
+<ul>
+<li>传输层在应用程序数据前面增加了 TCP 头；</li>
+<li>网络层在 TCP 数据包前增加了 IP 头；</li>
+<li>而网络接口层，又在 IP 数据包前后分别增加了帧头和帧尾。</li>
+</ul>
+<p>这些新增的头部和尾部，都按照特定的协议格式填充，想了解具体格式，你可以查看协议的文档。 比如，你可以查看这里，了解 TCP 头的格式。这些新增的头部和尾部，增加了网络包的大小，但我们都知道，物理链路中并不能传输任意大小的数据包。网络接口配置的最大传输单元（MTU），就规定了最大的 IP 包大小。在我们最常用的以太网中，MTU 默认值是 1500（这也是 Linux 的默认值）。</p>
+<p>一旦网络包超过 MTU 的大小，就会在网络层分片，以保证分片后的 IP 包不大于 MTU 值。显然，MTU 越大，需要的分包也就越少，自然，网络吞吐能力就越好。</p>
+<p>理解了 TCP/IP 网络模型和网络包的封装原理后，很容易能想到，Linux 内核中的网络栈，其实也类似于 TCP/IP 的四层结构。如下图所示，就是 Linux 通用 IP 网络栈的示意图：</p>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/linux网络栈.png"/>
 
-docker commit
-Dockerfile
-
-其中dock...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >
-            
-                <span>expect使用</span>
-        </a>
-        <div class="abstract-content">
-            使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。
-expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。
-安装1$ yum install -y expect
+<ul>
+<li>最上层的应用程序，需要通过系统调用，来跟套接字接口进行交互；</li>
+<li>套接字的下面，就是我们前面提到的传输层、网络层和网络接口层；</li>
+<li>最底层，则是网卡驱动程序以及物理网卡设备。</li>
+</ul>
+<blockquote>
+<p>网卡是发送和接收网络包的基本设备。在系统启动过程中，网卡通过内核中的网卡驱动程序注册到系统中。而在网络收发过程中，内核通过中断跟网卡进行交互。再结合前面提到的 Linux 网络栈，可以看出，网络包的处理非常复杂。所以，网卡硬中断只处理最核心的网卡数据读取或发送，而协议栈中的大部分逻辑，都会放到软中断中处理。</p>
+</blockquote>
+<h1 id="Linux-网络收发流程"><a href="#Linux-网络收发流程" class="headerlink" title="Linux 网络收发流程"></a>Linux 网络收发流程</h1><h2 id="网络包的接收流程"><a href="#网络包的接收流程" class="headerlink" title="网络包的接收流程"></a>网络包的接收流程</h2><ol>
+<li><p>内核分配一个主内存地址段（DMA缓冲区），网卡设备可以在DMA缓冲区中读写数据</p>
+</li>
+<li><p>当来了一个网络包，网卡将网络包写入DMA缓冲区，写完后通知CPU产生硬中断</p>
+</li>
+<li><p>硬中断处理程序锁定当前的DMA缓冲区，然后将网络包拷贝到另一块内存区，清空并解锁当前DMA缓冲区，然后通知软中断去处理网络包。</p>
+</li>
+<li><p>内核协议栈从缓冲区中取出网络帧，并通过网络协议栈，从下到上逐层处理这个网络帧。比如：</p>
+<ul>
+<li><p>在链路层检查报文的合法性，找出上层协议的类型（比如 IPv4还是 IPv6），再去掉帧头、帧尾，然后交给网络层。</p>
+</li>
+<li><p>网络层取出 IP 头，判断网络包下一步的走向，比如是交给上层处理还是转发。当网络层确认这个包是要发送到本机后，就会取出上层协议的类型（比如 TCP 还是 UDP），去掉 IP 头，再交给传输层处理。</p>
+</li>
+<li><p>传输层取出 TCP 头或者 UDP 头后，根据 &lt; 源 IP、源端口、目的 IP、目的端口 &gt; 四元组作为标识，找出对应的 Socket，并把数据拷贝到 Socket 的接收缓存中。</p>
+</li>
+</ul>
+</li>
+<li><p>最后，应用程序就可以使用 Socket 接口，读取到新接收到数据。</p>
+</li>
+</ol>
+<img src="https://gitee.com/Slions/picbed/raw/master/img/网卡处理流程.png"/>
 
 
 
-使用方法
-​    定义脚本的执行shell，类似于bash...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >
-            
-                <span>（五）ansible常用模块</span>
-        </a>
-        <div class="abstract-content">
-            ansible基于模块工作，ansible 2.9.24版本已经有3387个模块了，当然这些模块不需要也没精力全懂，但了解些常用模块的使用方式对日常运维过程中大有脾益。
-123456789[root@slions_pc1 ansible]# ansible --versionansible 2.9.24  config file = /etc/ansible/ansible.cfg  con...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >
-            
-                <span>（四）剧本文件playbook</span>
-        </a>
-        <div class="abstract-content">
-            我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。
-ansible之所以能...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >
-            
-                <span>（三）主机清单inventory</span>
-        </a>
-        <div class="abstract-content">
-            上一章在讲ansible基本用法时的几个例子中host都是localhost,是因为在没有对ansible进行任何配置时，ansible只能通过localhost来控制本机。
-inventory⽤于定义ansible要管理的主机列表，可以定义单个主机和主机组。/etc/ansible/hosts就是默认的全局inventory，当然我们可以在配置文件中修改此配置项，但通常不会去修改这个配置项...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >
-            
-                <span>实现科学上网</span>
-        </a>
-        <div class="abstract-content">
-            shadowsocks是当前比较受欢迎的科学上网工具。
-服务端配置准备代理服务器首先需要有一台可以连接外网的服务器，我本地环境是在腾讯云上的虚机（香港）。操作系统为Centos 7.6,1c 2g的资源。
-安装shadowsockslinux环境大多数情况都自带了pip工具，使用pip工具安装shadowsocks。
-1234567# pip3 install shadowsocksWARN...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "shadowsocks">shadowsocks</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >
-            
-                <span>hexo特殊符号的转义问题</span>
-        </a>
-        <div class="abstract-content">
-            最近写ansible相关文章时，发现hexo与Jinja2的语法有冲突。
-123line: 93,location: &#x27;_posts/（二）ansible初体验.md [Line 93, Column 133]&#x27;,type: &#x27;unexpected token: &#125;&#125;&#x27;
+<h1 id="网络包的发送流程"><a href="#网络包的发送流程" class="headerlink" title="网络包的发送流程"></a>网络包的发送流程</h1><p>当发送数据包时，与上述相反。链路层将数据包封装完毕后，放入网卡的DMA缓冲区，并调用系统硬中断，通知网卡从缓冲区读取并发送数据。</p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p>《关于linux网络，你必须知道这些》 冯永吉</p>
 
-它的模板语法 &#123;&#123;&#125;&#125...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "hexo">hexo</a>
-    
-</div>
-            
-        </div>
     </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2022/04/11/%E6%A3%80%E6%B5%8Btcp%E8%BF%9E%E9%80%9A%E6%80%A7%E4%B8%8E%E7%AB%AF%E5%8F%A3%E5%BB%B6%E8%BF%9F/" title= "检测tcp连通性与端口延迟">
+                    <div class="prevTitle">检测tcp连通性与端口延迟</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/2021/page/2/">&lt; PREV</a><a class="page-number" href="/archives/2021/">1</a><a class="page-number" href="/archives/2021/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/archives/2021/page/4/">4</a><a class="page-number" href="/archives/2021/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2021/page/7/">7</a><a class="extend next" rel="next" href="/archives/2021/page/4/">NEXT &gt;</a>
-    </nav>
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1649686848000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -800,6 +680,24 @@ inventory⽤于定义ansible要管理的主机列表，可以定义单个主机�
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">网络模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E7%BD%91%E7%BB%9C%E6%A0%88"><span class="toc-number">2.</span> <span class="toc-text">Linux网络栈</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-%E7%BD%91%E7%BB%9C%E6%94%B6%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">Linux 网络收发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%8C%85%E7%9A%84%E6%8E%A5%E6%94%B6%E6%B5%81%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">网络包的接收流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%8C%85%E7%9A%84%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">网络包的发送流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">5.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -2499,6 +2397,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

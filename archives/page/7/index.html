@@ -386,6 +386,73 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" >
+            
+                <span>alias与rm的最佳实践</span>
+        </a>
+        <div class="abstract-content">
+            不论是刚入职的运维萌新，还是工作多年的运维老油条，当在服务器上敲下rm时必须要保证命令的准确，在技术贴吧中也常常有人调侃到不想干了就rm -rf /与删库跑路等等的段子，如何让rm的操作更有保障呢，以下会提供一种解题思路。
+alias的用法Linux alias命令用于设置指令的别名。
+语法：
+1alias[别名]=[指令名称]
+
+使用不带参数的alias将列出当前shell环境下所有的已定...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
+            
+                <span>linux用户与组管理（下篇）</span>
+        </a>
+        <div class="abstract-content">
+            用户和组管理命令useradd 和 adduseradduser是useradd的一个软链接。
+12[root@slions_pc1 ~]# ls -l /usr/sbin/adduserlrwxrwxrwx. 1 root root 7 5月  21 16:45 /usr/sbin/adduser -&gt; useradd
+
+useradd用法：
+12345678910111213141...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/31</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >
             
                 <span>linux用户与组管理（上篇）</span>
@@ -642,71 +709,6 @@ heketi + glusterfs提供两种部署形式：
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >
-            
-                <span>cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</span>
-        </a>
-        <div class="abstract-content">
-            网上一大堆关于docker监控的工具和案例，这章主要说下如何通过cadvisor+node_exporter+prometheus完成对docker及主机的监控，并且通过grafana来完成监控数据的展示。
-简述下今天用到的几个组件，其中node_exporter是用来监控主机信息的，cadvisor是用来监控容器信息的，这俩组件对于prometheus而言都是采集器的作用，promethe...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "prometheus">prometheus</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >
-            
-                <span>理解存储驱动overlay2</span>
-        </a>
-        <div class="abstract-content">
-            容器中通过使用不同的rootfs来模拟了不同的操作系统及应用，不过，如果使用每个镜像都需要一个独立的根文件系统的话，那想必磁盘早已拥挤不堪了；且一个镜像可以同时运行多个容器，每个容器对文件的改动该怎么办？
-Linux提供了一种叫做联合文件系统的文件系统，它具备如下特性：
-
-联合挂载：将多个目录按层次组合，一并挂载到一个联合挂载点。
-写时复制：对联合挂载点的修改不会影响到底层的多个目录，而是使...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/12</span>
             </div>
             <!-- tags  -->
             
@@ -1906,9 +1908,47 @@ Linux提供了一种叫做联合文件系统的文件系统，它具备如下特
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1921,6 +1961,16 @@ Linux提供了一种叫做联合文件系统的文件系统，它具备如下特
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/%E6%A3%80%E6%B5%8Btcp%E8%BF%9E%E9%80%9A%E6%80%A7%E4%B8%8E%E7%AB%AF%E5%8F%A3%E5%BB%B6%E8%BF%9F/" >检测tcp连通性与端口延迟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/linux%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/" >linux网络模型必知必会</a>
+        </li>
     
     
         <li class="archive-post-item">

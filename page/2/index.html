@@ -399,6 +399,79 @@ height:100vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E8%A2%AB%E5%8D%A0%E7%94%A8%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" >
+            
+                <span>查看端口被占用的四种方式</span>
+        </a>
+        <div class="abstract-content">
+            netstat -anlp或ss
+
+
+
+lsof
+
+
+
+fuser
+
+
+
+nmap
+
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/RARP/" >
+            
+                <span>RARP</span>
+        </a>
+        <div class="abstract-content">
+            反向地址转换协议简称RARP。
+RARP是许多无盘系统在引导时用来获取IP地址的。RARP实现起来要比ARP复杂，因为RARP请求是在硬件层上广播的。这意味着他们不经过路由器进行转发。为了能让无盘系统在RARP关机的情况下也能引导，通常要在一个网络上（一根电缆）提供多个RARP服务器。
+允许局域网的物理机器从网关服务器的 ARP 表或者缓存上请求其 IP 地址。网络管理员在局域网网关路由器里...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2022/03/20/ping%E5%92%8Ctraceroute/" >
             
                 <span>ping和traceroute</span>
@@ -677,71 +750,6 @@ Kubelet 通过 CRI 接口（gRPC）调用 dockershim，请求创建一个容器�
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/02/%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89Jinja2%E6%A8%A1%E6%9D%BF/" >
-            
-                <span>（十一）Jinja2模板</span>
-        </a>
-        <div class="abstract-content">
-            日常ansible playbook编写过程中，会涉及到很多变量的解析与替换，解析并替换模板表达式的过程称为渲染。
-ansibles使用Jinja2来完成渲染工作，它是Python的一种模板引擎。
-Jinja2模板引擎提供了三种特殊符号来包围模板表达式：
-
-&#123;&#123;xxx&#125;&#125;：双大括号包围变量或表达式(Ansible中的变量就是它包围的)
-&#123;#x...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/02/%EF%BC%88%E5%8D%81%EF%BC%89ansible%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" >
-            
-                <span>（十）ansible异常处理</span>
-        </a>
-        <div class="abstract-content">
-            在日常使用ansible的过程中会发现，执行shell或command模块时，Ansible只认为0退出状态码是正确的，其它所有退出状态码都是失败的，但我们自己知道非0退出状态码并非一定代表着失败。
-比如下例：
-12345678- hosts: localhost  gather_facts: false  tasks:    - shell: &gt;        ls /home/aa...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
     
 </div>
             
@@ -2046,9 +2054,47 @@ Jinja2模板引擎提供了三种特殊符号来包围模板表达式：
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -2061,6 +2107,16 @@ Jinja2模板引擎提供了三种特殊符号来包围模板表达式：
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/%E6%A3%80%E6%B5%8Btcp%E8%BF%9E%E9%80%9A%E6%80%A7%E4%B8%8E%E7%AB%AF%E5%8F%A3%E5%BB%B6%E8%BF%9F/" >检测tcp连通性与端口延迟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/linux%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/" >linux网络模型必知必会</a>
+        </li>
     
     
         <li class="archive-post-item">

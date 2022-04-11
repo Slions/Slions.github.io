@@ -386,6 +386,73 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >
+            
+                <span>kube-proxy原理</span>
+        </a>
+        <div class="abstract-content">
+            kube-proxy的作用kube-proxy是Kubernetes的核心组件，部署在每个Node节点上，它是实现Kubernetes Service的通信与负载均衡机制的重要组件; kube-proxy负责为Pod创建代理服务，从apiserver获取所有server信息，并根据server信息创建代理服务，实现server到Pod的请求路由和转发，从而实现K8s层级的虚拟转发网络。
+
+在...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >
+            
+                <span>k8s-etcd理解</span>
+        </a>
+        <div class="abstract-content">
+            etcd作用是用来存储所有 Kubernetes 的集群状态的，它除了具备状态存储的功能，还有事件监听和订阅、Leader选举的功能。
+存储k8s集群状态整个kubernetes系统需要用到etcd用来协同和存储配置的有：
+
+网络插件flannel、calico等网络插件也需要用到etcd存储网络的配置信息
+kubernetes本身，包括各种对象的状态和元信息配置
+
+
+很多网上资料讲flan...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >
             
                 <span>k8s-scheduler原理</span>
@@ -634,66 +701,6 @@ expect是建立在tcl基础上的一个工具，可以让需要交互的任务�
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >
-            
-                <span>（五）ansible常用模块</span>
-        </a>
-        <div class="abstract-content">
-            ansible基于模块工作，ansible 2.9.24版本已经有3387个模块了，当然这些模块不需要也没精力全懂，但了解些常用模块的使用方式对日常运维过程中大有脾益。
-123456789[root@slions_pc1 ansible]# ansible --versionansible 2.9.24  config file = /etc/ansible/ansible.cfg  con...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >
-            
-                <span>（四）剧本文件playbook</span>
-        </a>
-        <div class="abstract-content">
-            我们之前的例子都是使用ansible &lt;host-pattern&gt; [-m module_name] [-a args]这种语法来完成的。对于这种每次使用一个模块，只能执行一个任务的方式，称为ad-hoc(点对点模式)，相当与被控节点在bash中执行一句shell命令。如果想要简单使用ansible的话，ad-hoc配合shell脚本可以满足大部分情况了。
-ansible之所以能...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
     
 </div>
             
@@ -1887,9 +1894,47 @@ ansible之所以能...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 77
+        Total : 79
         </div>
         <!-- search  -->
         
@@ -1902,6 +1947,16 @@ ansible之所以能...
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/%E6%A3%80%E6%B5%8Btcp%E8%BF%9E%E9%80%9A%E6%80%A7%E4%B8%8E%E7%AB%AF%E5%8F%A3%E5%BB%B6%E8%BF%9F/" >检测tcp连通性与端口延迟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/linux%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/" >linux网络模型必知必会</a>
+        </li>
     
     
         <li class="archive-post-item">
