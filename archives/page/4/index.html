@@ -386,6 +386,37 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >
+            
+                <span>k8s-controller-manager原理</span>
+        </a>
+        <div class="abstract-content">
+            controller-manager作用Controller Manager作为集群内部的管理控制中心，负责集群内的Node、Pod副本、服务端点（Endpoint）、命名空间（Namespace）、服务账号（ServiceAccount）、资源定额（ResourceQuota）的管理。
+
+逻辑上，每个控制器是一个单独的协程。用于监视 apiserver 暴露的集群状态，并且不断地尝试把当前...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >
             
                 <span>kube-proxy原理</span>
@@ -518,8 +549,13 @@ kubernetes本身，包括各种对象的状态和元信息配置
                 <span>修改kubeadm证书过期时间</span>
         </a>
         <div class="abstract-content">
-            使用kubeadm创建完Kubernetes集群后, 默认会在/etc/kubernetes/pki目录下存放集群中需要用到的证书文件, 整体结构如下图所示:
-12345678910111213141516171819202122232425root@k8s-master:/etc/kubernetes/pki# tree.|-- apiserver.crt|-- apiserver-etc...
+            证书过期利用kubeadm安装后发现ca的证书过期时间是十年，但是由ca签发的如apiserver.crt的证书过期时间都是一年，这就尴尬了。
+
+如果已经创建后的集群到了一年执行kubectl命令会出现：
+
+1Unable to connect to the server: x509: certificate has expired or is not yet valid
+
+此时需要手动更新...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -665,42 +701,6 @@ Dockerfile
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >
-            
-                <span>expect使用</span>
-        </a>
-        <div class="abstract-content">
-            使用ssh和scp时常常需要交互式的输入yes和密码，对于自动化运维中这种还需要人工点击完成的情况就比较烦了，linux的expect工具可以优雅的解决此问题。
-expect是建立在tcl基础上的一个工具，可以让需要交互的任务自动化的完成，相当于是模拟用户进行交互性操作。
-安装1$ yum install -y expect
-
-
-
-使用方法
-​    定义脚本的执行shell，类似于bash...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
     
 </div>
             
@@ -1932,9 +1932,44 @@ expect是建立在tcl基础上的一个工具，可以让需要交互的任务�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 79
+        Total : 80
         </div>
         <!-- search  -->
         
@@ -1947,6 +1982,11 @@ expect是建立在tcl基础上的一个工具，可以让需要交互的任务�
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2022/04/16/k8s%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6/" >k8s证书机制</a>
+        </li>
     
     
         <li class="archive-post-item">

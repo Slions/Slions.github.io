@@ -20,15 +20,15 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="使用kubeadm创建完Kubernetes集群后, 默认会在&#x2F;etc&#x2F;kubernetes&#x2F;pki目录下存放集群中需要用到的证书文件, 整体结构如下图所示: 12345678910111213141516171819202122232425root@k8s-master:&#x2F;etc&#x2F;kubernetes&#x2F;pki# tree.|-- apiserver.crt|-- apiserver-etcd-c">
+    <meta name="description" content="证书过期利用kubeadm安装后发现ca的证书过期时间是十年，但是由ca签发的如apiserver.crt的证书过期时间都是一年，这就尴尬了。  如果已经创建后的集群到了一年执行kubectl命令会出现：  1Unable to connect to the server: x509: certificate has expired or is not yet valid  此时需要手动更新证书。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="修改kubeadm证书过期时间">
 <meta property="og:url" content="https://slions.github.io/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="使用kubeadm创建完Kubernetes集群后, 默认会在&#x2F;etc&#x2F;kubernetes&#x2F;pki目录下存放集群中需要用到的证书文件, 整体结构如下图所示: 12345678910111213141516171819202122232425root@k8s-master:&#x2F;etc&#x2F;kubernetes&#x2F;pki# tree.|-- apiserver.crt|-- apiserver-etcd-c">
+<meta property="og:description" content="证书过期利用kubeadm安装后发现ca的证书过期时间是十年，但是由ca签发的如apiserver.crt的证书过期时间都是一年，这就尴尬了。  如果已经创建后的集群到了一年执行kubectl命令会出现：  1Unable to connect to the server: x509: certificate has expired or is not yet valid  此时需要手动更新证书。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-09-23T14:20:58.000Z">
-<meta property="article:modified_time" content="2021-10-03T04:53:24.512Z">
+<meta property="article:modified_time" content="2022-04-16T09:27:58.878Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="kubernetes">
 <meta name="twitter:card" content="summary">
@@ -319,7 +319,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.4k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">330</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -448,109 +448,7 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>使用kubeadm创建完Kubernetes集群后, 默认会在/etc/kubernetes/pki目录下存放集群中需要用到的证书文件, 整体结构如下图所示:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">root@k8s-master:/etc/kubernetes/pki# tree</span><br><span class="line">.</span><br><span class="line">|-- apiserver.crt</span><br><span class="line">|-- apiserver-etcd-client.crt</span><br><span class="line">|-- apiserver-etcd-client.key</span><br><span class="line">|-- apiserver.key</span><br><span class="line">|-- apiserver-kubelet-client.crt</span><br><span class="line">|-- apiserver-kubelet-client.key</span><br><span class="line">|-- ca.crt</span><br><span class="line">|-- ca.key</span><br><span class="line">|-- etcd</span><br><span class="line">|   |-- ca.crt</span><br><span class="line">|   |-- ca.key</span><br><span class="line">|   |-- healthcheck-client.crt</span><br><span class="line">|   |-- healthcheck-client.key</span><br><span class="line">|   |-- peer.crt</span><br><span class="line">|   |-- peer.key</span><br><span class="line">|   |-- server.crt</span><br><span class="line">|   `-- server.key</span><br><span class="line">|-- front-proxy-ca.crt</span><br><span class="line">|-- front-proxy-ca.key</span><br><span class="line">|-- front-proxy-client.crt</span><br><span class="line">|-- front-proxy-client.key</span><br><span class="line">|-- sa.key</span><br><span class="line">`-- sa.pub</span><br></pre></td></tr></table></figure>
-
-<h1 id="证书分组"><a href="#证书分组" class="headerlink" title="证书分组"></a>证书分组</h1><p>Kubernetes把证书放在了两个文件夹中</p>
-<ul>
-<li>/etc/kubernetes/pki</li>
-<li>/etc/kubernetes/pki/etcd</li>
-</ul>
-<h2 id="Kubernetes-集群根证书"><a href="#Kubernetes-集群根证书" class="headerlink" title="Kubernetes 集群根证书"></a>Kubernetes 集群根证书</h2><p>Kubernetes 集群根证书CA(Kubernetes集群组件的证书签发机构)</p>
-<ul>
-<li><p>/etc/kubernetes/pki/ca.crt</p>
-</li>
-<li><p>/etc/kubernetes/pki/ca.key</p>
-</li>
-</ul>
-<p>以上这组证书为签发其他Kubernetes组件证书使用的根证书, 可以认为是Kubernetes集群中证书签发机构之一。</p>
-<p>由此根证书签发的证书有:</p>
-<ol>
-<li>kube-apiserver 组件持有的服务端证书</li>
-</ol>
-<ul>
-<li><p>/etc/kubernetes/pki/apiserver.crt</p>
-</li>
-<li><p>/etc/kubernetes/pki/apiserver.key</p>
-</li>
-</ul>
-<ol start="2">
-<li>kubelet 组件持有的客户端证书, 用作 kube-apiserver 主动向 kubelet 发起请求时的客户端认证</li>
-</ol>
-<ul>
-<li><p>/etc/kubernetes/pki/apiserver-kubelet-client.crt</p>
-</li>
-<li><p>/etc/kubernetes/pki/apiserver-kubelet-client.key</p>
-</li>
-</ul>
-<h2 id="汇聚层证书"><a href="#汇聚层证书" class="headerlink" title="汇聚层证书"></a>汇聚层证书</h2><p>kube-apiserver 的另一种访问方式就是使用 kubectl proxy 来代理访问, 而该证书就是用来支持SSL代理访问的. 在该种访问模式下, 我们是以http的方式发起请求到代理服务的, 此时, 代理服务会将该请求发送给 kube-apiserver, 在此之前, 代理会将发送给 kube-apiserver 的请求头里加入证书信息。</p>
-<p>kube-apiserver 代理根证书(客户端证书)</p>
-<p>用在requestheader-client-ca-file配置选项中, kube-apiserver 使用该证书来验证客户端证书是否为自己所签发</p>
-<ul>
-<li>/etc/kubernetes/pki/front-proxy-ca.crt</li>
-<li>/etc/kubernetes/pki/front-proxy-ca.key</li>
-</ul>
-<p>由此根证书签发的证书只有一组:</p>
-<p>代理层(如汇聚层aggregator)使用此套代理证书来向 kube-apiserver 请求认证</p>
-<p>代理端使用的客户端证书, 用作代用户与 kube-apiserver 认证</p>
-<ul>
-<li>/etc/kubernetes/pki/front-proxy-client.crt</li>
-<li>/etc/kubernetes/pki/front-proxy-client.key</li>
-</ul>
-<h2 id="etcd-集群根证书"><a href="#etcd-集群根证书" class="headerlink" title="etcd 集群根证书"></a>etcd 集群根证书</h2><p>etcd集群所用到的证书都保存在/etc/kubernetes/pki/etcd这路径下, 很明显, 这一套证书是用来专门给etcd集群服务使用的, 设计以下证书文件</p>
-<p>etcd 集群根证书CA(etcd 所用到的所有证书的签发机构)</p>
-<ul>
-<li>/etc/kubernetes/pki/etcd/ca.crt</li>
-<li>/etc/kubernetes/pki/etcd/ca.key</li>
-</ul>
-<p>由此根证书签发机构签发的证书有:</p>
-<ol>
-<li>etcd server 持有的服务端证书</li>
-</ol>
-<ul>
-<li><p>/etc/kubernetes/pki/etcd/server.crt</p>
-</li>
-<li><p>/etc/kubernetes/pki/etcd/server.key</p>
-</li>
-</ul>
-<ol start="2">
-<li>peer 集群中节点互相通信使用的客户端证书</li>
-</ol>
-<ul>
-<li>/etc/kubernetes/pki/etcd/peer.crt</li>
-<li>/etc/kubernetes/pki/etcd/peer.key</li>
-</ul>
-<ol start="3">
-<li>pod 中定义 Liveness 探针使用的客户端证书</li>
-</ol>
-<ul>
-<li><p>/etc/kubernetes/pki/etcd/healthcheck-client.crt</p>
-</li>
-<li><p>/etc/kubernetes/pki/etcd/healthcheck-client.key</p>
-</li>
-</ul>
-<blockquote>
-<p>kubeadm 部署的 Kubernetes 集群是以 pod 的方式运行 etcd 服务的, 在该 pod 的定义中, 配置了 Liveness 探活探针。</p>
-<p>当 describe etcd 的 pod 时, 会看到如下一行配置:</p>
-<p>Liveness:       exec [/bin/sh -ec ETCDCTL_API=3 etcdctl –endpoints=https://[127.0.0.1]:2379 –cacert=/etc/kubernetes/pki/etcd/ca.crt –cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt –key=/etc/kubernetes/pki/etcd/healthcheck-client.key get foo] delay=15s timeout=15s period=10s #success=1 #failure=8</p>
-</blockquote>
-<ol start="4">
-<li>配置在 kube-apiserver 中用来与 etcd server 做双向认证的客户端证书</li>
-</ol>
-<ul>
-<li>/etc/kubernetes/pki/apiserver-etcd-client.crt</li>
-<li>/etc/kubernetes/pki/apiserver-etcd-client.key</li>
-</ul>
-<h2 id="Serveice-Account秘钥"><a href="#Serveice-Account秘钥" class="headerlink" title="Serveice Account秘钥"></a>Serveice Account秘钥</h2><p>最后介绍的这组”证书”其实不是证书, 而是一组秘钥，这组的密钥对儿仅提供给 kube-controller-manager 使用. kube-controller-manager 通过 sa.key 对 token 进行签名, master 节点通过公钥 sa.pub 进行签名的验证。</p>
-<ul>
-<li>/etc/kubernetes/pki/sa.key</li>
-<li>/etc/kubernetes/pki/sa.pub</li>
-</ul>
-<p>因为 kubeadm 创建的集群, kube-proxy 是以 pod 形式运行的, 在 pod 中, 直接使用 service account 与 kube-apiserver 进行认证, 此时就不需要再单独为 kube-proxy 创建证书了。</p>
-<blockquote>
-<p>如果 kube-proxy 是以守护进程的方式直接运行在宿主机的, 那么就需要为它创建一套证书了。创建的方式也很简单, 直接使用上面第一条提到的 Kubernetes 集群根证书 进行签发就可以了(注意CN和O的设置)。</p>
-</blockquote>
-<h1 id="证书过期"><a href="#证书过期" class="headerlink" title="证书过期"></a>证书过期</h1><p>利用kubeadm安装后发现ca的证书过期时间是十年，但是由ca签发的如apiserver.crt的证书过期时间都是一年，这就尴尬了。</p>
+        <h1 id="证书过期"><a href="#证书过期" class="headerlink" title="证书过期"></a>证书过期</h1><p>利用kubeadm安装后发现ca的证书过期时间是十年，但是由ca签发的如apiserver.crt的证书过期时间都是一年，这就尴尬了。</p>
 <ol>
 <li>如果已经创建后的集群到了一年执行kubectl命令会出现：</li>
 </ol>
@@ -754,7 +652,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E5%88%86%E7%BB%84"><span class="toc-number">1.</span> <span class="toc-text">证书分组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-%E9%9B%86%E7%BE%A4%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="toc-number">1.1.</span> <span class="toc-text">Kubernetes 集群根证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%87%E8%81%9A%E5%B1%82%E8%AF%81%E4%B9%A6"><span class="toc-number">1.2.</span> <span class="toc-text">汇聚层证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#etcd-%E9%9B%86%E7%BE%A4%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="toc-number">1.3.</span> <span class="toc-text">etcd 集群根证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Serveice-Account%E7%A7%98%E9%92%A5"><span class="toc-number">1.4.</span> <span class="toc-text">Serveice Account秘钥</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F"><span class="toc-number">2.</span> <span class="toc-text">证书过期</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F"><span class="toc-number">1.</span> <span class="toc-text">证书过期</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">
@@ -1885,9 +1783,44 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 79
+        Total : 80
         </div>
         <!-- search  -->
         
@@ -1900,6 +1833,11 @@ top:50vh;
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2022/04/16/k8s%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6/" >k8s证书机制</a>
+        </li>
     
     
         <li class="archive-post-item">
