@@ -1,0 +1,2551 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Jingyu Shi">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Jingyu Shi">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Container中的文件在磁盘上是临时存放的，这会给Container中运行的较重要的应用程序带来问题，问题之一是当容器崩溃时文件丢失。 kubelet 会重新启动容器，但容器会以干净的状态重启。 第二个问题会在同一 Pod 中运行多个容器并共享文件时出现。 kubernetes的volume解决了该问题。 ——kubernetes官方文档  kubernetes支持多种类型的volume,其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于k8s卷权限的一些测试">
+<meta property="og:url" content="https://slions.github.io/2022/06/14/%E5%85%B3%E4%BA%8Ek8s%E5%8D%B7%E6%9D%83%E9%99%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Container中的文件在磁盘上是临时存放的，这会给Container中运行的较重要的应用程序带来问题，问题之一是当容器崩溃时文件丢失。 kubelet 会重新启动容器，但容器会以干净的状态重启。 第二个问题会在同一 Pod 中运行多个容器并共享文件时出现。 kubernetes的volume解决了该问题。 ——kubernetes官方文档  kubernetes支持多种类型的volume,其">
+<meta property="og:locale">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/fsgroup.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/fsgroup2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/fsgroup3.png">
+<meta property="article:published_time" content="2022-06-14T07:19:18.000Z">
+<meta property="article:modified_time" content="2022-06-14T14:01:26.388Z">
+<meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="kubernetes storage">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/fsgroup.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>关于k8s卷权限的一些测试 · S_lion&#39;s Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20210204" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20210204" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js?v=20210204" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/js/all.min.js"  data-auto-replace-svg="nest" ></script>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <!-- top read progress line -->
+    <div class="header-element">
+        
+        <div class="read-progress"></div>
+        
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+        <div class="header-sidebar-menu">
+        
+            
+            <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- back to home page text -->
+    <a class="home-link header-element" href=/>S_lion's Studio</a>
+    <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">关于k8s卷权限的一些测试</a>
+        </div>
+    </div>
+    
+</header>
+    
+<footer class="footer-fixed">
+
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+        <div class="back-top">
+        
+            
+            <div>&#xe639;</div>
+            
+        </div>
+    </div>
+</footer>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            关于k8s卷权限的一些测试
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4k</span>阅读时长: <span class="post-count reading-time">20 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2022/06/14</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>Container中的文件在磁盘上是临时存放的，这会给Container中运行的较重要的应用程序带来问题，问题之一是当容器崩溃时文件丢失。 kubelet 会重新启动容器，但容器会以干净的状态重启。 第二个问题会在同一 <code>Pod</code> 中运行多个容器并共享文件时出现。 kubernetes的volume解决了该问题。</p>
+<p>——kubernetes官方文档</p>
+</blockquote>
+<p>kubernetes支持多种类型的volume,其中较为常用的为<code>secret</code>、<code>emptyDir</code>、<code>condfigMap</code>、<code>hostPath</code>以及<code>persistentVolumeClaim</code>,使用场景与语法可通过k8s官网进行了解，本次旨在测试上述几种volume 权限的问题。</p>
+<h1 id="环境描述："><a href="#环境描述：" class="headerlink" title="环境描述："></a>环境描述：</h1><h2 id="集群信息"><a href="#集群信息" class="headerlink" title="集群信息"></a>集群信息</h2><table>
+<thead>
+<tr>
+<th>ip</th>
+<th>系统版本</th>
+<th>内核版本</th>
+<th>硬件资源</th>
+<th>k8s版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>192.9.180.42</td>
+<td>CentOS 7.5.1804</td>
+<td>3.10.0-862.el7.x86_64</td>
+<td>8c 16g</td>
+<td>v1.17.0</td>
+</tr>
+</tbody></table>
+<h2 id="服务镜像"><a href="#服务镜像" class="headerlink" title="服务镜像"></a>服务镜像</h2><p>Dockerfile:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> library/tomcat:<span class="number">7</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> groupadd -g 7295 slions &amp;&amp; useradd -g 7295 -u 7295 -d /slions slions</span></span><br><span class="line"><span class="keyword">USER</span> slions</span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [ <span class="string">&quot;catalina.sh&quot;</span>,<span class="string">&quot;run&quot;</span>]</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /slions</span></span><br></pre></td></tr></table></figure>
+
+<p>基于该Dockerfile构建tomcat:7-sjy3镜像供后续的实验服务使用。</p>
+<h1 id="secret"><a href="#secret" class="headerlink" title="secret"></a>secret</h1><p><code>secret</code> 卷用来给 Pod 传递敏感信息，例如密码。<code>secret</code> 卷由 tmpfs（基于 RAM 的文件系统）提供存储，因此它们永远不会被写入持久化存储。</p>
+<p>Secret:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">slions-secret</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">username:</span> <span class="string">c2xpb25z</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">c2xpb25zLWt1YmVybmV0ZXM=</span></span><br></pre></td></tr></table></figure>
+
+<p>Deployment:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">progressDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">MY_POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NODE_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">spec.nodeName</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.podIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SERVICE_NAME</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/tomcat:7-sjy3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">ll</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">500Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">200m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/testsecret</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">test-secret</span></span><br><span class="line">      <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">default-image-secret</span></span><br><span class="line">      <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">      <span class="attr">schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-secret</span></span><br><span class="line">        <span class="attr">secret:</span></span><br><span class="line">          <span class="attr">secretName:</span> <span class="string">slions-secret</span></span><br></pre></td></tr></table></figure>
+
+<p>分别创建上述的Secret与Deployment资源，进入Pod内，查看secret的权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get pods |grep sjy</span><br><span class="line">sjy-75896cb868-9qs6p                        1/1     Running   0          4m40s</span><br><span class="line">$ kubectl exec -it sjy-75896cb868-9qs6p bash</span><br><span class="line">slions@sjy-75896cb868-9qs6p:~$ ls -l /testsecret/</span><br><span class="line">total 0</span><br><span class="line">lrwxrwxrwx 1 root root 15 Jun 14 02:50 password -&gt; ..data/password</span><br><span class="line">lrwxrwxrwx 1 root root 15 Jun 14 02:50 username -&gt; ..data/username</span><br><span class="line">slions@sjy-75896cb868-9qs6p:~$ cat /proc/mounts |grep testsecret</span><br><span class="line">tmpfs /testsecret tmpfs ro,relatime 0 0</span><br></pre></td></tr></table></figure>
+
+<p>当前secret属主属组都为root，且默认被设置为了只读。</p>
+<p>将Deployment进行如下修改：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">   <span class="string">...</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="string">...</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="string">...</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/testsecret</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">test-secret</span></span><br><span class="line">      <span class="string">...</span></span><br><span class="line">      <span class="attr">securityContext:</span></span><br><span class="line">        <span class="attr">fsGroup:</span> <span class="number">7295</span></span><br><span class="line">      <span class="string">...</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-secret</span></span><br><span class="line">        <span class="attr">secret:</span></span><br><span class="line">          <span class="attr">secretName:</span> <span class="string">slions-secret</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>securityContext.fsGroup 是kubernetes提供的Pod安全策略的选项，符合条件的volume可被kubelet更改为指定的属组。</p>
+</blockquote>
+<p>更新Deployment，验证是否生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">slions@sjy-658c5786f6-5879p:~$ ls -l /</span><br><span class="line">...</span><br><span class="line">drwxrwsrwt    3 root slions   120 Jun 14 02:57 testsecret</span><br><span class="line">drwxrwxrwt    1 root root      31 Jun 14 02:57 tmp</span><br><span class="line">drwxr-xr-x    1 root root      19 Oct 11  2018 usr</span><br><span class="line">drwxr-xr-x    1 root root      17 Oct 11  2018 var</span><br><span class="line">slions@sjy-658c5786f6-5879p:~$ ls -la /testsecret/</span><br><span class="line">total 0</span><br><span class="line">drwxrwsrwt 3 root slions 120 Jun 14 02:57 .</span><br><span class="line">drwxr-xr-x 1 root root    57 Jun 14 02:57 ..</span><br><span class="line">drwxr-sr-x 2 root slions  80 Jun 14 02:57 ..2022_06_14_02_57_40.151713228</span><br><span class="line">lrwxrwxrwx 1 root root    31 Jun 14 02:57 ..data -&gt; ..2022_06_14_02_57_40.151713228</span><br><span class="line">lrwxrwxrwx 1 root root    15 Jun 14 02:57 password -&gt; ..data/password</span><br><span class="line">lrwxrwxrwx 1 root root    15 Jun 14 02:57 username -&gt; ..data/username</span><br><span class="line">slions@sjy-658c5786f6-5879p:~$ ls -la /testsecret/..data/</span><br><span class="line">total 8</span><br><span class="line">drwxr-sr-x 2 root slions  80 Jun 14 02:57 .</span><br><span class="line">drwxrwsrwt 3 root slions 120 Jun 14 02:57 ..</span><br><span class="line">-rw-r--r-- 1 root slions  17 Jun 14 02:57 password</span><br><span class="line">-rw-r--r-- 1 root slions   6 Jun 14 02:57 username</span><br><span class="line">slions@sjy-658c5786f6-5879p:~$ cat /testsecret/username</span><br><span class="line">slions</span><br><span class="line">slions@sjy-658c5786f6-5879p:~$ cat /proc/mounts |grep testsecret</span><br><span class="line">tmpfs /testsecret tmpfs ro,relatime 0 0</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，secret volumes的属组虽然已经被修改为了普通用户的（slions）,但还是只读的状态。</p>
+<p>再次修改Deployment声明，指定volume的权限，禁用只读。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">   <span class="string">...</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="string">...</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="string">...</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/testsecret</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">test-secret</span></span><br><span class="line">          <span class="attr">readOnly:</span> <span class="literal">false</span></span><br><span class="line">      <span class="string">...</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-secret</span></span><br><span class="line">        <span class="attr">secret:</span></span><br><span class="line">          <span class="attr">secretName:</span> <span class="string">slions-secret</span></span><br><span class="line">          <span class="attr">defaultMode:</span> <span class="number">0777</span></span><br></pre></td></tr></table></figure>
+
+<p>更新后再次验证，依旧无法进行写入操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slions@sjy-84fd8c4957-nbtzj:~$ echo &quot;aaaa&quot; &gt;&gt; /testsecret/password</span><br><span class="line">bash: /testsecret/password: Read-only file system</span><br><span class="line">slions@sjy-84fd8c4957-nbtzj:~$ cat /proc/mounts |grep testsecret</span><br><span class="line">tmpfs /testsecret tmpfs ro,relatime 0 0</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="emptyDir"><a href="#emptyDir" class="headerlink" title="emptyDir"></a>emptyDir</h1><p>当 Pod 分派到某个 Node 上时，<code>emptyDir</code> 卷会被创建，并且在 Pod 在该节点上运行期间，卷一直存在。尽管 Pod 中的容器挂载 <code>emptyDir</code> 卷的路径可能相同也可能不同，这些容器都可以读写 <code>emptyDir</code> 卷中相同的文件。 当 Pod 因为某些原因被从节点上删除时，<code>emptyDir</code> 卷中的数据也会被永久删除。</p>
+<p>Deployment:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">progressDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">MY_POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NODE_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">spec.nodeName</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.podIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SERVICE_NAME</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/tomcat:7-sjy3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">ll</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">500Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">200m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/emptydir</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">empty</span></span><br><span class="line">      <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">default-image-secret</span></span><br><span class="line">      <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">      <span class="attr">schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line">      <span class="attr">securityContext:</span></span><br><span class="line">        <span class="attr">fsGroup:</span> <span class="number">7295</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">emptyDir:</span> &#123;&#125;</span><br><span class="line">        <span class="attr">name:</span> <span class="string">empty</span></span><br></pre></td></tr></table></figure>
+
+<p>创建此Deployment，进入Pod验证<code>emptyDir</code>目录访问权限与属组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -it sjy-6f845654bf-5d5rc bash</span><br><span class="line">slions@sjy-6f845654bf-5d5rc:~$ ls -l / |grep emptydir</span><br><span class="line">drwxrwsrwx    2 root slions     6 Jun 14 04:15 emptydir</span><br><span class="line">slions@sjy-6f845654bf-5d5rc:~$ echo &quot;abc&quot; &gt;&gt; /emptydir/testfile</span><br><span class="line">slions@sjy-6f845654bf-5d5rc:~$ ls -l /emptydir/</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 slions slions 4 Jun 14 05:25 testfile</span><br><span class="line">slions@sjy-6f845654bf-5d5rc:~$ cat /proc/mounts |grep emptydir</span><br><span class="line">/dev/mapper/centos-home /emptydir xfs rw,relatime,attr2,inode64,noquota 0 0</span><br></pre></td></tr></table></figure>
+
+<p>设置了<code>securityContext.FsGroup</code>的服务，<code>emptyDir</code>属组被设置为了指定的组，且普通用户可以对其进行读写操作。</p>
+<h1 id="configMap"><a href="#configMap" class="headerlink" title="configMap"></a>configMap</h1><p><code>configMap</code> 卷提供了向 Pod 注入配置数据的方法。 ConfigMap 对象中存储的数据可以被 <code>configMap</code> 类型的卷引用，然后被 Pod 中运行的容器化应用使用。(应用配置文件外置的常见做法)</p>
+<p>Map:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">testfile:</span> <span class="string">|-</span></span><br><span class="line"><span class="string">    1</span></span><br><span class="line"><span class="string">    22</span></span><br><span class="line"><span class="string">    333</span></span><br><span class="line"><span class="string">    4444</span></span><br><span class="line"><span class="string">    55555</span></span><br><span class="line"><span class="string">    666666</span></span><br><span class="line"><span class="string">    222</span></span><br><span class="line"><span class="string"></span><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjyconfig</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
+
+<p>Deployment:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">progressDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">MY_POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NODE_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">spec.nodeName</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.podIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SERVICE_NAME</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/tomcat:7-sjy3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">ll</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">500Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">200m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/slions/test</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">configmap-volume-0-0</span></span><br><span class="line">          <span class="attr">subPath:</span> <span class="string">testfile</span></span><br><span class="line">          <span class="attr">readOnly:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">default-image-secret</span></span><br><span class="line">      <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">      <span class="attr">schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line">      <span class="attr">securityContext:</span></span><br><span class="line">        <span class="attr">fsGroup:</span> <span class="number">7295</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">configMap:</span></span><br><span class="line">          <span class="attr">items:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">testfile</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">testfile</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">sjyconfig</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">configmap-volume-0-0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>分别创建上述的ConfigMap与Deployment资源，进入Pod内，查看ConfigMap volume的权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -it sjy-6dc89b49bb-7kchg bash</span><br><span class="line">slions@sjy-6dc89b49bb-7kchg:~$ ls -l /slions/test</span><br><span class="line">-rw-r--r-- 1 root slions 30 Jun 14 05:50 /slions/test</span><br><span class="line">slions@sjy-6dc89b49bb-7kchg:~$ cat /slions/test</span><br><span class="line">1</span><br><span class="line">22</span><br><span class="line">333</span><br><span class="line">4444</span><br><span class="line">55555</span><br><span class="line">666666</span><br><span class="line">222slions@sjy-6dc89b49bb-7kchg:~$ echo &quot;abc&quot; &gt;&gt; /slions/test</span><br><span class="line">bash: /slions/test: Permission denied</span><br><span class="line">slions@sjy-6dc89b49bb-7kchg:~$ cat /proc/mounts |grep test</span><br><span class="line">/dev/mapper/centos-home /slions/test xfs ro,relatime,attr2,inode64,noquota 0 0</span><br></pre></td></tr></table></figure>
+
+<p>与secret现象一致，设置fsgroup生效，但为只读状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe deployments.apps sjy</span><br><span class="line">Name:                   sjy</span><br><span class="line">Namespace:              default</span><br><span class="line">CreationTimestamp:      Tue, 14 Jun 2022 13:50:52 +0800</span><br><span class="line">Labels:                 app=sjy</span><br><span class="line">Annotations:            deployment.kubernetes.io/revision: 2</span><br><span class="line">                        kubectl.kubernetes.io/last-applied-configuration:</span><br><span class="line">                          &#123;&quot;apiVersion&quot;:&quot;apps/v1&quot;,&quot;kind&quot;:&quot;Deployment&quot;,&quot;metadata&quot;:&#123;&quot;annotations&quot;:&#123;&#125;,&quot;generation&quot;:1,&quot;labels&quot;:&#123;&quot;app&quot;:&quot;sjy&quot;&#125;,&quot;name&quot;:&quot;sjy&quot;,&quot;namespace&quot;:&quot;d...</span><br><span class="line">Selector:               app=sjy</span><br><span class="line">Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable</span><br><span class="line">StrategyType:           RollingUpdate</span><br><span class="line">MinReadySeconds:        0</span><br><span class="line">RollingUpdateStrategy:  25% max unavailable, 25% max surge</span><br><span class="line">Pod Template:</span><br><span class="line">  Labels:       app=sjy</span><br><span class="line">  Annotations:  sidecar.istio.io/inject: false</span><br><span class="line">  Containers:</span><br><span class="line">   sjy:</span><br><span class="line">    Image:      library/tomcat:7-sjy3</span><br><span class="line">    Port:       80/TCP</span><br><span class="line">    Host Port:  0/TCP</span><br><span class="line">    Limits:</span><br><span class="line">      cpu:     500m</span><br><span class="line">      memory:  500Mi</span><br><span class="line">    Requests:</span><br><span class="line">      cpu:     200m</span><br><span class="line">      memory:  200Mi</span><br><span class="line">    Environment:</span><br><span class="line">      MY_POD_NAME:     (v1:metadata.name)</span><br><span class="line">      POD_NAMESPACE:   (v1:metadata.namespace)</span><br><span class="line">      NODE_NAME:       (v1:spec.nodeName)</span><br><span class="line">      POD_IP:          (v1:status.podIP)</span><br><span class="line">      HOST_IP:         (v1:status.hostIP)</span><br><span class="line">      SERVICE_NAME:   sjy</span><br><span class="line">    Mounts:</span><br><span class="line">      /slions/test from configmap-volume-0-0 (rw,path=&quot;testfile&quot;)</span><br><span class="line">  Volumes:</span><br><span class="line">   configmap-volume-0-0:</span><br><span class="line">    Type:      ConfigMap (a volume populated by a ConfigMap)</span><br><span class="line">    Name:      sjyconfig</span><br><span class="line">    Optional:  false</span><br><span class="line">Conditions:</span><br><span class="line">  Type           Status  Reason</span><br><span class="line">  ----           ------  ------</span><br><span class="line">  Available      True    MinimumReplicasAvailable</span><br><span class="line">  Progressing    True    NewReplicaSetAvailable</span><br><span class="line">OldReplicaSets:  &lt;none&gt;</span><br><span class="line">NewReplicaSet:   sjy-7bbd8cfb97 (1/1 replicas created)</span><br><span class="line">Events:</span><br><span class="line">  Type    Reason             Age    From                   Message</span><br><span class="line">  ----    ------             ----   ----                   -------</span><br><span class="line">  Normal  ScalingReplicaSet  4m12s  deployment-controller  Scaled up replica set sjy-6dc89b49bb to 1</span><br><span class="line">  Normal  ScalingReplicaSet  119s   deployment-controller  Scaled up replica set sjy-7bbd8cfb97 to 1</span><br><span class="line">  Normal  ScalingReplicaSet  117s   deployment-controller  Scaled down replica set sjy-6dc89b49bb to 0</span><br></pre></td></tr></table></figure>
+
+<p>查看deployment详情，configmap 挂载点显示rw，但实际并为生效。</p>
+<h1 id="hostPath"><a href="#hostPath" class="headerlink" title="hostPath"></a>hostPath</h1><p><code>hostPath</code> 卷能将主机节点文件系统上的文件或目录挂载到 Pod 中。</p>
+<p>Deployment:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">progressDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">MY_POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NODE_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">spec.nodeName</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.podIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SERVICE_NAME</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/tomcat:7-sjy3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">ll</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">500Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">200m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/hostPath</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">hostpath-volume-0</span></span><br><span class="line">          <span class="attr">subPathExpr:</span> <span class="string">$(POD_NAMESPACE)/$(SERVICE_NAME)/$(MY_POD_NAME)</span></span><br><span class="line">      <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">      <span class="attr">nodeName:</span> <span class="string">kubemaster</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">default-image-secret</span></span><br><span class="line">      <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">      <span class="attr">schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line">      <span class="attr">securityContext:</span></span><br><span class="line">        <span class="attr">fsGroup:</span> <span class="number">7295</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">hostPath:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/tmp/hostpathDir</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">DirectoryOrCreate</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">hostpath-volume-0</span></span><br></pre></td></tr></table></figure>
+
+<p>创建该Deployment，查看运行该Pod的宿主机的hostpath路径权限，都是root。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ ls -lR /tmp/hostpathDir/</span><br><span class="line">/tmp/hostpathDir/:</span><br><span class="line">总用量 0</span><br><span class="line">drwxr-xr-x 3 root root 17 6月  14 14:10 default</span><br><span class="line"></span><br><span class="line">/tmp/hostpathDir/default:</span><br><span class="line">总用量 0</span><br><span class="line">drwxr-xr-x 3 root root 34 6月  14 14:10 sjy</span><br><span class="line"></span><br><span class="line">/tmp/hostpathDir/default/sjy:</span><br><span class="line">总用量 0</span><br><span class="line">drwxr-xr-x 2 root root 6 6月  14 14:10 sjy-78d4cc59c5-txhbh</span><br><span class="line"></span><br><span class="line">/tmp/hostpathDir/default/sjy/sjy-78d4cc59c5-txhbh:</span><br><span class="line">总用量 0</span><br></pre></td></tr></table></figure>
+
+<p>进入该pods内的查看对应目录权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -it sjy-78d4cc59c5-txhbh bash</span><br><span class="line">slions@sjy-78d4cc59c5-txhbh:~$ ls -l / |grep host</span><br><span class="line">drwxr-xr-x   2 root root    6 Jun 14 06:10 hostPath</span><br><span class="line">slions@sjy-78d4cc59c5-txhbh:~$ echo &quot;abc&quot; &gt;&gt; /hostPath/testfile</span><br><span class="line">bash: /hostPath/testfile: Permission denied</span><br></pre></td></tr></table></figure>
+
+<p>可以看到hostPath volume的属主属组都为root，普通用户无法进行读写操作。设置了<code>securityContext.FsGroup</code>对hostPath类型的volume并不生效。</p>
+<p>官方并没有提供修改hostPath目录权限的方式，从hostPath的实现方式可知道，要想修改hostPath volume的属主属组，要提前修改宿主机对应的源目录权限，所以可采用曲线救国的方式来达到目的。</p>
+<p>其中会使用inotify工具来实时监听宿主机目录，当有创建新目录动作时执行chown操作，将宿主机hostPath路径赋权为指定的应用用户。</p>
+<blockquote>
+<p>inotify 是linux内核的一个特性，在内核 2.6.13 以上都可以使用。主要的功能是监听文件的变化。</p>
+</blockquote>
+<p>首先在宿主机上创建应用用户：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo groupadd -g 7295 slions &amp;&amp; sudo useradd -u 7295 -g 7295 slions &amp;&amp;  echo &quot;slions:slions&quot; |sudo  chpasswd</span><br></pre></td></tr></table></figure>
+
+<p>安装inotify软件包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum install inotify-tools</span><br></pre></td></tr></table></figure>
+
+<p>编写监听脚本：（根据实际环境修改Dir与OwnerUser）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ cat changehpowner.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line">Dir=/tmp/hostpathDir</span><br><span class="line">OwnerUser=slions</span><br><span class="line">inotifywait -mrq  --format &#x27;%e %w%f&#x27; -e create $Dir | while read msg</span><br><span class="line">do</span><br><span class="line">    if [[ $msg =~ &quot;CREATE,ISDIR&quot; ]]</span><br><span class="line">    then</span><br><span class="line">        sudo chown -R $OwnerUser:$OwnerUser &quot;$&#123;msg:13&#125;&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br><span class="line">$ chmod +x  /home/user/shijingyu/hpowner/changehpowner.sh</span><br></pre></td></tr></table></figure>
+
+<p>编写systemd service:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ cat /usr/lib/systemd/system/changehpowner.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Change the owner of the host directory</span><br><span class="line">After=default.target</span><br><span class="line">Before=docker.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/bin/bash /home/user/shijingyu/hpowner/changehpowner.sh</span><br><span class="line">ExecStop=/bin/kill -s HUP $MAINPID</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>设置开机自启并启动服务。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl enable changehpowner.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/changehpowner.service to /usr/lib/systemd/system/changehpowner.service.</span><br><span class="line">$ sudo systemctl restart changehpowner.service</span><br></pre></td></tr></table></figure>
+
+<p>重启之前的Deployment，进行验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -it sjy-78d4cc59c5-fcwgq bash</span><br><span class="line">slions@sjy-78d4cc59c5-fcwgq:~$ ls -l / |grep host</span><br><span class="line">drwxr-xr-x   2 slions slions    6 Jun 14 06:34 hostPath</span><br><span class="line">slions@sjy-78d4cc59c5-fcwgq:~$ echo &quot;abc&quot; &gt;&gt; /hostPath/testfile</span><br><span class="line">slions@sjy-78d4cc59c5-fcwgq:~$ ls /hostPath/</span><br><span class="line">testfile</span><br><span class="line">slions@sjy-78d4cc59c5-fcwgq:~$ ls -l /hostPath/</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 slions slions 4 Jun 14 06:35 testfile</span><br><span class="line">slions@sjy-78d4cc59c5-fcwgq:~$ exit</span><br><span class="line">exit</span><br><span class="line">$ ls -lR /tmp/hostpathDir/</span><br><span class="line">/tmp/hostpathDir/:</span><br><span class="line">总用量 0</span><br><span class="line">drwxr-xr-x 3 slions slions 17 6月  14 14:34 default</span><br><span class="line"></span><br><span class="line">/tmp/hostpathDir/default:</span><br><span class="line">总用量 0</span><br><span class="line">drwxr-xr-x 3 slions slions 34 6月  14 14:34 sjy</span><br><span class="line"></span><br><span class="line">/tmp/hostpathDir/default/sjy:</span><br><span class="line">总用量 0</span><br><span class="line">drwxr-xr-x 2 slions slions 22 6月  14 14:35 sjy-78d4cc59c5-fcwgq</span><br><span class="line"></span><br><span class="line">/tmp/hostpathDir/default/sjy/sjy-78d4cc59c5-fcwgq:</span><br><span class="line">总用量 4</span><br><span class="line">-rw-r--r-- 1 slions slions 4 6月  14 14:35 testfile</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，此时普通用户可对hostPath volume进行读写操作。</p>
+<h1 id="persistentVolumeClaim"><a href="#persistentVolumeClaim" class="headerlink" title="persistentVolumeClaim"></a>persistentVolumeClaim</h1><p><code>persistentVolumeClaim</code> 卷用来将持久卷（PersistentVolume）挂载到 Pod 中。 </p>
+<p>pvc:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">kubectl</span> <span class="string">get</span> <span class="string">pvc</span> <span class="string">sjydemo-default-pvc</span> <span class="string">-o</span> <span class="string">yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">pv.kubernetes.io/bind-completed:</span> <span class="string">&quot;yes&quot;</span></span><br><span class="line">    <span class="attr">pv.kubernetes.io/bound-by-controller:</span> <span class="string">&quot;yes&quot;</span></span><br><span class="line">    <span class="attr">volume.beta.kubernetes.io/storage-provisioner:</span> <span class="string">kubernetes.io/glusterfs</span></span><br><span class="line">  <span class="attr">creationTimestamp:</span> <span class="string">&quot;2022-06-14T07:08:07Z&quot;</span></span><br><span class="line">  <span class="attr">finalizers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">kubernetes.io/pvc-protection</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">agree-app-type:</span> <span class="string">agree-pvc</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjydemo-default-pvc</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line">  <span class="attr">resourceVersion:</span> <span class="string">&quot;210865311&quot;</span></span><br><span class="line">  <span class="attr">selfLink:</span> <span class="string">/api/v1/namespaces/default/persistentvolumeclaims/sjydemo-default-pvc</span></span><br><span class="line">  <span class="attr">uid:</span> <span class="string">26acc08d-fb9e-401c-9d2d-eaaa4c56754d</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">requests:</span></span><br><span class="line">      <span class="attr">storage:</span> <span class="string">1Gi</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">gluster-heketi</span></span><br><span class="line">  <span class="attr">volumeMode:</span> <span class="string">Filesystem</span></span><br><span class="line">  <span class="attr">volumeName:</span> <span class="string">pvc-26acc08d-fb9e-401c-9d2d-eaaa4c56754d</span></span><br></pre></td></tr></table></figure>
+
+<p>Deployment:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">progressDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">MY_POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NODE_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">spec.nodeName</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.podIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SERVICE_NAME</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/tomcat:7-sjy3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">ll</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">500Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">200m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/slions/mypv</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">sjydemo-default-pvc</span></span><br><span class="line">      <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">default-image-secret</span></span><br><span class="line">      <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">      <span class="attr">schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line">      <span class="attr">securityContext:</span></span><br><span class="line">        <span class="attr">fsGroup:</span> <span class="number">7295</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">sjydemo-default-pvc</span></span><br><span class="line">        <span class="attr">persistentVolumeClaim:</span></span><br><span class="line">          <span class="attr">claimName:</span> <span class="string">sjydemo-default-pvc</span></span><br></pre></td></tr></table></figure>
+
+<p>创建pvc与Deployment资源后进入Pod，查看挂载目录权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec sjy-b746f9cb8-8r85f -it bash</span><br><span class="line">slions@sjy-b746f9cb8-8r85f:~$ ls -l /slions/</span><br><span class="line">total 0</span><br><span class="line">drwxrwsr-x 3 root 2060 24 Jun 14 07:08 mypv</span><br><span class="line">slions@sjy-b746f9cb8-8r85f:~$ echo &quot;abc&quot; &gt;&gt; /slions/mypv/testfile</span><br><span class="line">slions@sjy-b746f9cb8-8r85f:~$ cat /slions/mypv/testfile</span><br><span class="line">abc</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，设置了<code>securityContext.FsGroup</code>对Pvc类型的volume并不生效。</p>
+<p>kubernetes pvc只是资源的声明，对于pv卷的权限交给了具体的存储供应商，如果想要赋予pvc volume普通用户的权限，提供两种思路：</p>
+<p>一是可通过init容器实现，在启动应用服务前完成目录赋权操作。</p>
+<p>样例如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generation:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">progressDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">25</span><span class="string">%</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">sidecar.istio.io/inject:</span> <span class="string">&quot;false&quot;</span></span><br><span class="line">      <span class="attr">creationTimestamp:</span> <span class="literal">null</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">sjy</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">MY_POD_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.name</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_NAMESPACE</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NODE_NAME</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">spec.nodeName</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">POD_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.podIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">HOST_IP</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">fieldRef:</span></span><br><span class="line">              <span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line">              <span class="attr">fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SERVICE_NAME</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/tomcat:7-sjy3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">sjy</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">ll</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">500m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">500Mi</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">200m</span></span><br><span class="line">            <span class="attr">memory:</span> <span class="string">200Mi</span></span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/slions/mypv</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">sjydemo-default-pvc</span></span><br><span class="line">      <span class="attr">initContainers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">command:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">/bin/chown</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">-R</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">7295</span><span class="string">:7295</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">/slions/mypv</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">library/busybox:1.29.3</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">change-ownership-container</span></span><br><span class="line">        <span class="attr">resources:</span> &#123;&#125;</span><br><span class="line">        <span class="attr">securityContext:</span></span><br><span class="line">          <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">runAsUser:</span> <span class="number">0</span></span><br><span class="line">        <span class="attr">terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line">        <span class="attr">terminationMessagePolicy:</span> <span class="string">File</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/slions/mypv</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">sjydemo-default-pvc</span></span><br><span class="line">      <span class="attr">dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">default-image-secret</span></span><br><span class="line">      <span class="attr">restartPolicy:</span> <span class="string">Always</span></span><br><span class="line">      <span class="attr">schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line">      <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">sjydemo-default-pvc</span></span><br><span class="line">        <span class="attr">persistentVolumeClaim:</span></span><br><span class="line">          <span class="attr">claimName:</span> <span class="string">sjydemo-default-pvc</span></span><br></pre></td></tr></table></figure>
+
+<p>创建后进入Pod内查看，普通用户可实现正常读写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -it sjy-6f69f5b786-frnvr bash</span><br><span class="line">slions@sjy-6f69f5b786-frnvr:~$ ls -l /slions/</span><br><span class="line">total 0</span><br><span class="line">drwxrwsr-x 3 slions slions 40 Jun 14 07:10 mypv</span><br><span class="line">slions@sjy-6f69f5b786-frnvr:~$ ls -l /slions/mypv/</span><br><span class="line">total 1</span><br><span class="line">-rw-r--r-- 1 slions slions 4 Jun 14 07:10 testfile</span><br></pre></td></tr></table></figure>
+
+<p>第二种可以在应用运行cmd出下文章，在执行应用进程前执行服务操作，或者是写在运行脚本中。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><table>
+<thead>
+<tr>
+<th>volume类型</th>
+<th>支持fsGroup</th>
+<th>普通用户是否可读写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>secret</td>
+<td>√</td>
+<td>只读</td>
+</tr>
+<tr>
+<td>emptyDir</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>configMap</td>
+<td>√</td>
+<td>只读</td>
+</tr>
+<tr>
+<td>hostPath</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>persistentVolumeClaim</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<p>从表中可看出，emptyDir支持fsGroup且普通用户可对其读写；secret大量用于密钥存储，不支持普通用户写操作；configMap在kubernetes 1.9.4版本之前允许普通用户写操作，但系统会以任意时间间隔恢复这些更改，在后续的版本中取消了该功能，通过上面的测试可发现，当明确定义了volumeMount的readOnly为false，k8s也会置为只读挂载；hostPath目录的权限由宿主机的源路径决定，可以使用linux 监听程序来自动化完成hostPath目录的赋权；pvc的目录赋权操作交给了存储提供商，我们可以利用初始化容器或者修改应用cmd来实现目的。</p>
+<p>kubernetes在1.18版本添加了<code>ConfigurableFSGroupPolicy</code>的特性。</p>
+<p><img src="https://slions.gitee.io/picbed/img/fsgroup.png"></p>
+<p>使用1.22.8版本开启该特性后，secret、configMap、hostPath与上表测试结果一致。</p>
+<img src="https://slions.gitee.io/picbed/img/fsgroup2.png"/>
+
+<p>根据官方描述，高版本开启该特性后，securityContext支持<code>fsGroupChangePolicy</code> 字段，主要解决的是csi卷在设置了fsGroup时，递归地更改每个卷中的内容的属主和访问权限的效率问题。</p>
+<img src="https://slions.gitee.io/picbed/img/fsgroup3.png"/>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2022/04/16/k8s%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6/" title= "k8s证书机制">
+                    <div class="prevTitle">k8s证书机制</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1655191158000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+</main>
+
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:18301338035@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/Slions" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/wechat_p.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">环境描述：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">集群信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%95%9C%E5%83%8F"><span class="toc-number">1.2.</span> <span class="toc-text">服务镜像</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#secret"><span class="toc-number">2.</span> <span class="toc-text">secret</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#emptyDir"><span class="toc-number">3.</span> <span class="toc-text">emptyDir</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#configMap"><span class="toc-number">4.</span> <span class="toc-text">configMap</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hostPath"><span class="toc-number">5.</span> <span class="toc-text">hostPath</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#persistentVolumeClaim"><span class="toc-number">6.</span> <span class="toc-text">persistentVolumeClaim</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+    
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 81
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2022 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/14</span><a class="archive-post-title" href= "/2022/06/14/%E5%85%B3%E4%BA%8Ek8s%E5%8D%B7%E6%9D%83%E9%99%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B5%8B%E8%AF%95/" >关于k8s卷权限的一些测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2022/04/16/k8s%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6/" >k8s证书机制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/%E6%A3%80%E6%B5%8Btcp%E8%BF%9E%E9%80%9A%E6%80%A7%E4%B8%8E%E7%AB%AF%E5%8F%A3%E5%BB%B6%E8%BF%9F/" >检测tcp连通性与端口延迟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2022/04/11/linux%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/" >linux网络模型必知必会</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span><a class="archive-post-title" href= "/2022/04/10/shell%E5%A4%87%E5%BF%98%E5%BD%95/" >shell备忘录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2022/04/01/%E4%BF%AE%E6%94%B9kubeadm%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm源码中的证书过期时间</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2022/03/22/k8s%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E4%B8%8Ecni%E6%8F%92%E4%BB%B6/" >k8s网络模型与cni插件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2022/03/22/docker%E8%B7%A8%E4%B8%BB%E6%9C%BA%E9%80%9A%E4%BF%A1/" >docker跨主机通信</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2022/03/21/docker%E7%BD%91%E7%BB%9C/" >docker网络</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ARP/" >ARP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/iptables/" >iptables</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ip%E9%80%89%E8%B7%AF/" >ip选路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/ping%E5%92%8Ctraceroute/" >ping和traceroute</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/RARP/" >RARP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E8%A2%AB%E5%8D%A0%E7%94%A8%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" >查看端口被占用的四种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%94%B9%E5%8F%98%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4dns%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F/" >改变系统默认dns解析顺序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2022/03/20/%E6%8E%92%E6%9F%A5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8ip%E5%9C%B0%E5%9D%80%E5%8D%A0%E7%94%A8%E7%8E%B0%E8%B1%A1/" >排查是否存在ip地址占用现象</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2021 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/27</span><a class="archive-post-title" href= "/2021/12/27/k8s%E9%83%A8%E7%BD%B2EFK/" >k8s部署EFK</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span><a class="archive-post-title" href= "/2021/12/18/%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E4%B9%8BFilebeat/" >日志系统之Filebeat</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href= "/2021/12/16/k8s%E6%9B%BF%E6%8D%A2%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E4%B8%BAcontainerd/" >k8s替换容器运行时为containerd</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2021/12/15/CRI%E4%B9%8Bcontainerd/" >CRI之containerd</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href= "/2021/12/07/K8S-Runtime-CRI-OCI-contained-dockershim-%E7%90%86%E8%A7%A3%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >K8S Runtime CRI OCI contained dockershim（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%E4%B8%80%EF%BC%89Jinja2%E6%A8%A1%E6%9D%BF/" >（十一）Jinja2模板</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href= "/2021/12/02/%EF%BC%88%E5%8D%81%EF%BC%89ansible%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" >（十）ansible异常处理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B9%9D%EF%BC%89ansible%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" >（九）ansible流程控制</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E5%85%AB%EF%BC%89ansible%E5%8F%98%E9%87%8F/" >（八）ansible变量</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >（七）收集节点信息facts</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span><a class="archive-post-title" href= "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >（六）限制执行任务主机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >harbor对接F5的鉴权失败问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" >保留特殊字符</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span><a class="archive-post-title" href= "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >普通用户安装mysql</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" >k8s-controller-manager原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" >k8s-etcd理解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/" >kube-proxy原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href= "/2021/10/03/k8s-scheduler%E5%8E%9F%E7%90%86/" >k8s-scheduler原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href= "/2021/09/26/k8s-apiserver%E5%8E%9F%E7%90%86/" >k8s-apiserver原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >修改kubeadm证书过期时间</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href= "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >我是一个线程（转载）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" >git原理及常用命令</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >如何优雅的编写dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >镜像构建之dockerfile</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/30</span><a class="archive-post-title" href= "/2021/08/30/expect%E4%BD%BF%E7%94%A8/" >expect使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2021/08/29/%EF%BC%88%E4%BA%94%EF%BC%89ansible%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" >（五）ansible常用模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2021/08/28/%EF%BC%88%E5%9B%9B%EF%BC%89%E5%89%A7%E6%9C%AC%E6%96%87%E4%BB%B6playbook/" >（四）剧本文件playbook</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2021/08/24/%EF%BC%88%E4%B8%89%EF%BC%89%E4%B8%BB%E6%9C%BA%E6%B8%85%E5%8D%95inventory/" >（三）主机清单inventory</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2021/08/23/%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" >实现科学上网</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >hexo特殊符号的转义问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >（二）ansible初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span><a class="archive-post-title" href= "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >（一）ansible入门</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span><a class="archive-post-title" href= "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >走近分布式一致性协议（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/heketi%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" >heketi启动失败问题排查</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2021/08/08/gluster%E6%8E%92%E6%95%85%E7%BA%AA%E5%AE%9E/" >gluster排故纪实</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/%E4%BF%AE%E6%94%B9centos7%E4%B8%BB%E6%9C%BA%E5%90%8D/" >修改centos7主机名</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2021/08/07/linux%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E6%81%A2%E5%A4%8D%E6%80%9D%E8%B7%AF/" >linux误删文件恢复思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span><a class="archive-post-title" href= "/2021/08/06/%E9%80%BB%E8%BE%91%E5%8D%B7%E7%AE%A1%E7%90%86LVM/" >逻辑卷管理LVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href= "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >Virtualbox虚机使用介绍</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href= "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >df与du结果不一致问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7/" >磁盘分区工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2021/08/02/ceph%20mimic%E5%AF%B9%E6%8E%A5k8s%201.17.0/" >ceph mimic对接k8s 1.17.0(ceph-csi)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >创建开机自启程序（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/%E5%88%9B%E5%BB%BA%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >创建开机自启程序（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2021/08/01/alias%E4%B8%8Erm%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" >alias与rm的最佳实践</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/31</span><a class="archive-post-title" href= "/2021/07/31/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >linux用户与组管理（下篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2021/07/30/linux%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%8A%E7%AF%87%EF%BC%89/" >linux用户与组管理（上篇）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2021/07/19/harbor%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD%E5%8D%87%E9%AB%98%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/" >harbor集群系统负载升高原因分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2021/07/18/glusterfs%E5%8F%AF%E7%94%A8%E6%80%A7%E6%B5%8B%E8%AF%95/" >glusterfs可用性测试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span><a class="archive-post-title" href= "/2021/07/16/glusterfs%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" >glusterfs回收站功能</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/k8s-v1.11%E4%BD%BF%E7%94%A8glusterfs/" >k8s-v1.11使用glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span><a class="archive-post-title" href= "/2021/07/15/linux%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%A1%AC%E7%9B%98%E6%97%A0%E6%B3%95%E8%AF%86%E5%88%AB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" >linux添加新硬盘无法识别解决方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2021/07/14/%E6%89%8B%E5%B7%A5%E5%AE%89%E8%A3%85heketi%E7%AE%A1%E7%90%86glusterfs/" >手工安装heketi管理glusterfs</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2021/07/13/network-namespace%E9%9A%94%E7%A6%BB%E6%B5%8B%E8%AF%95/" >自己动手实现network namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/cadvisor-node-exporter-prometheus-grafana%E5%AE%9E%E7%8E%B0docker%E4%B8%8E%E4%B8%BB%E6%9C%BA%E7%9B%91%E6%8E%A7/" >cadvisor+node_exporter+prometheus+grafana实现docker与主机监控</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2021/07/12/%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E9%A9%B1%E5%8A%A8overlay2/" >理解存储驱动overlay2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/Centos%E9%95%9C%E5%83%8F%E9%82%A3%E4%B9%88%E5%B0%8F%E8%83%BD%E7%94%A8%E4%B9%88%EF%BC%9F/" >Centos镜像那么小能用么？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >浅谈docker框架</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2021/07/10/docker%20Cgroup/" >docker Cgroup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%A4%A7%E8%AF%9Ddocker/" >大话docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/%E5%AE%89%E8%A3%85docker/" >安装docker</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2021/07/09/docker%20namespace/" >docker namespace</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span><a class="archive-post-title" href= "/2021/07/08/hello-world/" >Hello World</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="虚拟机相关"><span class="iconfont-archer">&#xe606;</span>虚拟机相关</span>
+    
+        <span class="sidebar-tag-name" data-tags="prometheus"><span class="iconfont-archer">&#xe606;</span>prometheus</span>
+    
+        <span class="sidebar-tag-name" data-tags="glusterfs"><span class="iconfont-archer">&#xe606;</span>glusterfs</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes storage"><span class="iconfont-archer">&#xe606;</span>kubernetes storage</span>
+    
+        <span class="sidebar-tag-name" data-tags="harbor"><span class="iconfont-archer">&#xe606;</span>harbor</span>
+    
+        <span class="sidebar-tag-name" data-tags="heketi"><span class="iconfont-archer">&#xe606;</span>heketi</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="ceph"><span class="iconfont-archer">&#xe606;</span>ceph</span>
+    
+        <span class="sidebar-tag-name" data-tags="Distributed protocol"><span class="iconfont-archer">&#xe606;</span>Distributed protocol</span>
+    
+        <span class="sidebar-tag-name" data-tags="ansible"><span class="iconfont-archer">&#xe606;</span>ansible</span>
+    
+        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+    
+        <span class="sidebar-tag-name" data-tags="shadowsocks"><span class="iconfont-archer">&#xe606;</span>shadowsocks</span>
+    
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes核心组件"><span class="iconfont-archer">&#xe606;</span>kubernetes核心组件</span>
+    
+        <span class="sidebar-tag-name" data-tags="kubernetes"><span class="iconfont-archer">&#xe606;</span>kubernetes</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mysql"><span class="iconfont-archer">&#xe606;</span>Mysql</span>
+    
+        <span class="sidebar-tag-name" data-tags="logging"><span class="iconfont-archer">&#xe606;</span>logging</span>
+    
+        <span class="sidebar-tag-name" data-tags="Network"><span class="iconfont-archer">&#xe606;</span>Network</span>
+    
+        <span class="sidebar-tag-name" data-tags="shell"><span class="iconfont-archer">&#xe606;</span>shell</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="存储类"><span class="iconfont-archer">&#xe60a;</span>存储类</span>
+    
+        <span class="sidebar-category-name" data-categories="linux系统"><span class="iconfont-archer">&#xe60a;</span>linux系统</span>
+    
+        <span class="sidebar-category-name" data-categories="虚拟机"><span class="iconfont-archer">&#xe60a;</span>虚拟机</span>
+    
+        <span class="sidebar-category-name" data-categories="k8s存储"><span class="iconfont-archer">&#xe60a;</span>k8s存储</span>
+    
+        <span class="sidebar-category-name" data-categories="镜像仓库"><span class="iconfont-archer">&#xe60a;</span>镜像仓库</span>
+    
+        <span class="sidebar-category-name" data-categories="监控"><span class="iconfont-archer">&#xe60a;</span>监控</span>
+    
+        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
+    
+        <span class="sidebar-category-name" data-categories="hello-world"><span class="iconfont-archer">&#xe60a;</span>hello-world</span>
+    
+        <span class="sidebar-category-name" data-categories="分布式一致性协议"><span class="iconfont-archer">&#xe60a;</span>分布式一致性协议</span>
+    
+        <span class="sidebar-category-name" data-categories="ansible回炉"><span class="iconfont-archer">&#xe60a;</span>ansible回炉</span>
+    
+        <span class="sidebar-category-name" data-categories="hexo使用"><span class="iconfont-archer">&#xe60a;</span>hexo使用</span>
+    
+        <span class="sidebar-category-name" data-categories="科学上网"><span class="iconfont-archer">&#xe60a;</span>科学上网</span>
+    
+        <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
+    
+        <span class="sidebar-category-name" data-categories="好文推荐"><span class="iconfont-archer">&#xe60a;</span>好文推荐</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes笔记"><span class="iconfont-archer">&#xe60a;</span>kubernetes笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes"><span class="iconfont-archer">&#xe60a;</span>kubernetes</span>
+    
+        <span class="sidebar-category-name" data-categories="Mysql"><span class="iconfont-archer">&#xe60a;</span>Mysql</span>
+    
+        <span class="sidebar-category-name" data-categories="云原生"><span class="iconfont-archer">&#xe60a;</span>云原生</span>
+    
+        <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
+    
+        <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Jingyu Shi"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
