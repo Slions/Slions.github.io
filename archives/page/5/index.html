@@ -386,6 +386,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >
+            
+                <span>如何优雅的编写dockerfile</span>
+        </a>
+        <div class="abstract-content">
+            写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品化程度高”的dockerfile是需要设计的。
+操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对于系统的开销也就越大。dockerhub上有上万个镜像，我们可以随意的拿来作为基础镜像，与之伴随的就是潜在的安全隐患，某些特殊的场景...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/09/02/%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E4%B9%8BDockerfile/" >
             
                 <span>镜像构建之dockerfile</span>
@@ -665,38 +695,6 @@ ansible是新出现的自动化运维工具，基于Python开发，集合了众�
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/14/%E8%B5%B0%E8%BF%91%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%B8%8B%E7%AF%87%EF%BC%89/" >
-            
-                <span>走近分布式一致性协议（下篇）</span>
-        </a>
-        <div class="abstract-content">
-            上篇简述了几种一致性协议（二阶段提交、三阶段提交、paxos和zab）的实现原理与优缺点，这篇了解下raft与复制状态机。
-
-Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保证分布式环境下多节点数据的一致性，但更易于理解。
-在Raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目赋值给其他服务器，在确认安全的时候，将...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Distributed protocol">Distributed protocol</a>
     
 </div>
             
@@ -1964,9 +1962,46 @@ Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -1979,6 +2014,11 @@ Raft协议类似于zookeeper的zab协议（Paxos算法），Raft也是用于保�
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2022/06/22/harbor2-4-2%E5%B0%9D%E9%B2%9C/" >harbor2.4.2尝鲜</a>
+        </li>
     
     
         <li class="archive-post-item">

@@ -20,31 +20,38 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="kube-proxy的作用kube-proxy是Kubernetes的核心组件，部署在每个Node节点上，它是实现Kubernetes Service的通信与负载均衡机制的重要组件; kube-proxy负责为Pod创建代理服务，从apiserver获取所有server信息，并根据server信息创建代理服务，实现server到Pod的请求路由和转发，从而实现K8s层级的虚拟转发网络。  在k8s">
+    <meta name="description" content="根据harbor官方的描述，harbor高可用方案有以下几种：  通过helm chart的方式部署于kubernetes中，以多副本的形式运行，借助k8s自愈性维护自身状态，通过pvc来存储数据，连接外置的PostgreSQL和Redis集群。 多个harbor实例共享PostgreSQL、Redis及存储，上层搭建负载均衡器。 harbor组件单独部署，基于复制策略实现Artifact的一致性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kube-proxy原理">
-<meta property="og:url" content="https://slions.github.io/2021/10/03/kube-proxy%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:title" content="harbor2.4.2尝鲜">
+<meta property="og:url" content="https://slions.github.io/2022/06/22/harbor2-4-2%E5%B0%9D%E9%B2%9C/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="kube-proxy的作用kube-proxy是Kubernetes的核心组件，部署在每个Node节点上，它是实现Kubernetes Service的通信与负载均衡机制的重要组件; kube-proxy负责为Pod创建代理服务，从apiserver获取所有server信息，并根据server信息创建代理服务，实现server到Pod的请求路由和转发，从而实现K8s层级的虚拟转发网络。  在k8s">
+<meta property="og:description" content="根据harbor官方的描述，harbor高可用方案有以下几种：  通过helm chart的方式部署于kubernetes中，以多副本的形式运行，借助k8s自愈性维护自身状态，通过pvc来存储数据，连接外置的PostgreSQL和Redis集群。 多个harbor实例共享PostgreSQL、Redis及存储，上层搭建负载均衡器。 harbor组件单独部署，基于复制策略实现Artifact的一致性">
 <meta property="og:locale">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy1.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy2.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy3.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy4.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy5.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy6.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy7.png">
-<meta property="og:image" content="https://slions.gitee.io/picbed/img/proxy8.png">
-<meta property="article:published_time" content="2021-10-03T03:40:00.000Z">
-<meta property="article:modified_time" content="2021-10-03T10:51:20.752Z">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor001.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor002.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor003.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor004.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor005.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor006.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor007.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor008.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor009.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor010.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor011.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor012.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor013.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor014.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/harbor015.png">
+<meta property="article:published_time" content="2022-06-22T13:06:50.000Z">
+<meta property="article:modified_time" content="2022-06-22T14:07:56.296Z">
 <meta property="article:author" content="Jingyu Shi">
-<meta property="article:tag" content="kubernetes核心组件">
+<meta property="article:tag" content="harbor">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/proxy1.png">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/harbor001.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>kube-proxy原理 · S_lion&#39;s Studio</title>
+    <title>harbor2.4.2尝鲜 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -260,7 +267,7 @@
             <a href="/" >S_lion&#39;s Studio</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">kube-proxy原理</a>
+            <a href="#" class="post-name">harbor2.4.2尝鲜</a>
         </div>
     </div>
     
@@ -303,7 +310,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            kube-proxy原理
+            harbor2.4.2尝鲜
             <!-- 404 -->
             
         </h1>
@@ -322,18 +329,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">8 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2021/10/03</span>
+                    <span class="post-intro-time">2022/06/22</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -457,61 +464,155 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="kube-proxy的作用"><a href="#kube-proxy的作用" class="headerlink" title="kube-proxy的作用"></a>kube-proxy的作用</h1><p>kube-proxy是Kubernetes的核心组件，部署在每个Node节点上，它是实现Kubernetes Service的通信与负载均衡机制的重要组件; kube-proxy负责为Pod创建代理服务，从apiserver获取所有server信息，并根据server信息创建代理服务，实现server到Pod的请求路由和转发，从而实现K8s层级的虚拟转发网络。</p>
-<blockquote>
-<p>在k8s中，提供相同服务的一组pod可以抽象成一个service，通过service提供的统一入口对外提供服务，每个service都有一个虚拟IP地址（VIP）和端口号供客户端访问。kube-proxy存在于各个node节点上，主要用于Service功能的实现，具体来说，就是实现集群内的客户端pod访问service，或者是集群外的主机通过NodePort等方式访问service。在当前版本的k8s中，kube-proxy默认使用的是iptables模式，通过各个node节点上的iptables规则来实现service的负载均衡，但是随着service数量的增大，iptables模式由于线性查找匹配、全量更新等特点，其性能会显著下降。从k8s的1.8版本开始，kube-proxy引入了IPVS模式，IPVS模式与iptables同样基于Netfilter，但是采用的hash表，因此当service数量达到一定规模时，hash查表的速度优势就会显现出来，从而提高service的服务性能。</p>
-</blockquote>
-<p>kube-proxy负责为Service提供cluster内部的服务发现和负载均衡，它运行在每个Node计算节点上，负责Pod网络代理, 它会定时从etcd服务获取到service信息来做相应的策略，维护网络规则和四层负载均衡工作。在K8s集群中微服务的负载均衡是由Kube-proxy实现的，它是K8s集群内部的负载均衡器，也是一个分布式代理服务器，在K8s的每个节点上都有一个，这一设计体现了它的伸缩性优势，需要访问服务的节点越多，提供负载均衡能力的Kube-proxy就越多，高可用节点也随之增多。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。service会为这个LB提供一个IP，一般称为cluster IP。kube-proxy的作用主要是负责service的实现，具体来说，就是实现了内部从pod到service和外部的从node port向service的访问。</li>
-<li>kube-proxy其实就是管理service的访问入口，包括集群内Pod到Service的访问和集群外访问service。</li>
-<li>kube-proxy管理sevice的Endpoints，该service对外暴露一个Virtual IP，也成为Cluster IP, 集群内通过访问这个Cluster IP:Port就能访问到集群内对应的serivce下的Pod。</li>
-<li>service是通过Selector选择的一组Pods的服务抽象，其实就是一个微服务，提供了服务的LB和反向代理的能力，而kube-proxy的主要作用就是负责service的实现。</li>
-<li>service另外一个重要作用是，一个服务后端的Pods可能会随着生存灭亡而发生IP的改变，service的出现，给服务提供了一个固定的IP，而无视后端Endpoint的变化。</li>
-</ul>
-<p>举个例子，比如现在有podA，podB，podC和serviceAB。serviceAB是podA，podB的服务抽象(service)。那么kube-proxy的作用就是可以将pod(不管是podA，podB或者podC)向serviceAB的请求，进行转发到service所代表的一个具体pod(podA或者podB)上。请求的分配方法一般分配是采用轮询方法进行分配。另外，kubernetes还提供了一种在node节点上暴露一个端口，从而提供从外部访问service的方式。比如这里使用这样的一个yml来创建service。</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">role:</span> <span class="string">service</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mysql-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">3306</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">3306</span></span><br><span class="line">      <span class="attr">nodePort:</span> <span class="number">30964</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">mysql-service:</span> <span class="string">&quot;true&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Service-Endpoints与Pod的关系"><a href="#Service-Endpoints与Pod的关系" class="headerlink" title="Service, Endpoints与Pod的关系"></a>Service, Endpoints与Pod的关系</h2><p><img src="https://slions.gitee.io/picbed/img/proxy1.png"></p>
-<p>Kube-proxy进程获取每个Service的Endpoints,实现Service的负载均衡功能</p>
-<h2 id="Service的负载均衡转发规则"><a href="#Service的负载均衡转发规则" class="headerlink" title="Service的负载均衡转发规则"></a>Service的负载均衡转发规则</h2><p><img src="https://slions.gitee.io/picbed/img/proxy2.png"></p>
-<p>访问Service的请求，不论是Cluster IP+TargetPort的方式；还是用Node节点IP+NodePort的方式，都被Node节点的Iptables规则重定向到Kube-proxy监听Service服务代理端口。kube-proxy接收到Service的访问请求后，根据负载策略，转发到后端的Pod。</p>
-<h1 id="kubernetes服务发现"><a href="#kubernetes服务发现" class="headerlink" title="kubernetes服务发现"></a>kubernetes服务发现</h1><p>Kubernetes提供了两种方式进行服务发现, 即<strong>环境变量</strong>和<strong>DNS</strong>, 简单说明如下:</p>
-<ol>
-<li>环境变量： 当创建一个Pod的时候，kubelet会在该Pod中注入集群内所有Service的相关环境变量。<strong>需要注意:</strong> 要想一个Pod中注入某个Service的环境变量，则必须Service要先比该Pod创建。这一点，几乎使得这种方式进行服务发现不可用。比如，一个ServiceName为redis-master的Service，对应的ClusterIP:Port为172.16.50.11:6379，则其对应的环境变量为:</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">REDIS_MASTER_SERVICE_HOST=172.16.50.11</span><br><span class="line">REDIS_MASTER_SERVICE_PORT=6379</span><br><span class="line">REDIS_MASTER_PORT=tcp://172.16.50.11:6379</span><br><span class="line">REDIS_MASTER_PORT_6379_TCP=tcp://172.16.50.11:6379</span><br><span class="line">REDIS_MASTER_PORT_6379_TCP_PROTO=tcp</span><br><span class="line">REDIS_MASTER_PORT_6379_TCP_PORT=6379</span><br><span class="line">REDIS_MASTER_PORT_6379_TCP_ADDR=172.16.50.11</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>DNS：这是k8s官方强烈推荐的方式!!! 可以通过cluster add-on方式轻松的创建KubeDNS来对集群内的Service进行服务发现。</li>
-</ol>
-<h1 id="kubernetes发布-暴露-服务"><a href="#kubernetes发布-暴露-服务" class="headerlink" title="kubernetes发布(暴露)服务"></a>kubernetes发布(暴露)服务</h1><p>kubernetes原生的，一个Service的ServiceType决定了其发布服务的方式。</p>
+        <p>根据harbor官方的描述，harbor高可用方案有以下几种：</p>
 <ul>
-<li>ClusterIP：这是k8s默认的ServiceType。通过集群内的ClusterIP在内部发布服务。</li>
-<li>NodePort：这种方式是常用的，用来对集群外暴露Service，你可以通过访问集群内的每个NodeIP:NodePort的方式，访问到对应Service后端的Endpoint。</li>
-<li>LoadBalancer: 这也是用来对集群外暴露服务的，不同的是这需要Cloud Provider的支持，比如AWS等。</li>
-<li>ExternalName：这个也是在集群内发布服务用的，需要借助KubeDNS(version &gt;= 1.7)的支持，就是用KubeDNS将该service和ExternalName做一个Map，KubeDNS返回一个CNAME记录。</li>
+<li>通过helm chart的方式部署于kubernetes中，以多副本的形式运行，借助k8s自愈性维护自身状态，通过pvc来存储数据，连接外置的PostgreSQL和Redis集群。</li>
+<li>多个harbor实例共享PostgreSQL、Redis及存储，上层搭建负载均衡器。</li>
+<li>harbor组件单独部署，基于复制策略实现Artifact的一致性，通过上层负载均衡器提供统一入口，PostgreSQL和Redis的数据一致性需要用户自己解决。</li>
 </ul>
-<h1 id="kube-proxy-工作原理"><a href="#kube-proxy-工作原理" class="headerlink" title="kube-proxy 工作原理"></a>kube-proxy 工作原理</h1><p>kube-proxy当前实现了三种代理模式：<strong>userspace,</strong> <strong>iptables, ipvs</strong>。其中userspace mode是v1.0及之前版本的默认模式，从v1.1版本中开始增加了iptables mode，在v1.2版本中正式替代userspace模式成为默认模式。也就是说kubernetes在v1.2版本之前是默认模式, v1.2版本之后默认模式是iptables。</p>
-<h2 id="userspace-mode"><a href="#userspace-mode" class="headerlink" title="userspace mode"></a>userspace mode</h2><p>userspace是在用户空间，通过kube-proxy来实现service的代理服务, 其原理如下:</p>
-<p><img src="https://slions.gitee.io/picbed/img/proxy3.png"></p>
-<p>可见，userspace这种mode最大的问题是，service的请求会先从用户空间进入内核iptables，然后再回到用户空间，由kube-proxy完成后端Endpoints的选择和代理工作，这样流量从用户空间进出内核带来的性能损耗是不可接受的。这也是k8s v1.0及之前版本中对kube-proxy质疑最大的一点，因此社区就开始研究iptables mode.</p>
-<p>userspace这种模式下，kube-proxy 持续监听 Service 以及 Endpoints 对象的变化；对每个 Service，它都为其在本地节点开放一个端口，作为其服务代理端口；发往该端口的请求会采用一定的策略转发给与该服务对应的后端 Pod 实体。kube-proxy 同时会在本地节点设置 iptables 规则，配置一个 Virtual IP，把发往 Virtual IP 的请求重定向到与该 Virtual IP 对应的服务代理端口上。其工作流程大体如下:</p>
-<p><img src="https://slions.gitee.io/picbed/img/proxy4.png"></p>
-<p><strong>由此分析:</strong> 该模式请求在到达 iptables 进行处理时就会进入内核，而 kube-proxy 监听则是在用户态, 请求就形成了从用户态到内核态再返回到用户态的传递过程, 一定程度降低了服务性能。</p>
-<h2 id="iptables-mode"><a href="#iptables-mode" class="headerlink" title="iptables mode"></a>iptables mode</h2><p>该模式完全利用内核iptables来实现service的代理和LB, 这是K8s在v1.2及之后版本默认模式. 工作原理如下:</p>
-<p><img src="https://slions.gitee.io/picbed/img/proxy5.png"></p>
-<p>iptables mode因为使用iptable NAT来完成转发，也存在不可忽视的性能损耗。另外，如果集群中存在上万的Service/Endpoint，那么Node上的iptables rules将会非常庞大，性能还会再打折扣。</p>
-<p>iptables 模式与 userspace 相同，kube-proxy 持续监听 Service 以及 Endpoints 对象的变化；但它并不在本地节点开启反向代理服务，而是把反向代理全部交给 iptables 来实现；即 iptables 直接将对 VIP 的请求转发给后端 Pod，通过 iptables 设置转发策略。其工作流程大体如下:</p>
-<p><img src="https://slions.gitee.io/picbed/img/proxy6.png"></p>
-<p><strong>由此分析:</strong> 该模式相比 userspace 模式，克服了请求在用户态-内核态反复传递的问题，性能上有所提升，但使用 iptables NAT 来完成转发，存在不可忽视的性能损耗，而且在大规模场景下，iptables 规则的条目会十分巨大，性能上还要再打折扣。</p>
-<h2 id="ipvs-mode"><a href="#ipvs-mode" class="headerlink" title="ipvs mode"></a>ipvs mode</h2><p>在kubernetes 1.8以上的版本中，对于kube-proxy组件增加了除iptables模式和用户模式之外还支持ipvs模式。kube-proxy ipvs 是基于 NAT 实现的，通过ipvs的NAT模式，对访问k8s service的请求进行虚IP到POD IP的转发。当创建一个 service 后，kubernetes 会在每个节点上创建一个网卡，同时帮你将 Service IP(VIP) 绑定上，此时相当于每个 Node 都是一个 ds，而其他任何 Node 上的 Pod，甚至是宿主机服务(比如 kube-apiserver 的 6443)都可能成为 rs。</p>
-<p><img src="https://slions.gitee.io/picbed/img/proxy7.png"></p>
-<p>与iptables、userspace 模式一样，kube-proxy 依然监听Service以及Endpoints对象的变化, 不过它并不创建反向代理, 也不创建大量的 iptables 规则, 而是通过netlink 创建ipvs规则，并使用k8s Service与Endpoints信息，对所在节点的ipvs规则进行定期同步; netlink 与 iptables 底层都是基于 netfilter 钩子，但是 netlink 由于采用了 hash table 而且直接工作在内核态，在性能上比 iptables 更优。其工作流程大体如下:</p>
-<p><img src="https://slions.gitee.io/picbed/img/proxy8.png"></p>
-<p><strong>由此分析：</strong>ipvs 是目前 kube-proxy 所支持的最新代理模式，相比使用 iptables，使用 ipvs 具有更高的性能。</p>
+<p>可以看到第三种方式是最简单的，下面以第三种方式搭建harbor2.4.2环境。</p>
+<h1 id="环境描述"><a href="#环境描述" class="headerlink" title="环境描述"></a>环境描述</h1><table>
+<thead>
+<tr>
+<th>ip地址</th>
+<th>系统版本</th>
+<th>内核版本</th>
+<th>cpu(C)</th>
+<th>mem(G)</th>
+<th>disk(GB)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>192.168.100.10</td>
+<td>CentOS 7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+<td>2</td>
+<td>4</td>
+<td>40</td>
+</tr>
+<tr>
+<td>192.168.100.11</td>
+<td>CentOS 7.6.1810</td>
+<td>3.10.0-957.el7.x86_64</td>
+<td>2</td>
+<td>4</td>
+<td>40</td>
+</tr>
+</tbody></table>
+<h1 id="高可用部署"><a href="#高可用部署" class="headerlink" title="高可用部署"></a>高可用部署</h1><p>以下步骤在两台测试机器分别执行。</p>
+<h2 id="基础环境准备"><a href="#基础环境准备" class="headerlink" title="基础环境准备"></a>基础环境准备</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl status firewalld</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl stop firewalld.service &amp;&amp; systemctl <span class="built_in">disable</span> firewalld.service</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> setenforce 0</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sed -i <span class="string">&#x27;s/^SELINUX=.*/SELINUX=disabled/g&#x27;</span> /etc/selinux/config</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install docker-ce-19.03.4 docker-ce-cli-19.03.4</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir /etc/docker</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat &gt; /etc/docker/daemon.json &lt;&lt;<span class="string">EOF</span></span></span><br><span class="line">&#123;</span><br><span class="line">  &quot;graph&quot;: &quot;/home/docker&quot;,</span><br><span class="line">  &quot;log-driver&quot;: &quot;json-file&quot;,</span><br><span class="line">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],</span><br><span class="line">  &quot;log-opts&quot;: &#123;</span><br><span class="line">    &quot;max-size&quot;: &quot;50m&quot;,</span><br><span class="line">    &quot;max-file&quot;: &quot;3&quot;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">$</span><span class="bash"><span class="string"> systemctl enable docker &amp;&amp; systemctl start docker</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> curl -SL https://github.com/docker/compose/releases/download/v2.4.0/docker-compose-linux-x86_64 -o /usr/<span class="built_in">local</span>/bin/docker-compose</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> chmod +x /usr/<span class="built_in">local</span>/bin/docker-compose</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装harbor"><a href="#安装harbor" class="headerlink" title="安装harbor"></a>安装harbor</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget https://github.com/goharbor/harbor/releases/download/v2.4.2/harbor-offline-installer-v2.4.2.tgz</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tar zxvf harbor-offline-installer-v2.4.2.tgz</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置harbor"><a href="#配置harbor" class="headerlink" title="配置harbor"></a>配置harbor</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> harbor</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls</span></span><br><span class="line">common  common.sh  docker-compose.yml  harbor.v2.4.2.tar.gz  harbor.yml  install.sh  LICENSE  prepare</span><br><span class="line"><span class="meta">$</span><span class="bash"> cp harbor.yml.tmpl harbor.yml</span></span><br></pre></td></tr></table></figure>
+
+<p>根据本地环境实际情况来修改harbor.yml文件。</p>
+<p>https需要涉及到证书操作，暂时先将https部分注释掉，下面是对比原始文件修改的部分。</p>
+<blockquote>
+<p>hostname:处改成对应节点的ip地址</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> diff harbor.yml.tmpl harbor.yml</span></span><br><span class="line">5c5</span><br><span class="line">&lt; hostname: reg.mydomain.com</span><br><span class="line">---</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> hostname: 192.168.100.10</span></span><br><span class="line">13c13</span><br><span class="line">&lt; https:</span><br><span class="line">---</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="comment">#https:</span></span></span><br><span class="line">15c15</span><br><span class="line">&lt;   port: 443</span><br><span class="line">---</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="comment">#  port: 443</span></span></span><br><span class="line">17,18c17,18</span><br><span class="line">&lt;   certificate: /your/certificate/path</span><br><span class="line">&lt;   private_key: /your/private/key/path</span><br><span class="line">---</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="comment">#  certificate: /your/certificate/path</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="comment">#  private_key: /your/private/key/path</span></span></span><br><span class="line">34c34</span><br><span class="line">&lt; harbor_admin_password: Harbor12345</span><br><span class="line">---</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> harbor_admin_password: Slions123</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="安装harbor-1"><a href="#安装harbor-1" class="headerlink" title="安装harbor"></a>安装harbor</h3><p>执行<code>./prepare</code>，下载镜像，并根据harbor.yml生成docker-compose.yml文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./prepare</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>harbor离线包解压后，进入目录中看到的<code>harbor.v2.4.2.tar.gz</code>为对应组件的镜像，可提前通过docker load到本地。</p>
+</blockquote>
+<p>执行<code>./install.sh</code>进行安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./install.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>使用docker-compose ps 命令可以查看容器启动情况。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker-compose ps</span></span><br><span class="line">NAME                COMMAND                  SERVICE             STATUS              PORTS</span><br><span class="line">harbor-core         &quot;/harbor/entrypoint.…&quot;   core                running (healthy)</span><br><span class="line">harbor-db           &quot;/docker-entrypoint.…&quot;   postgresql          running (healthy)</span><br><span class="line">harbor-jobservice   &quot;/harbor/entrypoint.…&quot;   jobservice          running (healthy)</span><br><span class="line">harbor-log          &quot;/bin/sh -c /usr/loc…&quot;   log                 running (healthy)   127.0.0.1:1514-&gt;10514/tcp</span><br><span class="line">harbor-portal       &quot;nginx -g &#x27;daemon of…&quot;   portal              running (healthy)</span><br><span class="line">nginx               &quot;nginx -g &#x27;daemon of…&quot;   proxy               running (healthy)   0.0.0.0:80-&gt;8080/tcp</span><br><span class="line">redis               &quot;redis-server /etc/r…&quot;   redis               running (healthy)</span><br><span class="line">registry            &quot;/home/harbor/entryp…&quot;   registry            running (healthy)</span><br><span class="line">registryctl         &quot;/home/harbor/start.…&quot;   registryctl         running (healthy)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>浏览器访问<u>http:&lt;$节点ip&gt;:80</u></p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor001.png"></p>
+<h2 id="部署keepalived"><a href="#部署keepalived" class="headerlink" title="部署keepalived"></a>部署keepalived</h2><p>keepalived是一个高可用软件，通过VRRP协议来防止服务单点故障。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yum install -y keepalived</span></span><br></pre></td></tr></table></figure>
+
+<p>按需编辑配置文件。</p>
+<blockquote>
+<p>此次测试中，keepalived并没有加检测harbor组件状态的脚本</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat &gt; /etc/keepalived/keepalived.conf &lt;&lt;<span class="string">EOF</span></span></span><br><span class="line">global_defs &#123;</span><br><span class="line">  script_user root</span><br><span class="line">  enable_script_security</span><br><span class="line">  router_id lb_Harbor</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">  state BACKUP</span><br><span class="line">  nopreempt</span><br><span class="line">  interface ens33</span><br><span class="line">  virtual_router_id 51</span><br><span class="line">  priority 100</span><br><span class="line">  advert_int 1</span><br><span class="line">  authentication &#123;</span><br><span class="line">      auth_type PASS</span><br><span class="line">      auth_pass agree123</span><br><span class="line">  &#125;</span><br><span class="line">  virtual_ipaddress &#123;</span><br><span class="line">         192.168.100.100</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>启动<code>keepalived</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> keepalived &amp;&amp; systemctl start keepalived</span></span><br></pre></td></tr></table></figure>
+
+<p>此时分别查看两台测试机的网卡信息，可以看到VIP已经绑定在了一个节点上。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ip a|grep ens33</span></span><br><span class="line">2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    inet 192.168.100.10/24 brd 192.168.100.255 scope global noprefixroute ens33</span><br><span class="line">    inet 192.168.100.100/32 scope global ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="设置复制策略"><a href="#设置复制策略" class="headerlink" title="设置复制策略"></a>设置复制策略</h1><blockquote>
+<p>由于 v2.0 版本中的主要 API 更改以支持<a target="_blank" rel="noopener" href="https://github.com/opencontainers/distribution-spec">OCI</a>。您无法从 Harbor v1.x 复制到 v2.0 及更高版本，也无法将带有<strong>manifest list</strong>的artifacts 从 v2.0 及更高版本复制到 v1.x。</p>
+</blockquote>
+<h2 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h2><p>分别浏览器访问两台镜像仓库地址，<code>系统管理</code>-<code>仓库管理</code>-<code>新建目标</code>，填写目标镜像仓库信息。</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor002.png"></p>
+<h2 id="设置复制策略-1"><a href="#设置复制策略-1" class="headerlink" title="设置复制策略"></a>设置复制策略</h2><p><code>系统管理</code>-<code>复制管理</code>-<code>新建规则</code></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>复制模式</td>
+<td>支持主动推送和基于拉取策略</td>
+</tr>
+<tr>
+<td>资源过滤器</td>
+<td>支持基于tag和标签的过滤（匹配/排除），资源包括all、image、artifact</td>
+</tr>
+<tr>
+<td>仓库扁平化</td>
+<td>在复制image时支持处理image层次结构，可选择展平的级别</td>
+</tr>
+<tr>
+<td>触发模式</td>
+<td>手动（删除操作不会被复制）； 定时（通过定义 crontab定期复制资源，删除操作不会被复制） ；事件驱动（基于推送、重新标记和删除操作）</td>
+</tr>
+<tr>
+<td>带宽</td>
+<td>设置每个复制任务的最大网络带宽，须注意并发执行数，每个job-service pod默认值为10</td>
+</tr>
+</tbody></table>
+<p><img src="https://slions.gitee.io/picbed/img/harbor003.png"></p>
+<h2 id="测试过程与问题"><a href="#测试过程与问题" class="headerlink" title="测试过程与问题"></a>测试过程与问题</h2><p>测试的过程大致描述下，两个镜像仓库分别设置了基于<strong>事件驱动</strong>的复制策略：</p>
+<p>推送一些镜像到其中一个节点，此时可以看到很快就同步到了另外一台；</p>
+<p>推送一个较大的镜像，再推送的过程中进行VIP切换，此时推送的过程会中断，再次执行推送任务时可正常进行（测试时会有切换VIP再次推送镜像卡死现象，等待大概5分钟后可恢复）。</p>
+<p>关闭其中一台镜像仓库节点，推送一些镜像（此时都存储在另一台），过段时间后恢复关闭的节点，此时查看复制任务都还处于失败的状态，并且任务都不会再次执行。须点击复制按钮触发任务来完成。</p>
+<p>附上一些任务截图。</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor004.png"></p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor005.png"></p>
+<h1 id="垃圾清理"><a href="#垃圾清理" class="headerlink" title="垃圾清理"></a>垃圾清理</h1><p>最早之前harbor垃圾清理要在后台跑一个程序实现，当前已经集成到了页面上。</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor006.png"></p>
+<p>harbor提供了项目级别的<strong>tag保留策略</strong>，所有未标记的artifacts 都将被删除。</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor007.png"></p>
+<p>为避免损坏上传artifact，垃圾收集引入了一个时间窗口（2 小时）来保留最近上传的图层layers。垃圾收集不会扫描时间窗口中具有时间戳的清单和 blob 文件。目前并未提供修改该时间窗口的地方。</p>
+<p>为了避免过于频繁地触发垃圾收集过程，<strong>GC Now</strong>按钮的可用性受到限制。垃圾收集每分钟只能运行一次。</p>
+<h1 id="artifact"><a href="#artifact" class="headerlink" title="artifact"></a>artifact</h1><p>查阅官方文档时很多地方提到artifact，对比新老版本的界面也发现了其中的不同</p>
+<p>旧版本（v1.4.0）</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor008.png"></p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor009.png"></p>
+<p>测试版本（v2.4.2）</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor010.png"></p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor011.png"></p>
+<p>可以看到artifacts和images的digests保持一致</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor012.png"></p>
+<p>点击artifact的详情查看如下</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor013.png"></p>
+<h1 id="测试过程中的问题"><a href="#测试过程中的问题" class="headerlink" title="测试过程中的问题"></a>测试过程中的问题</h1><p>因为测试是搭建了两个独立的harbor，镜像层面可以通过设置复制策略解决，虽然高版本中取消了之前的“即刻”模式，也就导致当一台机器异常后，直到恢复时的这段时间产生的镜像差异不会自动的同步，需要手动的重启下复制策略，或者是设置个基于定时任务的复制策略。</p>
+<p>对于用户管理等功能是存储在数据库中的，低版本是mysql，高版本变为了postgreSQL，尝试同步两台镜像仓库的数据库来使用户管理等数据保持一致（暴力的方式直接同步宿主机上的PG数据目录），但此时会引发另一些问题：</p>
+<p>页面上看到的数据都会被覆盖，比如复制策略被覆盖了，需要重新添加；项目下的镜像仓库、artifacts等被覆盖，此时推送镜像到一个镜像仓库，另一台镜像仓库的UI也会刷新该镜像的信息，导致即使配置了复制策略，也会运行失败。</p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor014.png"></p>
+<p><img src="https://slions.gitee.io/picbed/img/harbor015.png"></p>
+<p>高可用方案来说，多harbor实例连接外置redis与PostgreSQL集群，建立统一访问入口，挂载共享存储目前还是最稳定且推荐的做法。</p>
 
     </article>
     <!-- license  -->
@@ -520,17 +621,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2021/10/03/k8s-controller-manager%E5%8E%9F%E7%90%86/" title= "k8s-controller-manager原理">
-                    <div class="nextTitle">k8s-controller-manager原理</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2021/10/03/k8s-etcd%E7%90%86%E8%A7%A3/" title= "k8s-etcd理解">
-                    <div class="prevTitle">k8s-etcd理解</div>
+                <a href= "/2022/06/14/%E5%85%B3%E4%BA%8Ek8s%E5%8D%B7%E6%9D%83%E9%99%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B5%8B%E8%AF%95/" title= "关于k8s卷权限的一些测试">
+                    <div class="prevTitle">关于k8s卷权限的一些测试</div>
                 </a>
             
         </li>
@@ -546,7 +642,7 @@ height:50vh;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
     <script>
-        let idOption = '1633232400000'
+        let idOption = '1655903210000'
         
         idOption = location.pathname
         
@@ -685,7 +781,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#kube-proxy%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">kube-proxy的作用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Service-Endpoints%E4%B8%8EPod%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.</span> <span class="toc-text">Service, Endpoints与Pod的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Service%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%BD%AC%E5%8F%91%E8%A7%84%E5%88%99"><span class="toc-number">1.3.</span> <span class="toc-text">Service的负载均衡转发规则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#kubernetes%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">kubernetes服务发现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#kubernetes%E5%8F%91%E5%B8%83-%E6%9A%B4%E9%9C%B2-%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">kubernetes发布(暴露)服务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#kube-proxy-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">kube-proxy 工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#userspace-mode"><span class="toc-number">4.1.</span> <span class="toc-text">userspace mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptables-mode"><span class="toc-number">4.2.</span> <span class="toc-text">iptables mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ipvs-mode"><span class="toc-number">4.3.</span> <span class="toc-text">ipvs mode</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">环境描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E9%83%A8%E7%BD%B2"><span class="toc-number">2.</span> <span class="toc-text">高可用部署</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">2.1.</span> <span class="toc-text">基础环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85docker"><span class="toc-number">2.2.</span> <span class="toc-text">安装docker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85docker-compose"><span class="toc-number">2.3.</span> <span class="toc-text">安装docker-compose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85harbor"><span class="toc-number">2.4.</span> <span class="toc-text">安装harbor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEharbor"><span class="toc-number">2.4.1.</span> <span class="toc-text">配置harbor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85harbor-1"><span class="toc-number">2.4.2.</span> <span class="toc-text">安装harbor</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2keepalived"><span class="toc-number">2.5.</span> <span class="toc-text">部署keepalived</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%A4%8D%E5%88%B6%E7%AD%96%E7%95%A5"><span class="toc-number">3.</span> <span class="toc-text">设置复制策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-number">3.1.</span> <span class="toc-text">添加远程仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%A4%8D%E5%88%B6%E7%AD%96%E7%95%A5-1"><span class="toc-number">3.2.</span> <span class="toc-text">设置复制策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B%E4%B8%8E%E9%97%AE%E9%A2%98"><span class="toc-number">3.3.</span> <span class="toc-text">测试过程与问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E6%B8%85%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">垃圾清理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#artifact"><span class="toc-number">5.</span> <span class="toc-text">artifact</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">测试过程中的问题</span></a></li></ol>
     </div>
     
     <div class="sidebar sidebar-hide">

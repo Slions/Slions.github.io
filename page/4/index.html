@@ -399,6 +399,37 @@ height:100vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" >
+            
+                <span>保留特殊字符</span>
+        </a>
+        <div class="abstract-content">
+            由于Ansible采用Jinja2模板引擎渲染字符串，在需要渲染的时候，如果发现字符串中包含了Jinja2的特殊字符，就会认为这是一个需要渲染的内容。
+如下示例：
+123456789---- hosts: localhost  gather_facts: false  tasks:    - name: &quot;测试特殊字符&quot;      debug:        var: p...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/17</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/10/31/%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85mysql/" >
             
                 <span>普通用户安装mysql</span>
@@ -691,36 +722,6 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "git">git</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/02/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E7%BC%96%E5%86%99dockerfile/" >
-            
-                <span>如何优雅的编写dockerfile</span>
-        </a>
-        <div class="abstract-content">
-            写一个能够运行起来的的dockerfile是比较简单的，而写一个“产品化程度高”的dockerfile是需要设计的。
-操作简易的dockerfile意味着几乎任何命令都能成功执行，以致于镜像动不动就1个多G好几百M，要知道的是镜像越大，拉取的速度也会随之增加，对于系统的开销也就越大。dockerhub上有上万个镜像，我们可以随意的拿来作为基础镜像，与之伴随的就是潜在的安全隐患，某些特殊的场景...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
     
 </div>
             
@@ -2099,9 +2100,46 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 81
+        Total : 82
         </div>
         <!-- search  -->
         
@@ -2114,6 +2152,11 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2022/06/22/harbor2-4-2%E5%B0%9D%E9%B2%9C/" >harbor2.4.2尝鲜</a>
+        </li>
     
     
         <li class="archive-post-item">
