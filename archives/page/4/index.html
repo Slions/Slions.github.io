@@ -386,6 +386,37 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >
+            
+                <span>harbor对接F5的鉴权失败问题</span>
+        </a>
+        <div class="abstract-content">
+            之前harbor的高可用方案都是通过我们自建VIP与检测机制来做的，此次上线的双活架构下，VIP无法跨网段进行通信，甲方提供F5作为统一入口，由此进行了F5对接harbor的功能性测试。
+问题现象使用docker login harbor时，有时成功，有时失败：
+123456# docker login -u user -p passwd http://xxx.xxx.xxx.xxx:998...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/11/17/%E4%BF%9D%E7%95%99%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" >
             
                 <span>保留特殊字符</span>
@@ -676,39 +707,6 @@ kubernetes本身，包括各种对象的状态和元信息配置
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/10/git%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" >
-            
-                <span>git原理及常用命令</span>
-        </a>
-        <div class="abstract-content">
-            关于git的使用介绍网上也比较多了，尤其是廖雪峰大佬的git教程与苏玲大佬的git网课都是git入门的经典。写这篇文章主要是想通过图示化配合文字的方式，加深记忆，也在日常工作中起到速查的作用。
-git简介
-Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地处理从小到大的所有项目。这是git官网对其的描述。
-
-在没有出现版本控制系统前，常见的作法是在一台服务器上把文件共享出来，每个成...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "git">git</a>
     
 </div>
             
@@ -2004,18 +2002,9 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 82
+        Total : 83
         </div>
         <!-- search  -->
         
@@ -2028,6 +2017,11 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2022/10/30/%E5%AE%89%E8%A3%85openshift%E8%AE%B0%E5%AE%9E/" >安装openshift记实</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2492,6 +2486,8 @@ Git 是一个免费的开源 分布式版本控制系统，旨在快速高效地
         <span class="sidebar-tag-name" data-tags="Network"><span class="iconfont-archer">&#xe606;</span>Network</span>
     
         <span class="sidebar-tag-name" data-tags="shell"><span class="iconfont-archer">&#xe606;</span>shell</span>
+    
+        <span class="sidebar-tag-name" data-tags="openshift"><span class="iconfont-archer">&#xe606;</span>openshift</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
