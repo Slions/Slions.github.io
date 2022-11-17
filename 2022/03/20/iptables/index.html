@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="老的系统防火墙使用的一直是iptables，centos&#x2F;redhat7后默认的防火墙变为了firewalld， iptables主要是通过四表五链对网络数据进行处理，firewalld则是通过设置zone来限制网络，firewalld与iptables不能共存，会产生不兼容的问题。 我们一般只是知道iptables，但它实际上由两个组件netfilter 和 iptables 组成。 netfi">
 <meta property="og:locale">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/iptables0.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/iptables2.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/iptable3.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/iptables0.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/iptables2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/iptable3.png">
 <meta property="article:published_time" content="2022-03-20T05:36:59.000Z">
-<meta property="article:modified_time" content="2022-03-20T06:29:40.963Z">
+<meta property="article:modified_time" content="2022-11-17T12:14:28.480Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Slions/picbed/raw/master/img/iptables0.png">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/iptables0.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
@@ -457,9 +457,9 @@ height:50vh;
 <p>我们一般只是知道iptables，但它实际上由两个组件netfilter 和 iptables 组成。</p>
 <p>netfilter 组件也称为内核空间（kernelspace），是内核的一部分，由一些信息包过滤表组成，这些表包含内核用来控制信息包过滤处理的规则集。</p>
 <p>iptables 组件是一种工具，也称为用户空间（userspace），它使插入、修改和除去信息包过滤表中的规则变得容易。</p>
-<h1 id="iptables原理"><a href="#iptables原理" class="headerlink" title="iptables原理"></a>iptables原理</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/iptables0.png"/>
+<h1 id="iptables原理"><a href="#iptables原理" class="headerlink" title="iptables原理"></a>iptables原理</h1><img src="https://slions.gitee.io/picbed/img/iptables0.png"/>
 
-<img src="https://gitee.com/Slions/picbed/raw/master/img/iptables2.png"/>
+<img src="https://slions.gitee.io/picbed/img/iptables2.png"/>
 
 <p>上图可以看出一个数据包发往本地的流向。</p>
 <p>（1） 一个数据包进入网卡时，它首先进入PREROUTING链，内核根据数据包目的IP判断是否需要转发出去。</p>
@@ -546,7 +546,7 @@ height:50vh;
 </tr>
 </tbody></table>
 <p><strong>配置防火墙的主要工作就是添加、修改和删除这些规则。</strong></p>
-<p><img src="https://gitee.com/Slions/picbed/raw/master/img/iptable3.png"></p>
+<p><img src="https://slions.gitee.io/picbed/img/iptable3.png"></p>
 <p>（1）RAW表</p>
 <p>只使用在PREROUTING链和OUTPUT链上,因为优先级最高，从而可以对收到的数据包在连接跟踪前进行处理。</p>
 <p>（2）filter表</p>

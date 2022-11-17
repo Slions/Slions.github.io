@@ -27,19 +27,19 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="地址解析协议（Address Resolution Protocol），其基本功能为透过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。它是IPv4中网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。 工作流程假设主机A和B在同一个网段，主机A要向主机B发送信息，具体的地址解析过程如下：  主机A首先查看自己的ARP表，确定其中是否包含有主机B">
 <meta property="og:locale">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp1.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp2.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp3.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp4.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp5.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp6.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp7.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp3.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp4.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp5.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp6.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/arp7.png">
 <meta property="article:published_time" content="2022-03-20T08:14:39.000Z">
-<meta property="article:modified_time" content="2022-03-20T08:35:25.539Z">
+<meta property="article:modified_time" content="2022-11-17T12:19:02.034Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Slions/picbed/raw/master/img/arp1.png">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/arp1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
@@ -464,7 +464,7 @@ height:50vh;
 <li>主机B比较自己的IP地址和ARP请求报文中的目标IP地址，当两者相同时进行如下处理：将ARP请求报文中的发送端（即主机A）的IP地址和MAC地址存入自己的ARP表中。之后以<strong>单播方式</strong>发送ARP响应报文给主机A，其中包含了自己的MAC地址。</li>
 <li>主机A收到ARP响应报文后，<strong>将主机B的MAC地址加入到自己的ARP表中以用于后续报文的转发</strong>，同时将IP数据包进行封装后发送出去。</li>
 </ol>
-<h1 id="ARP报文"><a href="#ARP报文" class="headerlink" title="ARP报文"></a>ARP报文</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/arp1.png"/>
+<h1 id="ARP报文"><a href="#ARP报文" class="headerlink" title="ARP报文"></a>ARP报文</h1><img src="https://slions.gitee.io/picbed/img/arp1.png"/>
 
 <p>一般说以太网地址就是指MAC地址。</p>
 <ul>
@@ -480,19 +480,19 @@ height:50vh;
 <li>字段11和12是目的端的硬件地址和协议地址。</li>
 </ul>
 <p>图中红框圈起来的是一对ARP请求和ARP应答。</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/arp2.png"/>
+<img src="https://slions.gitee.io/picbed/img/arp2.png"/>
 
-<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><img src="https://gitee.com/Slions/picbed/raw/master/img/arp3.png"/>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><img src="https://slions.gitee.io/picbed/img/arp3.png"/>
 
 
 
 <h2 id="应答报文"><a href="#应答报文" class="headerlink" title="应答报文"></a>应答报文</h2><p>ARP应答分组中，将ARP请求中的源和目的地址进行交换，此外，变化的还有字段8 Opcode。其余字段内容不会发生变化。</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/arp4.png"/>
+<img src="https://slions.gitee.io/picbed/img/arp4.png"/>
 
 
 
 <h1 id="ARP表"><a href="#ARP表" class="headerlink" title="ARP表"></a>ARP表</h1><p>设备通过ARP解析到目的MAC地址后，将会在自己的ARP表中增加IP地址到MAC地址的映射表项，以用于后续到同一目的地报文的转发。</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/arp5.png"/>
+<img src="https://slions.gitee.io/picbed/img/arp5.png"/>
 
 <h2 id="动态ARP表"><a href="#动态ARP表" class="headerlink" title="动态ARP表"></a>动态ARP表</h2><p>动态ARP表项由ARP协议通过ARP报文自动生成和维护，可以被老化，可以被新的ARP报文更新，可以被静态ARP表项覆盖。当到达老化时间、接口down时会删除相应的动态ARP表项。</p>
 <h2 id="静态ARP表"><a href="#静态ARP表" class="headerlink" title="静态ARP表"></a>静态ARP表</h2><p>静态ARP表项通过手工配置和维护，不会被老化，不会被动态ARP表项覆盖。</p>
@@ -519,7 +519,7 @@ height:50vh;
 <p>为什么需要代理ARP？</p>
 <p>先要了解，路由器的重要功能之一就是把局域网的广播包限制在该网内，阻止其扩散，否则会造成网络风暴。</p>
 <p>ARP请求是个广播包，它询问的对象如果在同一个局域网内，就会收到应答。但是如果询问的对象不在同一个局域网该如何处理？路由器就提供了代理ARP为这个问题提供了解决方案。</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/arp6.png"/>
+<img src="https://slions.gitee.io/picbed/img/arp6.png"/>
 
 <p>两台主机A和B处于同一网段但不同的广播段（不在同一物理网络上）时，主机A发送ARP请求主机B的MAC地址时，因为路由器不转发广播包的原因，ARP请求只能到达路由器。如果路由器启用了代理ARP功能，并知道主机B属于它连接的网络，那么路由器就用自己接口的MAC地址代替主机B的MAC地址来对主机A进行ARP应答。主机A接收ARP应答，但并不知道代理ARP的存在。</p>
 <p>代理ARP的<strong>优缺点</strong></p>
@@ -535,7 +535,7 @@ height:50vh;
 <li>计算机不能正常上网，出现网络中断的症状。</li>
 </ol>
 <p>因为这种攻击是利用ARP请求报文进行“欺骗”的，所以防火墙会误以为是正常的请求数据包，不予拦截。因此普通的防火墙很难抵挡这种攻击。</p>
-<h1 id="ARP老化时间"><a href="#ARP老化时间" class="headerlink" title="ARP老化时间"></a>ARP老化时间</h1><img src="https://gitee.com/Slions/picbed/raw/master/img/arp7.png"/>
+<h1 id="ARP老化时间"><a href="#ARP老化时间" class="headerlink" title="ARP老化时间"></a>ARP老化时间</h1><img src="https://slions.gitee.io/picbed/img/arp7.png"/>
 
 
 

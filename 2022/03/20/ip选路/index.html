@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="选路是IP最重要的功能之一。需要进行选路的数据报可以由本地主机产生，也可以由其他主机产生。在后一种情况下，主机必须配置成一个路由器，否则通过网络接口接收到的数据报，如果目的地址不是本机就要被丢弃（例如，悄无声息地被丢弃）。 选路原理ip搜索路由表的步骤：  搜索匹配的主机地址； 搜索匹配的网络地址； 搜索默认表项（默认表项一般在路由表中被指定为一个网络表项，其网络号为0）。匹配主机地址步骤始终发生">
 <meta property="og:locale">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/ip route1.png">
-<meta property="og:image" content="https://gitee.com/Slions/picbed/raw/master/img/ip route2.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/ip route1.png">
+<meta property="og:image" content="https://slions.gitee.io/picbed/img/ip route2.png">
 <meta property="article:published_time" content="2022-03-20T05:37:09.000Z">
-<meta property="article:modified_time" content="2022-03-20T06:41:54.570Z">
+<meta property="article:modified_time" content="2022-11-17T12:14:24.982Z">
 <meta property="article:author" content="Jingyu Shi">
 <meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Slions/picbed/raw/master/img/ip route1.png">
+<meta name="twitter:image" content="https://slions.gitee.io/picbed/img/ip route1.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
@@ -460,7 +460,7 @@ height:50vh;
 </ol>
 <p>IP层进行的选路实际上是一种选路机制，它搜索路由表并决定向哪个网络接口发送分组。这区别于选路策略，它只是一组决定把哪些路由放入路由表的规则。I P执行选路机制，而路由守护程序则一般提供选路策略。</p>
 <h1 id="简单路由表"><a href="#简单路由表" class="headerlink" title="简单路由表"></a>简单路由表</h1><p>首先来看一看一些典型的主机路由表。在主机s v r 4上，先执行带-r选项的netstat命令列出路由表，然后以-n选项再次执行该命令，以数字格式打印出I P地址（我们这样做是因为路由表中的一些表项是网络地址，而不是主机地址。如果没有- n选项，netstat命令将搜索文件/etc/networks并列出其中的网络名。这样会与另一种形式的名字—网络名加主机名相混淆）。</p>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/ip route1.png"/>
+<img src="https://slions.gitee.io/picbed/img/ip route1.png"/>
 
 <p>对于一个给定的路由器，可以打印出五种不同的标志（flag)：</p>
 <ul>
@@ -485,7 +485,7 @@ height:50vh;
 <li>R1收到数据报并且检查它的路由表，发现R 2是发送该数据报的下一站。当它把数据报发送给R2时，R 1检测到它正在发送的接口与数据报到达接口是相同的（即主机和两个路由器所在的L A N）。这样就给路由器发送重定向报文给原始发送端提供了线索。</li>
 <li>R1 发送一份I C M P重定向报文给主机，告诉它以后把数据报发送给R 2而不是R 1。</li>
 </ol>
-<img src="https://gitee.com/Slions/picbed/raw/master/img/ip route2.png"/>
+<img src="https://slions.gitee.io/picbed/img/ip route2.png"/>
 
 
 
