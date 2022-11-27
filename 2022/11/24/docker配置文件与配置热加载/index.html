@@ -20,17 +20,22 @@
     <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2022/06/index.html">
+    <meta name="description" content="Daemon配置文件--config-file选项允许以JSON格式为docker守护进程设置任何配置选项。此文件使用与键相同的标志名称，但允许多个条目的标志除外，其中它使用标志名称的复数，例如label标志的labels。 配置文件中设置的选项不得与通过命令行设置的选项冲突。如果文件和标志之间复制了一个选项，无论其值如何，docker守护进程都无法启动。这样做是为了避免默默地忽略配置重新加载中引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker配置文件与配置热加载">
+<meta property="og:url" content="https://slions.github.io/2022/11/24/docker%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%8E%E9%85%8D%E7%BD%AE%E7%83%AD%E5%8A%A0%E8%BD%BD/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Daemon配置文件--config-file选项允许以JSON格式为docker守护进程设置任何配置选项。此文件使用与键相同的标志名称，但允许多个条目的标志除外，其中它使用标志名称的复数，例如label标志的labels。 配置文件中设置的选项不得与通过命令行设置的选项冲突。如果文件和标志之间复制了一个选项，无论其值如何，docker守护进程都无法启动。这样做是为了避免默默地忽略配置重新加载中引">
 <meta property="og:locale">
+<meta property="article:published_time" content="2022-11-24T03:19:11.000Z">
+<meta property="article:modified_time" content="2022-11-27T12:35:31.882Z">
 <meta property="article:author" content="Jingyu Shi">
+<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-    <title>S_lion&#39;s Studio</title>
+    <title>docker配置文件与配置热加载 · S_lion&#39;s Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
     <style type="text/css">
     @font-face {
@@ -214,6 +219,8 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
@@ -236,6 +243,17 @@
     <!-- back to home page text -->
     <a class="home-link header-element" href=/>S_lion's Studio</a>
     <!-- toggle banner for post layout -->
+    
+    
+    <div class="banner">
+    
+        <div class="blog-title header-element">
+            <a href="/" >S_lion&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">docker配置文件与配置热加载</a>
+        </div>
+    </div>
     
 </header>
     
@@ -260,24 +278,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            docker配置文件与配置热加载
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.5k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2022/11/24</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -378,77 +446,101 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2022/06/22/harbor2-4-2%E5%B0%9D%E9%B2%9C/" >
-            
-                <span>harbor2.4.2尝鲜</span>
-        </a>
-        <div class="abstract-content">
-            根据harbor官方的描述，harbor高可用方案有以下几种：
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Daemon配置文件"><a href="#Daemon配置文件" class="headerlink" title="Daemon配置文件"></a>Daemon配置文件</h1><p><code>--config-file</code>选项允许以JSON格式为docker守护进程设置任何配置选项。此文件使用与键相同的标志名称，但允许多个条目的标志除外，其中它使用标志名称的复数，例如label标志的labels。</p>
+<p><strong>配置文件中设置的选项不得与通过命令行设置的选项冲突。如果文件和标志之间复制了一个选项，无论其值如何，docker守护进程都无法启动。</strong>这样做是为了避免默默地忽略配置重新加载中引入的更改。例如，如果在配置文件中设置守护进程标签，并且还通过–label标志设置守护进程标签，则守护进程无法启动。当守护进程启动时，文件中不存在的选项将被忽略。</p>
+<p>Linux上配置文件的默认位置是<code>/etc/docker/daemon.json</code>。<code>--config-file</code>标志可用于指定非默认位置。</p>
+<p>这是Linux上允许的配置选项的完整示例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;allow-nondistributable-artifacts&quot;: [],</span><br><span class="line">  &quot;api-cors-header&quot;: &quot;&quot;,</span><br><span class="line">  &quot;authorization-plugins&quot;: [],</span><br><span class="line">  &quot;bip&quot;: &quot;&quot;,</span><br><span class="line">  &quot;bridge&quot;: &quot;&quot;,</span><br><span class="line">  &quot;cgroup-parent&quot;: &quot;&quot;,</span><br><span class="line">  &quot;cluster-advertise&quot;: &quot;&quot;,</span><br><span class="line">  &quot;cluster-store&quot;: &quot;&quot;,</span><br><span class="line">  &quot;cluster-store-opts&quot;: &#123;&#125;,</span><br><span class="line">  &quot;containerd&quot;: &quot;/run/containerd/containerd.sock&quot;,</span><br><span class="line">  &quot;containerd-namespace&quot;: &quot;docker&quot;,</span><br><span class="line">  &quot;containerd-plugin-namespace&quot;: &quot;docker-plugins&quot;,</span><br><span class="line">  &quot;data-root&quot;: &quot;&quot;,</span><br><span class="line">  &quot;debug&quot;: true,</span><br><span class="line">  &quot;default-address-pools&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;base&quot;: &quot;172.30.0.0/16&quot;,</span><br><span class="line">      &quot;size&quot;: 24</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;base&quot;: &quot;172.31.0.0/16&quot;,</span><br><span class="line">      &quot;size&quot;: 24</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;default-cgroupns-mode&quot;: &quot;private&quot;,</span><br><span class="line">  &quot;default-gateway&quot;: &quot;&quot;,</span><br><span class="line">  &quot;default-gateway-v6&quot;: &quot;&quot;,</span><br><span class="line">  &quot;default-runtime&quot;: &quot;runc&quot;,</span><br><span class="line">  &quot;default-shm-size&quot;: &quot;64M&quot;,</span><br><span class="line">  &quot;default-ulimits&quot;: &#123;</span><br><span class="line">    &quot;nofile&quot;: &#123;</span><br><span class="line">      &quot;Hard&quot;: 64000,</span><br><span class="line">      &quot;Name&quot;: &quot;nofile&quot;,</span><br><span class="line">      &quot;Soft&quot;: 64000</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;dns&quot;: [],</span><br><span class="line">  &quot;dns-opts&quot;: [],</span><br><span class="line">  &quot;dns-search&quot;: [],</span><br><span class="line">  &quot;exec-opts&quot;: [],</span><br><span class="line">  &quot;exec-root&quot;: &quot;&quot;,</span><br><span class="line">  &quot;experimental&quot;: false,</span><br><span class="line">  &quot;features&quot;: &#123;&#125;,</span><br><span class="line">  &quot;fixed-cidr&quot;: &quot;&quot;,</span><br><span class="line">  &quot;fixed-cidr-v6&quot;: &quot;&quot;,</span><br><span class="line">  &quot;group&quot;: &quot;&quot;,</span><br><span class="line">  &quot;hosts&quot;: [],</span><br><span class="line">  &quot;icc&quot;: false,</span><br><span class="line">  &quot;init&quot;: false,</span><br><span class="line">  &quot;init-path&quot;: &quot;/usr/libexec/docker-init&quot;,</span><br><span class="line">  &quot;insecure-registries&quot;: [],</span><br><span class="line">  &quot;ip&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">  &quot;ip-forward&quot;: false,</span><br><span class="line">  &quot;ip-masq&quot;: false,</span><br><span class="line">  &quot;iptables&quot;: false,</span><br><span class="line">  &quot;ip6tables&quot;: false,</span><br><span class="line">  &quot;ipv6&quot;: false,</span><br><span class="line">  &quot;labels&quot;: [],</span><br><span class="line">  &quot;live-restore&quot;: true,</span><br><span class="line">  &quot;log-driver&quot;: &quot;json-file&quot;,</span><br><span class="line">  &quot;log-level&quot;: &quot;&quot;,</span><br><span class="line">  &quot;log-opts&quot;: &#123;</span><br><span class="line">    &quot;cache-disabled&quot;: &quot;false&quot;,</span><br><span class="line">    &quot;cache-max-file&quot;: &quot;5&quot;,</span><br><span class="line">    &quot;cache-max-size&quot;: &quot;20m&quot;,</span><br><span class="line">    &quot;cache-compress&quot;: &quot;true&quot;,</span><br><span class="line">    &quot;env&quot;: &quot;os,customer&quot;,</span><br><span class="line">    &quot;labels&quot;: &quot;somelabel&quot;,</span><br><span class="line">    &quot;max-file&quot;: &quot;5&quot;,</span><br><span class="line">    &quot;max-size&quot;: &quot;10m&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;max-concurrent-downloads&quot;: 3,</span><br><span class="line">  &quot;max-concurrent-uploads&quot;: 5,</span><br><span class="line">  &quot;max-download-attempts&quot;: 5,</span><br><span class="line">  &quot;mtu&quot;: 0,</span><br><span class="line">  &quot;no-new-privileges&quot;: false,</span><br><span class="line">  &quot;node-generic-resources&quot;: [</span><br><span class="line">    &quot;NVIDIA-GPU=UUID1&quot;,</span><br><span class="line">    &quot;NVIDIA-GPU=UUID2&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;oom-score-adjust&quot;: -500,</span><br><span class="line">  &quot;pidfile&quot;: &quot;&quot;,</span><br><span class="line">  &quot;raw-logs&quot;: false,</span><br><span class="line">  &quot;registry-mirrors&quot;: [],</span><br><span class="line">  &quot;runtimes&quot;: &#123;</span><br><span class="line">    &quot;cc-runtime&quot;: &#123;</span><br><span class="line">      &quot;path&quot;: &quot;/usr/bin/cc-runtime&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;custom&quot;: &#123;</span><br><span class="line">      &quot;path&quot;: &quot;/usr/local/bin/my-runc-replacement&quot;,</span><br><span class="line">      &quot;runtimeArgs&quot;: [</span><br><span class="line">        &quot;--debug&quot;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;seccomp-profile&quot;: &quot;&quot;,</span><br><span class="line">  &quot;selinux-enabled&quot;: false,</span><br><span class="line">  &quot;shutdown-timeout&quot;: 15,</span><br><span class="line">  &quot;storage-driver&quot;: &quot;&quot;,</span><br><span class="line">  &quot;storage-opts&quot;: [],</span><br><span class="line">  &quot;swarm-default-advertise-addr&quot;: &quot;&quot;,</span><br><span class="line">  &quot;tls&quot;: true,</span><br><span class="line">  &quot;tlscacert&quot;: &quot;&quot;,</span><br><span class="line">  &quot;tlscert&quot;: &quot;&quot;,</span><br><span class="line">  &quot;tlskey&quot;: &quot;&quot;,</span><br><span class="line">  &quot;tlsverify&quot;: true,</span><br><span class="line">  &quot;userland-proxy&quot;: false,</span><br><span class="line">  &quot;userland-proxy-path&quot;: &quot;/usr/libexec/docker-proxy&quot;,</span><br><span class="line">  &quot;userns-remap&quot;: &quot;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在命令行设置的参数，不能在daemon.json中进行设置。<br>在使用systemd启动Docker守护进程的系统上，-H已经设置，因此不能使用daemon.json中的hosts密钥来添加监听地址。</p>
+</blockquote>
+<h1 id="配置热加载"><a href="#配置热加载" class="headerlink" title="配置热加载"></a>配置热加载</h1><p>当守护进程运行时，可以重新配置一些选项，而无需重新启动进程。在Linux中使用SIGHUP信号重新加载，<code>sudo kill -SIGHUP $(pidof dockerd)</code><br>这些选项可以在配置文件中修改，但仍然会检查与提供的标志的冲突。如果有冲突，守护进程无法重新配置自己，但它不会停止执行。</p>
+<p>当前支持的可以重新配置的选项列表如下：</p>
+<ul>
+<li>debug：当设置为true时，它会将守护进程更改为调试模式。</li>
+<li>cluster-store：它会用新地址重新加载发现商店。</li>
+<li>cluster-store-opts：它使用新选项重新加载发现存储。</li>
+<li>cluster-advertise：它修改了重新加载后公布的地址。</li>
+<li>labels：它用一套新的标签取代了守护进程标签。</li>
+<li>live-restore：允许在守护进程停机期间保持容器的活力。</li>
+<li>max-concurrent-downloads：它更新了每次拉取的最大并发下载量。</li>
+<li>max-concurrent-uploads：它更新了每次推送的最大并发上传。</li>
+<li>max-download-attempts：它更新了每次拉取的最大下载尝试。</li>
+<li>default-runtime：如果在容器创建时未指定，它会更新要使用的运行时。它默认为“默认”，即官方docker软件包随附的运行时。</li>
+<li>runtimes：它更新了可用于运行容器的可用OCI运行时列表。</li>
+<li>authorization-plugin：它指定要使用的授权插件。</li>
+<li>allow-nondistributable-artifacts：用一组新的注册表替换守护进程将推送不可分发工件的注册表集。</li>
+<li>insecure-registries：它用一组新的不安全的注册表取代了守护进程不安全的注册表。如果守护进程配置中的一些现有不安全注册表不在新重新加载的不安全注册表中，这些现有注册表将从守护进程的配置中删除。</li>
+<li>registry-mirrors：它用一组新的注册表镜取代了守护进程注册表镜像。如果守护进程配置中的一些现有注册表镜像不在新重新加载的注册表镜像中，这些现有注册表镜像将从守护进程的配置中删除。</li>
+<li>shutdown-timeout：它将守护进程现有的配置超时替换为关闭所有容器的新超时。</li>
+<li>features：它明确启用或禁用特定功能。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file">https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file</a></p>
 
-通过helm chart的方式部署于kubernetes中，以多副本的形式运行，借助k8s自愈性维护自身状态，通过pvc来存储数据，连接外置的PostgreSQL和Redis集群。
-多个harbor实例共享PostgreSQL、Redis及存储，上层搭建负载均衡器。
-harbor组件单独部署，基于复制策略实现Artifact的...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
-    
-</div>
-            
-        </div>
     </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2022/06/14/%E5%85%B3%E4%BA%8Ek8s%E5%8D%B7%E6%9D%83%E9%99%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B5%8B%E8%AF%95/" >
-            
-                <span>关于k8s卷权限的一些测试</span>
-        </a>
-        <div class="abstract-content">
-            
-Container中的文件在磁盘上是临时存放的，这会给Container中运行的较重要的应用程序带来问题，问题之一是当容器崩溃时文件丢失。 kubelet 会重新启动容器，但容器会以干净的状态重启。 第二个问题会在同一 Pod 中运行多个容器并共享文件时出现。 kubernetes的volume解决了该问题。
-——kubernetes官方文档
-
-kubernetes支持多种类型的volum...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
-    
-</div>
-            
-        </div>
-    </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2022/11/17/%E5%85%B3%E4%BA%8Enginx%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E8%90%BD%E5%9C%B0%E9%97%AE%E9%A2%98/" title= "关于nginx容器日志落地问题">
+                    <div class="prevTitle">关于nginx容器日志落地问题</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
+    <script>
+        let idOption = '1669259951000'
+        
+        idOption = location.pathname
+        
+        const gitalk = new Gitalk({
+            clientID: '408256f64d15631774e7',
+            clientSecret: '9baebd9c602f198ca120ea2277b7d5debb1f144f',
+            repo: 'Slions_blog_comment',
+            owner: 'Slions',
+            admin: "Slions",
+            id: md5(idOption),
+            distractionFreeMode: false,
+            createIssueManually: true,
+        })
+        console.log(gitalk)
+        gitalk.render('gitalk-container')
+    </script>
+    <noscript>为正常使用 Gitalk 评论功能，您需要激活 JavaScript</noscript>
+ 
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
 </main>
+
             <!-- profile -->
             
         </div>
@@ -538,6 +630,24 @@ kubernetes支持多种类型的volum...
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Daemon%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">Daemon配置文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%83%AD%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.</span> <span class="toc-text">配置热加载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
     
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -2363,6 +2473,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

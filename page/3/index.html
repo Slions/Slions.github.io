@@ -399,6 +399,38 @@ height:100vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2022/03/20/iptables/" >
+            
+                <span>iptables</span>
+        </a>
+        <div class="abstract-content">
+            老的系统防火墙使用的一直是iptables，centos/redhat7后默认的防火墙变为了firewalld，
+iptables主要是通过四表五链对网络数据进行处理，firewalld则是通过设置zone来限制网络，firewalld与iptables不能共存，会产生不兼容的问题。
+我们一般只是知道iptables，但它实际上由两个组件netfilter 和 iptables 组成。
+ne...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/12/27/k8s%E9%83%A8%E7%BD%B2EFK/" >
             
                 <span>k8s部署EFK</span>
@@ -699,36 +731,6 @@ Jinja2模板引擎提供了三种特殊符号来包围模板表达式：
 
 对于这类变量的访问，ansible中提供了两种方式：
 123456---- hosts: localhost  gather_facts: false  tasks:    - debu...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >
-            
-                <span>（七）收集节点信息facts</span>
-        </a>
-        <div class="abstract-content">
-            收集节点信息ansible可以获取目标主机的节点信息，如ip地址，主机名、系统版本、内核版本等等，对于运维来说是一个很好的功能，但是正是它收集的信息很全面，运行也很慢，在日常工作中，没有特殊的需求会在playbook中将其关闭，或者开启facts缓存，在运行任务前手动执行一次。
-ansible中提供了两个模块（setup与gather_facts）来实现收集主机facts，其中setup是最...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -2176,24 +2178,9 @@ ansible中提供了两个模块（setup与gather_facts）来实现收集主机fa
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 84
+        Total : 85
         </div>
         <!-- search  -->
         
@@ -2206,6 +2193,11 @@ ansible中提供了两个模块（setup与gather_facts）来实现收集主机fa
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2022/11/24/docker%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%8E%E9%85%8D%E7%BD%AE%E7%83%AD%E5%8A%A0%E8%BD%BD/" >docker配置文件与配置热加载</a>
+        </li>
     
     
         <li class="archive-post-item">

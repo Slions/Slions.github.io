@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://slions.github.io/archives/2022/06/index.html">
+<meta property="og:url" content="https://slions.github.io/archives/2022/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale">
 <meta property="article:author" content="Jingyu Shi">
@@ -386,60 +386,26 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2022/06/22/harbor2-4-2%E5%B0%9D%E9%B2%9C/" >
+        <a class="abstract-title" href = "/2022/03/20/iptables/" >
             
-                <span>harbor2.4.2尝鲜</span>
+                <span>iptables</span>
         </a>
         <div class="abstract-content">
-            根据harbor官方的描述，harbor高可用方案有以下几种：
-
-通过helm chart的方式部署于kubernetes中，以多副本的形式运行，借助k8s自愈性维护自身状态，通过pvc来存储数据，连接外置的PostgreSQL和Redis集群。
-多个harbor实例共享PostgreSQL、Redis及存储，上层搭建负载均衡器。
-harbor组件单独部署，基于复制策略实现Artifact的...
+            老的系统防火墙使用的一直是iptables，centos/redhat7后默认的防火墙变为了firewalld，
+iptables主要是通过四表五链对网络数据进行处理，firewalld则是通过设置zone来限制网络，firewalld与iptables不能共存，会产生不兼容的问题。
+我们一般只是知道iptables，但它实际上由两个组件netfilter 和 iptables 组成。
+ne...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/22</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/20</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "harbor">harbor</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2022/06/14/%E5%85%B3%E4%BA%8Ek8s%E5%8D%B7%E6%9D%83%E9%99%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B5%8B%E8%AF%95/" >
-            
-                <span>关于k8s卷权限的一些测试</span>
-        </a>
-        <div class="abstract-content">
-            
-Container中的文件在磁盘上是临时存放的，这会给Container中运行的较重要的应用程序带来问题，问题之一是当容器崩溃时文件丢失。 kubelet 会重新启动容器，但容器会以干净的状态重启。 第二个问题会在同一 Pod 中运行多个容器并共享文件时出现。 kubernetes的volume解决了该问题。
-——kubernetes官方文档
-
-kubernetes支持多种类型的volum...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes storage">kubernetes storage</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Network">Network</a>
     
 </div>
             
@@ -447,6 +413,10 @@ kubernetes支持多种类型的volum...
     </article>
     
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/archives/2022/page/2/">&lt; PREV</a><a class="page-number" href="/archives/2022/">1</a><a class="page-number" href="/archives/2022/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
     
 </main>
             <!-- profile -->
