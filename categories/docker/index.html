@@ -386,6 +386,40 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >
+            
+                <span>docker cgroups driver设置为systemd报错</span>
+        </a>
+        <div class="abstract-content">
+            kubernetes官方建议将cgroup驱动设置为systemd来增强系统稳定性。
+
+当 systemd 是初始化系统时， 不推荐使用 cgroupfs 驱动，因为 systemd 期望系统上只有一个 cgroup 管理器。 此外，如果使用 cgroup v2， 则应用 systemd cgroup 驱动取代 cgroupfs。
+
+操作系统信息如下：
+12345678910# cat /e...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/02/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2022/11/24/docker%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%8E%E9%85%8D%E7%BD%AE%E7%83%AD%E5%8A%A0%E8%BD%BD/" >
             
                 <span>docker配置文件与配置热加载</span>
@@ -654,37 +688,6 @@ docker架构在我的本地环境执行docker ...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/10/docker%20Cgroup/" >
-            
-                <span>docker Cgroup</span>
-        </a>
-        <div class="abstract-content">
-            什么是Cgroup容器的资源限制是通过Cgroup实现的，Cgroups 的全称是 Control Group，属于linux内核提供的一个特性，它最主要的作用就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
-此外，Cgroups 还能够对进程进行优先级设置、审计，以及将进程挂起和恢复等操作。
-在 Linux 中，Cgroups 给用户暴露出来的操作接口是文件系...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/10</span>
             </div>
             <!-- tags  -->
             
@@ -2016,9 +2019,55 @@ docker架构在我的本地环境执行docker ...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 85
+        Total : 87
         </div>
         <!-- search  -->
         
@@ -2028,6 +2077,25 @@ docker架构在我的本地环境执行docker ...
     
     
     
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2023/02/03/%E9%BA%92%E9%BA%9F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%82%E5%B8%B8%E5%AE%95%E6%9C%BA%E6%8E%92%E6%9F%A5/" >麒麟服务器异常宕机排查</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >docker cgroups driver设置为systemd报错</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
@@ -2513,6 +2581,8 @@ docker架构在我的本地环境执行docker ...
     
         <span class="sidebar-tag-name" data-tags="openshift"><span class="iconfont-archer">&#xe606;</span>openshift</span>
     
+        <span class="sidebar-tag-name" data-tags="kylin"><span class="iconfont-archer">&#xe606;</span>kylin</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2585,6 +2655,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
         <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
+    
+        <span class="sidebar-category-name" data-categories="kylin"><span class="iconfont-archer">&#xe60a;</span>kylin</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

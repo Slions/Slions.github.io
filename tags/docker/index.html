@@ -386,6 +386,40 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >
+            
+                <span>docker cgroups driver设置为systemd报错</span>
+        </a>
+        <div class="abstract-content">
+            kubernetes官方建议将cgroup驱动设置为systemd来增强系统稳定性。
+
+当 systemd 是初始化系统时， 不推荐使用 cgroupfs 驱动，因为 systemd 期望系统上只有一个 cgroup 管理器。 此外，如果使用 cgroup v2， 则应用 systemd cgroup 驱动取代 cgroupfs。
+
+操作系统信息如下：
+12345678910# cat /e...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/02/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2022/11/24/docker%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%8E%E9%85%8D%E7%BD%AE%E7%83%AD%E5%8A%A0%E8%BD%BD/" >
             
                 <span>docker配置文件与配置热加载</span>
@@ -651,36 +685,6 @@ Linux提供了一种叫做联合文件系统的文件系统，它具备如下特
         <div class="abstract-content">
             不知道大家在使用docker的过程中有没有过这种困惑，就是下载了个centos镜像，可以看到只有200多M,这和我们之前使用传统方式启一个centos系统动不动4、5个G简直有天壤之别，这么小能运行么，稳定么？
 1234567891011[root@slions_pc1 ~]# docker imagesREPOSITORY          TAG                 IMAG...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/07/11/%E6%B5%85%E8%B0%88docker%E6%A1%86%E6%9E%B6/" >
-            
-                <span>浅谈docker框架</span>
-        </a>
-        <div class="abstract-content">
-            如果你之前使用过docker应该发现其并不难，把所谓的三大核心“镜像”，“容器”，“仓库”掌握了就能满足日常工作中的大多数应用内容。但如果想要更深入些了解docker,就需要熟悉下docker的框架结构，正巧前段时间同组大佬通过docker源码来分享了一波学习心得，也使得我对docker的理解更深了些，下面来一起分析下docker的框架结构。
-docker架构在我的本地环境执行docker ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -2017,9 +2021,55 @@ docker架构在我的本地环境执行docker ...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 85
+        Total : 87
         </div>
         <!-- search  -->
         
@@ -2029,6 +2079,25 @@ docker架构在我的本地环境执行docker ...
     
     
     
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/03</span><a class="archive-post-title" href= "/2023/02/03/%E9%BA%92%E9%BA%9F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%82%E5%B8%B8%E5%AE%95%E6%9C%BA%E6%8E%92%E6%9F%A5/" >麒麟服务器异常宕机排查</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >docker cgroups driver设置为systemd报错</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
@@ -2514,6 +2583,8 @@ docker架构在我的本地环境执行docker ...
     
         <span class="sidebar-tag-name" data-tags="openshift"><span class="iconfont-archer">&#xe606;</span>openshift</span>
     
+        <span class="sidebar-tag-name" data-tags="kylin"><span class="iconfont-archer">&#xe606;</span>kylin</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2586,6 +2657,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
         <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
+    
+        <span class="sidebar-category-name" data-categories="kylin"><span class="iconfont-archer">&#xe60a;</span>kylin</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
