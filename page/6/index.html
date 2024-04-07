@@ -399,6 +399,70 @@ height:100vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/22/Hexo%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/" >
+            
+                <span>hexo特殊符号的转义问题</span>
+        </a>
+        <div class="abstract-content">
+            最近写ansible相关文章时，发现hexo与Jinja2的语法有冲突。
+123line: 93,location: &#x27;_posts/（二）ansible初体验.md [Line 93, Column 133]&#x27;,type: &#x27;unexpected token: &#125;&#125;&#x27;
+
+它的模板语法 &#123;&#123;&#125;&#125...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "hexo">hexo</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%BA%8C%EF%BC%89ansible%E5%88%9D%E4%BD%93%E9%AA%8C/" >
+            
+                <span>（二）ansible初体验</span>
+        </a>
+        <div class="abstract-content">
+            上篇简单介绍了ansible的概念与架构，也提到了如果想要简单的实现一些批量管控主机的功能，可以轻松上手。这边就主要介绍下如何实现最简单的功能。
+从之前的架构图上看能知道，ansible分为了控制节点机与被控节点，首先需要在控制节点上安装ansible软件。
+
+Ansible的模块是用Python来执行的，且默认远程连接的方式是ssh，所以控制节点和被控制端都需要有Python环境，并且被控...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/08/22/%EF%BC%88%E4%B8%80%EF%BC%89ansible%E5%85%A5%E9%97%A8/" >
             
                 <span>（一）ansible入门</span>
@@ -676,67 +740,6 @@ Physical Volume(PV)
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/06</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/05/Virtualbox%E8%99%9A%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/" >
-            
-                <span>Virtualbox虚机使用介绍</span>
-        </a>
-        <div class="abstract-content">
-             VMware workstation是最常见也是最常用的虚拟机工具，但是很多公司不会购买其商用授权，VirtualBox 也是一款虚拟化产品，重要的是其开源免费，好早之前在本地安装使用了下，感觉与VMware workstation比还是不太习惯，包括虚拟机的安装和设置也要重新习惯，本文主要讲下安装好软件后如何完成基础设置与网络配置，安装部分比较简单请自行解决。
-新建虚机
-进入virtua...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "虚拟机相关">虚拟机相关</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/08/03/df%E4%B8%8Edu%E7%BB%93%E6%9E%9C%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/" >
-            
-                <span>df与du结果不一致问题</span>
-        </a>
-        <div class="abstract-content">
-            df与du命令都是运维人员常用的检测存储空间大小的命令，平时我们并不太关注这两个命令的差别，但是经常会遇到这样一种场景，使用df查看到空间使用率已经非常高了，但使用du命令排查时发现不存在占用空间大的文件， 两者间的结果不一致。
-du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后累加，du能看到的文件只是一些当前存在的，没有被删除的。他计算的大小就是当前他认为存在的...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/03</span>
             </div>
             <!-- tags  -->
             
@@ -2149,9 +2152,39 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 83
+        Total : 85
         </div>
         <!-- search  -->
         
@@ -2161,6 +2194,34 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
     
     
+    
+    <div class="archive-year"> 2024 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href= "/2024/04/07/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/" >关于改变</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >docker cgroups driver设置为systemd报错</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
@@ -2636,6 +2697,8 @@ du与dfdu，disk usage,是通过搜索文件来计算每个文件的大小然后
     
         <span class="sidebar-tag-name" data-tags="openshift"><span class="iconfont-archer">&#xe606;</span>openshift</span>
     
+        <span class="sidebar-tag-name" data-tags="观点与感悟"><span class="iconfont-archer">&#xe606;</span>观点与感悟</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2708,6 +2771,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
         <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
+    
+        <span class="sidebar-category-name" data-categories="观点与感悟"><span class="iconfont-archer">&#xe60a;</span>观点与感悟</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

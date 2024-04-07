@@ -399,6 +399,67 @@ height:100vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2021/12/01/%EF%BC%88%E4%B8%83%EF%BC%89%E6%94%B6%E9%9B%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AFfacts/" >
+            
+                <span>（七）收集节点信息facts</span>
+        </a>
+        <div class="abstract-content">
+            收集节点信息ansible可以获取目标主机的节点信息，如ip地址，主机名、系统版本、内核版本等等，对于运维来说是一个很好的功能，但是正是它收集的信息很全面，运行也很慢，在日常工作中，没有特殊的需求会在playbook中将其关闭，或者开启facts缓存，在运行任务前手动执行一次。
+ansible中提供了两个模块（setup与gather_facts）来实现收集主机facts，其中setup是最...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2021/11/29/%EF%BC%88%E5%85%AD%EF%BC%89%E9%99%90%E5%88%B6%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%B8%BB%E6%9C%BA/" >
+            
+                <span>（六）限制执行任务主机</span>
+        </a>
+        <div class="abstract-content">
+            默认情况下，所有被ansible或ansible-playbook选中的主机都会执行任务，有时在开发和测试阶段只想选择其中某些节点来执行，需要改动inventory文件或playbook的host不是很优雅，ansible 提供了--limit选项来筛选目标主机。
+
+使用 –limit选项，ansible或ansible-playbook也会解析inventory中定义的所有主机，在执行任务...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ansible">ansible</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2021/11/23/harbor%E5%AF%B9%E6%8E%A5F5%E7%9A%84%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" >
             
                 <span>harbor对接F5的鉴权失败问题</span>
@@ -650,76 +711,6 @@ kubernetes本身，包括各种对象的状态和元信息配置
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes核心组件">kubernetes核心组件</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/23/%E4%BF%AE%E6%94%B9kubeadm%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4/" >
-            
-                <span>修改kubeadm证书过期时间</span>
-        </a>
-        <div class="abstract-content">
-            证书过期利用kubeadm安装后发现ca的证书过期时间是十年，但是由ca签发的如apiserver.crt的证书过期时间都是一年，这就尴尬了。
-
-如果已经创建后的集群到了一年执行kubectl命令会出现：
-
-1Unable to connect to the server: x509: certificate has expired or is not yet valid
-
-此时需要手动更新...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2021/09/19/%E6%88%91%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%EF%BC%88%E8%BD%AC%E8%BD%BD%EF%BC%89/" >
-            
-                <span>我是一个线程（转载）</span>
-        </a>
-        <div class="abstract-content">
-            
-本文转载自IBM前架构师刘欣
-
-初生牛犊我是一个线程，我一出生就被编了个号：0x3704，然后被领到一个昏暗的屋子里，在这里我发现了很多和我一模一样的同伴。
-我身边的同伴0x6900 待的时间比较长，他带着沧桑的口气对我说：“我们线程的宿命就是处理包裹。把包裹处理完以后还得马上回到这里，否则可能永远回不来了。”
-我一脸懵懂，“包裹，什么包裹？”
-“不要着急，马上你就会明白了，我们这里是不养...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
     
 </div>
             
@@ -2126,9 +2117,39 @@ kubernetes本身，包括各种对象的状态和元信息配置
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 83
+        Total : 85
         </div>
         <!-- search  -->
         
@@ -2138,6 +2159,34 @@ kubernetes本身，包括各种对象的状态和元信息配置
     
     
     
+    
+    <div class="archive-year"> 2024 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href= "/2024/04/07/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/" >关于改变</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >docker cgroups driver设置为systemd报错</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
@@ -2613,6 +2662,8 @@ kubernetes本身，包括各种对象的状态和元信息配置
     
         <span class="sidebar-tag-name" data-tags="openshift"><span class="iconfont-archer">&#xe606;</span>openshift</span>
     
+        <span class="sidebar-tag-name" data-tags="观点与感悟"><span class="iconfont-archer">&#xe606;</span>观点与感悟</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2685,6 +2736,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
         <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
+    
+        <span class="sidebar-category-name" data-categories="观点与感悟"><span class="iconfont-archer">&#xe60a;</span>观点与感悟</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

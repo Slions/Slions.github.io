@@ -386,6 +386,71 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2024/04/07/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/" >
+            
+                <span>关于改变</span>
+        </a>
+        <div class="abstract-content">
+            距离上一次发文到现在有一年多的时间了，期间有生活上的一些变化，也有工作上的一些变动，2023年我的年度关键词是“改变”，被动或者主动已经不重要了，今天主要想记录下来最近的一些感悟，以及对后面博客内容的一些规划。
+
+我的博客一般没什么人看，我也没在csdn或者掘金发文的习惯：我不是学计算机的，看过很多技术大佬的文章，不论是从技术深度还是架构视野来说都遥遥领先，而我只是站在巨人的肩膀，所以博客的...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/04/07</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "观点与感悟">观点与感悟</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >
+            
+                <span>docker cgroups driver设置为systemd报错</span>
+        </a>
+        <div class="abstract-content">
+            kubernetes官方建议将cgroup驱动设置为systemd来增强系统稳定性。
+
+当 systemd 是初始化系统时， 不推荐使用 cgroupfs 驱动，因为 systemd 期望系统上只有一个 cgroup 管理器。 此外，如果使用 cgroup v2， 则应用 systemd cgroup 驱动取代 cgroupfs。
+
+操作系统信息如下：
+12345678910# cat /e...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/02/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2022/10/30/%E5%AE%89%E8%A3%85openshift%E8%AE%B0%E5%AE%9E/" >
             
                 <span>安装openshift记实</span>
@@ -627,72 +692,6 @@ uniq、tr、split12345678910111213141516# 去掉重复的行并显示重复了�
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2022/03/22/k8s%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E4%B8%8Ecni%E6%8F%92%E4%BB%B6/" >
-            
-                <span>k8s网络模型与cni插件</span>
-        </a>
-        <div class="abstract-content">
-            Docker是基于一个虚拟网桥设备docker0来实现宿主机上容器通信的，而k8s本身不提供网络方案，只提供cni接口，维护了一个单独的网桥（cni0）来代替 docker0，由遵从cni的第三方网络插件提供。
-在使用cni插件时，一旦使用了k8s创建Pod,那么会产生一个CNI网桥来接管所有CNI插件负责的Pod，而我们单纯使用docker run命令创建的容器，还是由docker0负责。...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kubernetes">kubernetes</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2022/03/22/docker%E8%B7%A8%E4%B8%BB%E6%9C%BA%E9%80%9A%E4%BF%A1/" >
-            
-                <span>docker跨主机通信</span>
-        </a>
-        <div class="abstract-content">
-            Docker默认的网络模式有三种：bridge、host、none，其中想实现不同宿主机上的容器相互访问是做不到的。对应”docker跨主通信”的需求，社区里涌现了大批的方案，其中flannel是用的最多也是较为简单的。
-FlannelFlannel本身是个框架，真正提供网络功能的是flannel的后端实现。Flannel支持三种后端实现：
-
-udp
-vxlan
-host-gw
-
-udpfl...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
     
 </div>
             
@@ -1988,9 +1987,39 @@ udpfl...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 83
+        Total : 85
         </div>
         <!-- search  -->
         
@@ -2000,6 +2029,34 @@ udpfl...
     
     
     
+    
+    <div class="archive-year"> 2024 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href= "/2024/04/07/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/" >关于改变</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2023/02/02/docker%20cgroups%20driver%E8%AE%BE%E7%BD%AE%E4%B8%BAsystemd%E6%8A%A5%E9%94%99/" >docker cgroups driver设置为systemd报错</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2022 </div>
     <ul class="year-list">
@@ -2475,6 +2532,8 @@ udpfl...
     
         <span class="sidebar-tag-name" data-tags="openshift"><span class="iconfont-archer">&#xe606;</span>openshift</span>
     
+        <span class="sidebar-tag-name" data-tags="观点与感悟"><span class="iconfont-archer">&#xe606;</span>观点与感悟</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2547,6 +2606,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Network"><span class="iconfont-archer">&#xe60a;</span>Network</span>
     
         <span class="sidebar-category-name" data-categories="shell"><span class="iconfont-archer">&#xe60a;</span>shell</span>
+    
+        <span class="sidebar-category-name" data-categories="观点与感悟"><span class="iconfont-archer">&#xe60a;</span>观点与感悟</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
